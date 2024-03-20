@@ -1,0 +1,182 @@
+springdoc:
+  swagger-ui:
+    path : '/swagger-ui.html'
+management:
+  server:
+    port: 9405
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  metrics:
+    distribution:
+      percentiles:
+        http.server.requests: 0.5, 0.95, 0.99
+---
+spring:
+  config:
+    activate:
+      on-profile: "local"
+
+logging:
+  level:
+    root: info
+    "org.*": info
+    "com.*": info
+  file:
+    name: /myrealtrip/logs/tomcat/catalina.out
+  logback:
+    rollingpolicy:
+      max-history: 5
+
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "dev"
+logging:
+  level:
+    root: info
+    "org.*": info
+    "com.*": info
+  file:
+    name: /myrealtrip/logs/tomcat/catalina.out
+  logback:
+    rollingpolicy:
+      max-history: 5
+
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "dev01"
+logging:
+  level:
+    root: info
+    "org.*": info
+    "com.*": info
+  file:
+    name: /myrealtrip/logs/tomcat/catalina.out
+  logback:
+    rollingpolicy:
+      max-history: 5
+
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "dev02"
+logging:
+  level:
+    root: info
+    "org.*": info
+    "com.*": info
+  file:
+    name: /myrealtrip/logs/tomcat/catalina.out
+  logback:
+    rollingpolicy:
+      max-history: 5
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "test"
+logging:
+  level:
+    root: info
+    "org.*": info
+    "com.*": info
+  file:
+    name: /myrealtrip/logs/tomcat/catalina.out
+  logback:
+    rollingpolicy:
+      max-history: 5
+
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "test01"
+logging:
+  level:
+    root: info
+    "org.*": info
+    "com.*": info
+  file:
+    name: /myrealtrip/logs/tomcat/catalina.out
+  logback:
+    rollingpolicy:
+      max-history: 5
+
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "test02"
+logging:
+  level:
+    root: info
+    "org.*": info
+    "com.*": info
+  file:
+    name: /myrealtrip/logs/tomcat/catalina.out
+  logback:
+    rollingpolicy:
+      max-history: 5
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "stage"
+logging:
+  level:
+    root: warn
+    "org.*": warn
+    "com.*": warn
+    "com.myrealtrip.eps.*": info
+  file:
+    name: /myrealtrip/logs/tomcat/catalina.out
+  logback:
+    rollingpolicy:
+      max-history: 5
+
+myrealtrip:
+  datasource:
+    read-write:
+      username:
+      password:
+    read-only:
+      username:
+      password:
+---
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+logging:
+  level:
+    root: warn
+    "org.*": warn
+    "com.*": warn
+    "com.myrealtrip.eps.*": info
+  file:
+    name: /myrealtrip/logs/tomcat/catalina.out
+  logback:
+    rollingpolicy:
+      max-history: 14
+
+myrealtrip:
+  datasource:
+    read-write:
+      username:
+      password:
+    read-only:
+      username:
+      password:

@@ -1,0 +1,23 @@
+dependencies {
+    implementation(project(":configuration"))
+    implementation(project(":common"))
+
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+    implementation "io.github.resilience4j:resilience4j-spring-boot2:${resilience4jVersion}"
+    implementation "io.github.resilience4j:resilience4j-all:${resilience4jVersion}"
+    implementation "io.github.resilience4j:resilience4j-reactor:${resilience4jVersion}"
+
+    // Kafka
+    implementation("org.springframework.kafka:spring-kafka")
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    implementation ('org.springframework.boot:spring-boot-starter-web-services') {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+
+    // Myrealtrip
+    implementation("com.myrealtrip.cipher:mrt-cipher:${mrtCipherVersion}")
+}

@@ -1,2 +1,7 @@
 rootProject.name = 'hotel-ota-ohmyhotel'
+include 'configuration'
+include 'core'
+include 'common'
+include 'outbound'
+include 'api'
 

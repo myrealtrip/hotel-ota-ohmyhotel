@@ -1,0 +1,124 @@
+# 마리트 공통 카프카 https://myrealtrip.atlassian.net/wiki/spaces/DEVOPS/pages/2966749571/Kafka+Cluster
+myrealtrip:
+  kafka:
+    consumer:
+      max-poll-interval-ms: 3600000
+---
+spring:
+  config:
+    activate:
+      on-profile: "local"
+
+myrealtrip:
+  kafka:
+    common:
+      bootstrap-servers: b-1.mrt-dev-common.nnl7so.c4.kafka.ap-northeast-2.amazonaws.com:9092, b-2.mrt-dev-common.nnl7so.c4.kafka.ap-northeast-2.amazonaws.com:9092, b-3.mrt-dev-common.nnl7so.c4.kafka.ap-northeast-2.amazonaws.com:9092, b-4.mrt-dev-common.nnl7so.c4.kafka.ap-northeast-2.amazonaws.com:9092
+      topics:
+        unionstay-property-status-update: mrt-dev-unionstay-property-status-update-v1
+        unionstay-property-upsert: mrt-dev-unionstay-property-upsert-v2
+        unionstay-roomtype-upsert: mrt-dev-unionstay-roomtype-upsert-v2
+        unionstay-property-rank-update: mrt-dev-unionstay-property-rank-update-v1
+        unionstay-booking-detail-upsert: mrt-dev-unionstay-booking-detail-upsert-v1
+        unionstay-chain-upsert: mrt-dev-unionstay-chain-upsert-v1
+        unionstay-common-dlt: mrt-dev-unionstay-common-dlt-v1
+        unionstay-booking-detail-upsert-dlt: mrt-dev-unionstay-booking-detail-upsert-dlt-v1
+        unionstay-booking-order: mrt-dev-unionstay-booking-order-v1
+        unionstay-property-mrt-discount-types-update: mrt-dev-unionstay-property-mrt-discount-types-update-v1
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "dev"
+        - "dev01"
+        - "dev02"
+
+myrealtrip:
+  kafka:
+    common:
+      bootstrap-servers: b-1.mrt-dev-common.nnl7so.c4.kafka.ap-northeast-2.amazonaws.com:9092, b-2.mrt-dev-common.nnl7so.c4.kafka.ap-northeast-2.amazonaws.com:9092, b-3.mrt-dev-common.nnl7so.c4.kafka.ap-northeast-2.amazonaws.com:9092, b-4.mrt-dev-common.nnl7so.c4.kafka.ap-northeast-2.amazonaws.com:9092
+      topics:
+        unionstay-property-status-update: mrt-dev-unionstay-property-status-update-v1
+        unionstay-property-upsert: mrt-dev-unionstay-property-upsert-v2
+        unionstay-roomtype-upsert: mrt-dev-unionstay-roomtype-upsert-v2
+        unionstay-property-rank-update: mrt-dev-unionstay-property-rank-update-v1
+        unionstay-booking-detail-upsert: mrt-dev-unionstay-booking-detail-upsert-v1
+        unionstay-chain-upsert: mrt-dev-unionstay-chain-upsert-v1
+        unionstay-common-dlt: mrt-dev-unionstay-common-dlt-v1
+        unionstay-booking-detail-upsert-dlt: mrt-dev-unionstay-booking-detail-upsert-dlt-v1
+        unionstay-booking-order: mrt-dev-unionstay-booking-order-v1
+        eps-booking-agent-history: mrt-dev-eps-booking-agent-history-v1
+        unionstay-property-mrt-discount-types-update: mrt-dev-unionstay-property-mrt-discount-types-update-v1
+
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "test"
+        - "test01"
+        - "test02"
+
+myrealtrip:
+  kafka:
+    common:
+      bootstrap-servers: b-3.mrt-test-common.d4ll00.c4.kafka.ap-northeast-2.amazonaws.com:9092, b-4.mrt-test-common.d4ll00.c4.kafka.ap-northeast-2.amazonaws.com:9092, b-1.mrt-test-common.d4ll00.c4.kafka.ap-northeast-2.amazonaws.com:9092, b-2.mrt-test-common.d4ll00.c4.kafka.ap-northeast-2.amazonaws.com:9092
+      topics:
+        unionstay-property-status-update: mrt-test-unionstay-property-status-update-v1
+        unionstay-property-upsert: mrt-test-unionstay-property-upsert-v1
+        unionstay-roomtype-upsert: mrt-test-unionstay-roomtype-upsert-v1
+        unionstay-property-rank-update: mrt-test-unionstay-property-rank-update-v1
+        unionstay-booking-detail-upsert: mrt-test-unionstay-booking-detail-upsert-v1
+        unionstay-chain-upsert: mrt-test-unionstay-chain-upsert-v1
+        unionstay-common-dlt: mrt-test-unionstay-common-dlt-v1
+        unionstay-booking-detail-upsert-dlt: mrt-test-unionstay-booking-detail-upsert-dlt-v1
+        unionstay-booking-order: mrt-test-unionstay-booking-order-v1
+        eps-booking-agent-history: mrt-test-eps-booking-agent-history-v1
+        unionstay-property-mrt-discount-types-update: mrt-test-unionstay-property-mrt-discount-types-update-v1
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "stage"
+
+myrealtrip:
+  kafka:
+    common:
+      bootstrap-servers: b-1.mrt-stage-common.up2mtb.c2.kafka.ap-northeast-2.amazonaws.com:9092, b-4.mrt-stage-common.up2mtb.c2.kafka.ap-northeast-2.amazonaws.com:9092, b-2.mrt-stage-common.up2mtb.c2.kafka.ap-northeast-2.amazonaws.com:9092
+
+      topics:
+        unionstay-property-status-update: mrt-stage-unionstay-property-status-update-v1
+        unionstay-property-upsert: mrt-stage-unionstay-property-upsert-v1
+        unionstay-roomtype-upsert: mrt-stage-unionstay-roomtype-upsert-v1
+        unionstay-property-rank-update: mrt-stage-unionstay-property-rank-update-v1
+        unionstay-booking-detail-upsert: mrt-stage-unionstay-booking-detail-upsert-v1
+        unionstay-chain-upsert: mrt-stage-unionstay-chain-upsert-v1
+        unionstay-common-dlt: mrt-stage-unionstay-common-dlt-v1
+        unionstay-booking-detail-upsert-dlt: mrt-stage-unionstay-booking-detail-upsert-dlt-v1
+        unionstay-booking-order: mrt-stage-unionstay-booking-order-v1
+        eps-booking-agent-history: mrt-stage-eps-booking-agent-history-v1
+        unionstay-property-mrt-discount-types-update: mrt-stage-unionstay-property-mrt-discount-types-update-v1
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "prod"
+
+myrealtrip:
+  kafka:
+    common:
+      bootstrap-servers: b-3.mrt-prod-common.xfzv2o.c2.kafka.ap-northeast-2.amazonaws.com:9092, b-4.mrt-prod-common.xfzv2o.c2.kafka.ap-northeast-2.amazonaws.com:9092, b-2.mrt-prod-common.xfzv2o.c2.kafka.ap-northeast-2.amazonaws.com:9092, b-1.mrt-prod-common.xfzv2o.c2.kafka.ap-northeast-2.amazonaws.com:9092
+      topics:
+        unionstay-property-status-update: mrt-prod-unionstay-property-status-update-v1
+        unionstay-property-upsert: mrt-prod-unionstay-property-upsert-v1
+        unionstay-roomtype-upsert: mrt-prod-unionstay-roomtype-upsert-v1
+        unionstay-property-rank-update: mrt-prod-unionstay-property-rank-update-v1
+        unionstay-booking-detail-upsert: mrt-prod-unionstay-booking-detail-upsert-v1
+        unionstay-chain-upsert: mrt-prod-unionstay-chain-upsert-v1
+        unionstay-common-dlt: mrt-prod-unionstay-common-dlt-v1
+        unionstay-booking-detail-upsert-dlt: mrt-prod-unionstay-booking-detail-upsert-dlt-v1
+        unionstay-booking-order: mrt-prod-unionstay-booking-order-v1
+        eps-booking-agent-history: mrt-prod-eps-booking-agent-history-v1
+        unionstay-property-mrt-discount-types-update: mrt-prod-unionstay-property-mrt-discount-types-update-v1

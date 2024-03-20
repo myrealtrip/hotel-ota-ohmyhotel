@@ -1,0 +1,163 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database: mysql
+    show-sql: false
+    database-platform: org.hibernate.dialect.MySQL57Dialect
+    open-in-view: false
+    generate-ddl: false
+    properties:
+      org:
+        hibernate:
+          envers:
+            audit_table_suffix: _history
+            store_data_at_delete: true
+      hibernate:
+        globally_quoted_identifiers: true
+        create_empty_composites:
+          enabled: true
+        format_sql: true
+        show_sql: false
+        jdbc:
+          time_zone: Asia/Seoul
+        default_batch_fetch_size: 1000
+---
+spring:
+  config:
+    activate:
+      on-profile: local, dev, dev01, dev02
+  jpa:
+    properties:
+      hibernate:
+        show_sql: false
+myrealtrip:
+  datasource:
+    read-write:
+      jdbc-url: AQICAHgovqlBdsdUjXt9BbtXP7qgR8K0eyGB9hE6cTsaEEZBAgEkeBGAWF0GYKkMap1+rwspAAABJjCCASIGCSqGSIb3DQEHBqCCARMwggEPAgEAMIIBCAYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAw+ukiosYn0YN38jqsCARCAgdqUWeaVIKH2ksHqUzjomQgJo9D6d3jldMdhzYj9b/pVDzSNYHVI65fXenGRQrmlc208Ve+jvz1rzrApt+tGAI7mPNsqbNTc8aPwfgfPKtoffbSdEns5ettlCQCMG0dk9EvMfbdQPZWHNQRLoyFlv44wJ9DFd2+HbQCJJLy2ASqXe/AVNhPHKEF+jq41CNqDzbzSIB6J+8s8n2GQMQh7OkXcp5z2Fwyaz+1xstFccvHyFbJOXNrNbNRkqVpIXBe0fHQqgSFt3qajsaIZ3pSvrCEfeEhO2fwg28ZJXg==
+      username: AQICAHgovqlBdsdUjXt9BbtXP7qgR8K0eyGB9hE6cTsaEEZBAgET27Oj5cvA+5ZcGgLu5dQUAAAAazBpBgkqhkiG9w0BBwagXDBaAgEAMFUGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMhb3PZNUHdRuy8fm8AgEQgCgLzFm68jnjB2ndrGdOfLMWUP3KWG4/I4zT+QSx+73Q35puTKrmr3zb
+      password: AQICAHgovqlBdsdUjXt9BbtXP7qgR8K0eyGB9hE6cTsaEEZBAgEm5DPLYks53Po/vkZbaKj9AAAAcjBwBgkqhkiG9w0BBwagYzBhAgEAMFwGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM3zhV7keb3so6FOWyAgEQgC96QONGTlWzmMlUA1q8UKAPoJ09OBhIMHDWqtT+EMaR3y3HEpk71XrYGIs4xuxRPA==
+      pool-name: hikari-cp
+      extra:
+        maximum-pool-size: 20
+        data-source-properties:
+          cachePrepStmts: true
+          prepStmtCacheSize: 250
+          prepStmtCacheSqlLimit: 2048
+          useServerPrepStmts: true
+    read-only:
+      jdbc-url: AQICAHgovqlBdsdUjXt9BbtXP7qgR8K0eyGB9hE6cTsaEEZBAgEkeBGAWF0GYKkMap1+rwspAAABJjCCASIGCSqGSIb3DQEHBqCCARMwggEPAgEAMIIBCAYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAw+ukiosYn0YN38jqsCARCAgdqUWeaVIKH2ksHqUzjomQgJo9D6d3jldMdhzYj9b/pVDzSNYHVI65fXenGRQrmlc208Ve+jvz1rzrApt+tGAI7mPNsqbNTc8aPwfgfPKtoffbSdEns5ettlCQCMG0dk9EvMfbdQPZWHNQRLoyFlv44wJ9DFd2+HbQCJJLy2ASqXe/AVNhPHKEF+jq41CNqDzbzSIB6J+8s8n2GQMQh7OkXcp5z2Fwyaz+1xstFccvHyFbJOXNrNbNRkqVpIXBe0fHQqgSFt3qajsaIZ3pSvrCEfeEhO2fwg28ZJXg==
+      username: AQICAHgovqlBdsdUjXt9BbtXP7qgR8K0eyGB9hE6cTsaEEZBAgEkz0UGR/xeC8lKe0/uqe6EAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM0zmE/n8tGWPS1fsRAgEQgCuGbdk3/mO8t5Ixv2tzqJt2/wLE5K5v6bgRUT0Kykl2B4jZPSRCWxl6mzUO
+      password: AQICAHgovqlBdsdUjXt9BbtXP7qgR8K0eyGB9hE6cTsaEEZBAgEm5DPLYks53Po/vkZbaKj9AAAAcjBwBgkqhkiG9w0BBwagYzBhAgEAMFwGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM3zhV7keb3so6FOWyAgEQgC96QONGTlWzmMlUA1q8UKAPoJ09OBhIMHDWqtT+EMaR3y3HEpk71XrYGIs4xuxRPA==
+      pool-name: hikari-cp-slave
+      extra:
+        maximum-pool-size: 20
+        data-source-properties:
+          cachePrepStmts: true
+          prepStmtCacheSize: 250
+          prepStmtCacheSqlLimit: 2048
+          useServerPrepStmts: true
+---
+spring:
+  jpa:
+    properties:
+      hibernate:
+        show_sql: false
+  config:
+    activate:
+      on-profile:
+        - "test"
+        - "test01"
+        - "test02"
+
+myrealtrip:
+  datasource:
+    read-write:
+      jdbc-url: AQICAHgovqlBdsdUjXt9BbtXP7qgR8K0eyGB9hE6cTsaEEZBAgEzcBt+rd8+ki39w0mFmK9iAAABIzCCAR8GCSqGSIb3DQEHBqCCARAwggEMAgEAMIIBBQYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAyM8kdhYrFhJM+yChQCARCAgdcObnE9k8gM3ZrUvc7a7VnwqijEp9T1rnLXN1xRXpcW0J923tcKY8RnbovypQEqLT9O4HUMug0vPY8Eu0ZCXWuaR3WTprWr28J1gt5gqzmPWiK/SByOhi3tRhhJH2GWETO79wWB6LJjMFM9sPY0ge+HEpCHQqCw6tZf3izTnqoKPSdQb/fw5pRGMSkV6Li9RhhTk60OvpwB5IkvqsjpD0GKeRaNweNp369kZ/ge0vzGvdTYTdPbG87sHgfVDudP0k/vC+5fdAbhn2B0Cpei25KY7eDeQKcJ4A==
+      username: AQICAHgovqlBdsdUjXt9BbtXP7qgR8K0eyGB9hE6cTsaEEZBAgE40BOo31TnbjcrSeap3/jlAAAAbDBqBgkqhkiG9w0BBwagXTBbAgEAMFYGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMwuGOt+TIq4D+Z8FIAgEQgCkwwsFuXCNeQeW6ECzkIMtq74Yez3p/fvcm/0Io2QtmI9WeDcgYqU382Q==
+      password: AQICAHgovqlBdsdUjXt9BbtXP7qgR8K0eyGB9hE6cTsaEEZBAgFbajsJt14n83i/O+S1hCfPAAAAcjBwBgkqhkiG9w0BBwagYzBhAgEAMFwGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM9Kof4CmWs6GHxG49AgEQgC8BQ9y19dypJc1NifdRG4phvKBrQ2AACztZDKJKr5tQCCon3AKHNPHHMXj4zoMo/A==
+      pool-name: hikari-cp
+      extra:
+        maximum-pool-size: 20
+        data-source-properties:
+          cachePrepStmts: true
+          prepStmtCacheSize: 250
+          prepStmtCacheSqlLimit: 2048
+          useServerPrepStmts: true
+    read-only:
+      jdbc-url: AQICAHgovqlBdsdUjXt9BbtXP7qgR8K0eyGB9hE6cTsaEEZBAgEzcBt+rd8+ki39w0mFmK9iAAABIzCCAR8GCSqGSIb3DQEHBqCCARAwggEMAgEAMIIBBQYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAyM8kdhYrFhJM+yChQCARCAgdcObnE9k8gM3ZrUvc7a7VnwqijEp9T1rnLXN1xRXpcW0J923tcKY8RnbovypQEqLT9O4HUMug0vPY8Eu0ZCXWuaR3WTprWr28J1gt5gqzmPWiK/SByOhi3tRhhJH2GWETO79wWB6LJjMFM9sPY0ge+HEpCHQqCw6tZf3izTnqoKPSdQb/fw5pRGMSkV6Li9RhhTk60OvpwB5IkvqsjpD0GKeRaNweNp369kZ/ge0vzGvdTYTdPbG87sHgfVDudP0k/vC+5fdAbhn2B0Cpei25KY7eDeQKcJ4A==
+      username: AQICAHgovqlBdsdUjXt9BbtXP7qgR8K0eyGB9hE6cTsaEEZBAgFez9DcmkzDE9IxgBL4p8wKAAAAbzBtBgkqhkiG9w0BBwagYDBeAgEAMFkGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMh1Xp9Rk/YKlEqEpmAgEQgCzQLJb5xOhzGjgjWKuZU3a5IBbWT5Bqxe+iyT5pKTE1Ej60TJrt3Cv57GMdeA==
+      password: AQICAHgovqlBdsdUjXt9BbtXP7qgR8K0eyGB9hE6cTsaEEZBAgFbajsJt14n83i/O+S1hCfPAAAAcjBwBgkqhkiG9w0BBwagYzBhAgEAMFwGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM9Kof4CmWs6GHxG49AgEQgC8BQ9y19dypJc1NifdRG4phvKBrQ2AACztZDKJKr5tQCCon3AKHNPHHMXj4zoMo/A==
+      pool-name: hikari-cp-slave
+      extra:
+        maximum-pool-size: 20
+        data-source-properties:
+          cachePrepStmts: true
+          prepStmtCacheSize: 250
+          prepStmtCacheSqlLimit: 2048
+          useServerPrepStmts: true
+
+---
+# 운영환경 maximum-pool-size, DB 접속 정보는 각 모듈 yml 파일에서 관리
+spring:
+  jpa:
+    properties:
+      hibernate:
+        show_sql: false
+  config:
+    activate:
+      on-profile: "stage"
+
+myrealtrip:
+  datasource:
+    read-write:
+      jdbc-url:
+      pool-name: hikari-cp
+      extra:
+        maximum-pool-size: 50
+        data-source-properties:
+          cachePrepStmts: true
+          prepStmtCacheSize: 250
+          prepStmtCacheSqlLimit: 2048
+          useServerPrepStmts: true
+    read-only:
+      jdbc-url:
+      pool-name: hikari-cp-slave
+      extra:
+        maximum-pool-size: 50
+        data-source-properties:
+          cachePrepStmts: true
+          prepStmtCacheSize: 250
+          prepStmtCacheSqlLimit: 2048
+          useServerPrepStmts: true
+---
+# 운영환경 maximum-pool-size, DB 접속 정보는 각 모듈 yml 파일에서 관리
+spring:
+  jpa:
+    properties:
+      hibernate:
+        show_sql: false
+  config:
+    activate:
+      on-profile: "prod"
+
+myrealtrip:
+  datasource:
+    read-write:
+      jdbc-url:
+      pool-name: hikari-cp
+      extra:
+        data-source-properties:
+          cachePrepStmts: true
+          prepStmtCacheSize: 250
+          prepStmtCacheSqlLimit: 2048
+          useServerPrepStmts: true
+    read-only:
+      jdbc-url:
+      pool-name: hikari-cp-slave
+      extra:
+        data-source-properties:
+          cachePrepStmts: true
+          prepStmtCacheSize: 250
+          prepStmtCacheSqlLimit: 2048
+          useServerPrepStmts: true
