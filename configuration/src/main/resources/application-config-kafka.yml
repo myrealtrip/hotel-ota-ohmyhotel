@@ -47,7 +47,6 @@ myrealtrip:
         unionstay-common-dlt: mrt-dev-unionstay-common-dlt-v1
         unionstay-booking-detail-upsert-dlt: mrt-dev-unionstay-booking-detail-upsert-dlt-v1
         unionstay-booking-order: mrt-dev-unionstay-booking-order-v1
-        eps-booking-agent-history: mrt-dev-eps-booking-agent-history-v1
         unionstay-property-mrt-discount-types-update: mrt-dev-unionstay-property-mrt-discount-types-update-v1
 
 ---
@@ -73,7 +72,6 @@ myrealtrip:
         unionstay-common-dlt: mrt-test-unionstay-common-dlt-v1
         unionstay-booking-detail-upsert-dlt: mrt-test-unionstay-booking-detail-upsert-dlt-v1
         unionstay-booking-order: mrt-test-unionstay-booking-order-v1
-        eps-booking-agent-history: mrt-test-eps-booking-agent-history-v1
         unionstay-property-mrt-discount-types-update: mrt-test-unionstay-property-mrt-discount-types-update-v1
 ---
 spring:
@@ -97,7 +95,6 @@ myrealtrip:
         unionstay-common-dlt: mrt-stage-unionstay-common-dlt-v1
         unionstay-booking-detail-upsert-dlt: mrt-stage-unionstay-booking-detail-upsert-dlt-v1
         unionstay-booking-order: mrt-stage-unionstay-booking-order-v1
-        eps-booking-agent-history: mrt-stage-eps-booking-agent-history-v1
         unionstay-property-mrt-discount-types-update: mrt-stage-unionstay-property-mrt-discount-types-update-v1
 ---
 spring:
@@ -120,5 +117,4 @@ myrealtrip:
         unionstay-common-dlt: mrt-prod-unionstay-common-dlt-v1
         unionstay-booking-detail-upsert-dlt: mrt-prod-unionstay-booking-detail-upsert-dlt-v1
         unionstay-booking-order: mrt-prod-unionstay-booking-order-v1
-        eps-booking-agent-history: mrt-prod-eps-booking-agent-history-v1
         unionstay-property-mrt-discount-types-update: mrt-prod-unionstay-property-mrt-discount-types-update-v1
