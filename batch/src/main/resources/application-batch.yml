@@ -1,0 +1,84 @@
+myrealtrip:
+  staynet:
+    context: batch
+spring:
+  main:
+    lazy-initialization: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+logging:
+  level:
+    root: info
+    "org.*": info
+    "com.*": info
+---
+spring:
+  config:
+    activate:
+      on-profile: dev, dev01, dev02
+logging:
+  level:
+    root: info
+    "org.*": info
+    "com.*": info
+---
+spring:
+  config:
+    activate:
+      on-profile: test, test01, test02
+logging:
+  level:
+    root: info
+    "org.*": info
+    "com.*": info
+---
+spring:
+  config:
+    activate:
+      on-profile: "stage"
+logging:
+  level:
+    root: info
+    "org.*": info
+    "com.*": info
+
+myrealtrip:
+  datasource:
+    read-write:
+      username:
+      password:
+      extra:
+        maximum-pool-size: 10
+    read-only:
+      username:
+      password:
+      extra:
+        maximum-pool-size: 10
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+logging:
+  level:
+    root: info
+    "org.*": info
+    "com.*": info
+
+myrealtrip:
+  datasource:
+    read-write:
+      username:
+      password:
+      extra:
+        maximum-pool-size: 10
+    read-only:
+      username:
+      password:
+      extra:
+        maximum-pool-size: 10

@@ -5,4 +5,5 @@ include 'common'
 include 'outbound'
 include 'api'
 include 'consumer'
+include 'batch'
 
