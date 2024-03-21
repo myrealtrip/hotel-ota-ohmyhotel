@@ -1,0 +1,151 @@
+server:
+  shutdown: graceful
+spring:
+  lifecycle:
+    timeout-per-shutdown-phase: 90s
+
+myrealtrip:
+  staynet:
+    context: consumer
+
+management:
+  server:
+    port: 9405
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  metrics:
+    distribution:
+      percentiles:
+        http.server.requests: 0.5, 0.95, 0.99
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "local"
+
+logging:
+  level:
+    root: info
+    "org.*": info
+    "com.*": info
+  file:
+    name: /myrealtrip/logs/tomcat/catalina.out
+  logback:
+    rollingpolicy:
+      max-history: 5
+      total-size-cap: 10GB
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "dev"
+        - "dev01"
+        - "dev02"
+logging:
+  level:
+    root: info
+    "org.*": info
+    "com.*": info
+  file:
+    name: /myrealtrip/logs/tomcat/catalina.out
+  logback:
+    rollingpolicy:
+      max-history: 5
+      total-size-cap: 10GB
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "test"
+        - "test01"
+        - "test02"
+logging:
+  level:
+    root: info
+    "org.*": info
+    "com.*": info
+  file:
+    name: /myrealtrip/logs/tomcat/catalina.out
+  logback:
+    rollingpolicy:
+      max-history: 5
+      total-size-cap: 10GB
+---
+spring:
+  config:
+    activate:
+      on-profile: "stage"
+logging:
+  level:
+    root: warn
+    "org.*": warn
+    "com.*": warn
+    "com.myrealtrip.staynet.*": info
+  file:
+    name: /myrealtrip/logs/tomcat/catalina.out
+  logback:
+    rollingpolicy:
+      max-history: 5
+      total-size-cap: 10GB
+
+myrealtrip:
+  datasource:
+    read-write:
+      jdbc-url: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gEtQz3Vh1qI2hlfdhmewWLXAAABFTCCAREGCSqGSIb3DQEHBqCCAQIwgf8CAQAwgfkGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMDWCtgmaLST3cvNSDAgEQgIHLkQGfxZ1/AGI01HZu5V2ghTZcKYU0xMesgFV7Guo3gpMaX0MhEJLN1R46ITVn8E6ADnNvJDnSdTu3hdMasGgoA+D9veYXpHP3HOypOsQqaaOubuUA7QdQ0RifPeLb+tzkSeMOnMz440OEWxCqblv6wZAqOjt/qMEO+rYwd5PhnHdlTxYK/hvN22RZgzvlwRfo5eOmEIoPhIRurzApHJhma9sKTSUG5vhrO7CD5cJSIPKYJPdIzU7qogOTD6FRu95k/Lpo6p6NCT72jJU=
+      username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gFWr+z5NvViCYJvhL3O6bBIAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMI1lWjTiKY9gkHLSIAgEQgCsy9ByvWDIqhRzU+K+OnQ1dEBAr88F9yy+MRj1gX/h67TVwuBTbsGu272wN
+      password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gF9WDCYI4Nopxy3RkzwkaN9AAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMOtsACoAfwJQVIT4UAgEQgCuV2sqqUyXWgTpWj5n83iW7iZgMt7Zd02C/e65nthN+gLgReKObDdAbW54I
+      pool-name: hikari-cp
+      extra:
+        maximum-pool-size: 50
+        data-source-properties:
+          cachePrepStmts: true
+          prepStmtCacheSize: 250
+          prepStmtCacheSqlLimit: 2048
+          useServerPrepStmts: true
+    read-only:
+      jdbc-url: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gFkeQavQESVh8cxLQOA8p7oAAABGTCCARUGCSqGSIb3DQEHBqCCAQYwggECAgEAMIH8BgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDEz0Gb0SBJ0TXg834QIBEICBzudVppe2Z5O1duMH3iRhTNw/KUpCbCFHclwumdHzj7r1URYpsXEOjYGm7Czu/c+tJKGU7H20CepP5YdsBhAapGQMRsxfh4FSjOpjJu4bnAgdfmEuS1lMqXUCXzDtJSFmqfUJSlemRbUzp0+avfgr3fxvnqDg/4w2kCeMUlQF6y2Aw723+UbUYyGbdx6I+zaooA5mBKI61ngsVnXgerWFWQyRbSrgmPFtyJpRZHNuUWX0McrCKwUmHWkmb+/IS5MIKzsy5izB1c4ElXu/bJN1
+      username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gFWr+z5NvViCYJvhL3O6bBIAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMI1lWjTiKY9gkHLSIAgEQgCsy9ByvWDIqhRzU+K+OnQ1dEBAr88F9yy+MRj1gX/h67TVwuBTbsGu272wN
+      password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gF9WDCYI4Nopxy3RkzwkaN9AAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMOtsACoAfwJQVIT4UAgEQgCuV2sqqUyXWgTpWj5n83iW7iZgMt7Zd02C/e65nthN+gLgReKObDdAbW54I
+      pool-name: hikari-cp-slave
+      extra:
+        maximum-pool-size: 50
+        data-source-properties:
+          cachePrepStmts: true
+          prepStmtCacheSize: 250
+          prepStmtCacheSqlLimit: 2048
+          useServerPrepStmts: true
+---
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+logging:
+  level:
+    root: warn
+    "org.*": warn
+    "com.*": warn
+    "com.myrealtrip.staynet.*": info
+  file:
+    name: /myrealtrip/logs/tomcat/catalina.out
+  logback:
+    rollingpolicy:
+      max-history: 14
+      total-size-cap: 10GB
+
+myrealtrip:
+  datasource:
+    read-write:
+      username:
+      password:
+      extra:
+        maximum-pool-size: 50
+    read-only:
+      username:
+      password:
+      extra:
+        maximum-pool-size: 50

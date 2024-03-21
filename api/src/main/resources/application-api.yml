@@ -156,9 +156,13 @@ myrealtrip:
     read-write:
       username:
       password:
+      extra:
+        maximum-pool-size: 50
     read-only:
       username:
       password:
+      extra:
+        maximum-pool-size: 50
 ---
 spring:
   config:
@@ -181,6 +185,10 @@ myrealtrip:
     read-write:
       username:
       password:
+      extra:
+        maximum-pool-size: 50
     read-only:
       username:
       password:
+      extra:
+        maximum-pool-size: 50

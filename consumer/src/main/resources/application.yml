@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    include:
+      - consumer
+      - config-db
+      - config-kafka
+      - srt-common
+      - outbound
+      - core
