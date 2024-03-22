@@ -9,6 +9,12 @@ ohmyhotel:
       read-timeout: 10
       response-timeout: 10
       max-in-memory-size: -1
+    static-hotel-bulk-list:
+      connect-timeout: 10
+      write-timeout: 10
+      read-timeout: 30
+      response-timeout: 30
+      max-in-memory-size: -1
 
 myrealtrip:
   api:

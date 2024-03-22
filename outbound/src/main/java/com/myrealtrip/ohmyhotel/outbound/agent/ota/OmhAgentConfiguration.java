@@ -2,7 +2,6 @@ package com.myrealtrip.ohmyhotel.outbound.agent.ota;
 
 import com.myrealtrip.ohmyhotel.outbound.agent.common.WebClientFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,5 +17,10 @@ public class OmhAgentConfiguration {
     @Bean
     public WebClient omhHealthCheckWebClient() {
         return WebClientFactory.createDefaultWebClient(properties.getHealthCheck(), properties.getBaseUrl());
+    }
+
+    @Bean
+    public WebClient omhStaticHotelBulkListWebClient() {
+        return WebClientFactory.createDefaultWebClient(properties.getStaticHotelBulkList(), properties.getBaseUrl());
     }
 }

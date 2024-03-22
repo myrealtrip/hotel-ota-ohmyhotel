@@ -18,6 +18,7 @@ public class OmhAgentProperties {
     private String secret;
 
     private AgentProperties healthCheck;
+    private AgentProperties staticHotelBulkList;
 
     public String getDecryptedApiKey(String profile) {
         return CipherDecryptor.decrypt(profile, apiKey);
