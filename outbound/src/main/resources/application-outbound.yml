@@ -15,6 +15,12 @@ ohmyhotel:
       read-timeout: 30
       response-timeout: 30
       max-in-memory-size: -1
+    static-hotel-info-list:
+      connect-timeout: 10
+      write-timeout: 10
+      read-timeout: 30
+      response-timeout: 30
+      max-in-memory-size: -1
 
 myrealtrip:
   api:

@@ -23,4 +23,9 @@ public class OmhAgentConfiguration {
     public WebClient omhStaticHotelBulkListWebClient() {
         return WebClientFactory.createDefaultWebClient(properties.getStaticHotelBulkList(), properties.getBaseUrl());
     }
+
+    @Bean
+    public WebClient omhStaticHotelInfoListWebClient() {
+        return WebClientFactory.createDefaultWebClient(properties.getStaticHotelInfoList(), properties.getBaseUrl());
+    }
 }
