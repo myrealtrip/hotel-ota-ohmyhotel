@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol;
+package com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myrealtrip.ohmyhotel.enumarate.Language;

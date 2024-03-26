@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CancellationPolicy {
+public class OmhCancellationPolicy {
 
     private Boolean isNonRefundable;
 
@@ -27,14 +27,14 @@ public class CancellationPolicy {
 
     private PenaltyBasis penaltyBasis;
 
-    private List<Policy> policies;
+    private List<OmhCancellationPolicyDetail> policies;
 
     @SuperBuilder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class Policy {
+    public static class OmhCancellationPolicyDetail {
 
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime fromDateTime;

@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol;
+package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myrealtrip.ohmyhotel.enumarate.Language;
@@ -11,7 +11,7 @@ import java.util.List;
 
 @Builder
 @Getter
-public class OmhHotelsAvailabilityRequest {
+public class OmhRoomsAvailabilityRequest {
 
     @Builder.Default
     private String nationalityCode = "KR";
@@ -24,9 +24,9 @@ public class OmhHotelsAvailabilityRequest {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate checkOutDate;
 
-    private List<RoomGuest> rooms;
+    private List<OmhRoomGuest> rooms;
 
     private RateType rateType;
 
-    private List<Long> hotelCodes;
+    private Long hotelCode;
 }

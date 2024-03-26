@@ -17,18 +17,18 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class NightlyAmount {
+public class OmhNightlyAmount {
 
     private Integer roomNo;
 
-    private List<Amount> amounts;
+    private List<OmhAmount> amounts;
 
     @SuperBuilder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class Amount {
+    public static class OmhAmount {
 
         @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate date;

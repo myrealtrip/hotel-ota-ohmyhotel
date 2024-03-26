@@ -2,9 +2,8 @@ package com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo;
 
 import com.myrealtrip.ohmyhotel.outbound.agent.common.CircuitBreakerFactory;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.OmhAgentSupport;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.OmhStaticBulkHotelListResponse;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.OmhStaticHotelInfoListRequest;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.OmhStaticHotelInfoListResponse;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.request.OmhStaticHotelInfoListRequest;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response.OmhStaticHotelInfoListResponse;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.reactor.circuitbreaker.operator.CircuitBreakerOperator;
 import org.springframework.stereotype.Component;

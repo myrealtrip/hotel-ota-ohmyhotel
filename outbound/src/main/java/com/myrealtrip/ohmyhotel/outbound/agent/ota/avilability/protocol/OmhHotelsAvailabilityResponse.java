@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
 import com.myrealtrip.ohmyhotel.enumarate.PromotionType;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.NightlyAmount;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhNightlyAmount;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCommonResponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -108,9 +108,9 @@ public class OmhHotelsAvailabilityResponse extends OmhCommonResponse {
 
         private BigDecimal totalMspAmount;
 
-        private List<NightlyAmount> nightly;
+        private List<OmhNightlyAmount> nightly;
 
-        private CancellationPolicy cancellationPolicy;
+        private OmhCancellationPolicy cancellationPolicy;
     }
 
 }

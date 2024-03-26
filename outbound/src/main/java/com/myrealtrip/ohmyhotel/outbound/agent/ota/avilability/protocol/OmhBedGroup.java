@@ -15,18 +15,18 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BedGroup {
+public class OmhBedGroup {
 
     private Integer bedGroupNo;
 
-    private List<Bed> beds;
+    private List<OmhBed> beds;
 
     @SuperBuilder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class Bed {
+    public static class OmhBed {
 
         private Integer bedNo;
 

@@ -1,9 +1,10 @@
-package com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol;
+package com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.myrealtrip.ohmyhotel.enumarate.HotelStatus;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCommonResponse;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response.OmhHotelFacility;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

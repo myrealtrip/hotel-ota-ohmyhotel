@@ -1,8 +1,7 @@
 package com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo;
 
 import com.myrealtrip.ohmyhotel.outbound.AgentTestContext;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.OmhStaticBulkHotelListResponse;
-import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response.OmhStaticBulkHotelListResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -12,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Disabled
 @SpringBootTest(classes = AgentTestContext.class, properties = "spring.profiles.active=dev")

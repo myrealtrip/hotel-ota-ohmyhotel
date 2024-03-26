@@ -22,17 +22,24 @@ ohmyhotel:
       response-timeout: 30
       max-in-memory-size: -1
     hotels-availability:
-      connect-timeout: 10
-      write-timeout: 10
-      read-timeout: 30
-      response-timeout: 30
+      connect-timeout: 5
+      write-timeout: 5
+      read-timeout: 10
+      response-timeout: 10
       max-in-memory-size: -1
     rooms-availability:
-      connect-timeout: 10
-      write-timeout: 10
-      read-timeout: 30
-      response-timeout: 30
+      connect-timeout: 5
+      write-timeout: 5
+      read-timeout: 10
+      response-timeout: 10
       max-in-memory-size: -1
+    room-info:
+      connect-timeout: 5
+      write-timeout: 5
+      read-timeout: 10
+      response-timeout: 10
+      max-in-memory-size: -1
+
 myrealtrip:
   api:
     unionstay:

@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol;
+package com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
@@ -12,17 +12,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class RoomOccupancy {
-
-    private Integer minAdultCount;
-
-    private Integer minChildCount;
-
-    private Integer minSumCount;
-
-    private Integer maxAdultCount;
-
-    private Integer maxChildCount;
-
-    private Integer maxSumCount;
+public class OmhHotelFacility {
+    private String facilityCode;
+    private String facilityName;
 }

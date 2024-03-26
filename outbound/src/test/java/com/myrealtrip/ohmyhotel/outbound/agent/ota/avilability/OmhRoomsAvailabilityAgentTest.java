@@ -3,9 +3,9 @@ package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability;
 import com.myrealtrip.ohmyhotel.enumarate.Language;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
 import com.myrealtrip.ohmyhotel.outbound.AgentTestContext;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityRequest;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomsAvailabilityRequest;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.RoomGuest;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomGuest;
 import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
@@ -17,7 +17,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @Disabled
 @SpringBootTest(classes = AgentTestContext.class, properties = "spring.profiles.active=dev")
@@ -33,7 +32,7 @@ class OmhRoomsAvailabilityAgentTest {
             .language(Language.KO)
             .checkInDate(LocalDate.now().plusDays(30))
             .checkOutDate(LocalDate.now().plusDays(32))
-            .rooms(List.of(RoomGuest.builder()
+            .rooms(List.of(OmhRoomGuest.builder()
                                .adultCount(2)
                                .childCount(0)
                                .childAges(List.of())
