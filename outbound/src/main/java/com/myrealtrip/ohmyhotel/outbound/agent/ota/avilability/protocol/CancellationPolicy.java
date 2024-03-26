@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol;
+package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;

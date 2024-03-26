@@ -11,7 +11,7 @@ import java.util.List;
 
 @Builder
 @Getter
-public class OmhHotelsAvailabilityRequest {
+public class OmhRoomsAvailabilityRequest {
 
     @Builder.Default
     private String nationalityCode = "KR";
@@ -28,5 +28,5 @@ public class OmhHotelsAvailabilityRequest {
 
     private RateType rateType;
 
-    private List<Long> hotelCodes;
+    private Long hotelCode;
 }

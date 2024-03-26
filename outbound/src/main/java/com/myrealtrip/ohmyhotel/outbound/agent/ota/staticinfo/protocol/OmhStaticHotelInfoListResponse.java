@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.myrealtrip.ohmyhotel.enumarate.HotelStatus;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCommonResponse;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhFacility;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -85,7 +84,7 @@ public class OmhStaticHotelInfoListResponse extends OmhCommonResponse {
 
         private OmhHotelDescriptions descriptions;
 
-        private List<OmhFacility> facilities;
+        private List<OmhHotelFacility> facilities;
 
         private List<OmhHotelPhoto> photos;
     }

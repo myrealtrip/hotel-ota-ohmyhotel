@@ -6,6 +6,7 @@ import com.myrealtrip.ohmyhotel.enumarate.PromotionType;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.NightlyAmount;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCommonResponse;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.OmhHotelFacility;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,54 +21,26 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class OmhHotelsAvailabilityResponse extends OmhCommonResponse {
+public class OmhRoomsAvailabilityResponse extends OmhCommonResponse {
 
-    private List<HotelAvailability> hotels;
-
-    @SuperBuilder
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class HotelAvailability {
-
-        private Long hotelCode;
-
-        private String hotelName;
-
-        private String hotelNameByLanguage;
-
-        private String hotelType;
-
-        private String starRating;
-
-        private String zipCode;
-
-        private String address;
-
-        private String addressByLanguage;
-
-        private Double latitude;
-
-        private Double longitude;
-
-        private Boolean recommendYn;
-
-        private List<RoomSimpleAvailability> rooms;
-    }
+    private List<RoomAvailability> rooms;
 
     @SuperBuilder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class RoomSimpleAvailability {
+    public static class RoomAvailability {
 
         private String roomTypeCode;
 
         private String roomTypeName;
 
         private String roomTypeNameByLanguage;
+
+        private String roomTypeDescription;
+
+        private String roomTypeDescriptionByLanguage;
 
         private MealBasisCode mealBasisCode;
 
@@ -98,6 +71,10 @@ public class OmhHotelsAvailabilityResponse extends OmhCommonResponse {
 
         private String promotionInfoByLanguage;
 
+        private Double roomSizeMeter;
+
+        private Double roomSizeFeet;
+
         private RateType rateType;
 
         private Integer leftRooms;
@@ -111,6 +88,31 @@ public class OmhHotelsAvailabilityResponse extends OmhCommonResponse {
         private List<NightlyAmount> nightly;
 
         private CancellationPolicy cancellationPolicy;
+
+        private RoomOccupancy occupancy;
+
+        private List<OmhRoomFacility> facilities;
+
+        private List<BedGroup> bedGroups;
+
+        private ChildPolicy childPolicy;
     }
 
+    @SuperBuilder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class ChildPolicy {
+
+        private Integer infantAge;
+
+        private Integer childFromAge;
+
+        private Integer childToAge;
+
+        private Boolean freeStay;
+
+        private Integer minimumGuestAge;
+    }
 }

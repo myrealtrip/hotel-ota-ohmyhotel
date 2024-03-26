@@ -33,4 +33,9 @@ public class OmhAgentConfiguration {
     public WebClient omhHotelsAvailabilityWebClient() {
         return WebClientFactory.createDefaultWebClient(properties.getHotelsAvailability(), properties.getBaseUrl());
     }
+
+    @Bean
+    public WebClient omhRoomsAvailabilityWebClient() {
+        return WebClientFactory.createDefaultWebClient(properties.getRoomsAvailability(), properties.getBaseUrl());
+    }
 }

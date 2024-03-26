@@ -3,8 +3,8 @@ package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability;
 import com.myrealtrip.ohmyhotel.enumarate.Language;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
 import com.myrealtrip.ohmyhotel.outbound.AgentTestContext;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhHotelsAvailabilityRequest;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhHotelsAvailabilityResponse;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityRequest;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.RoomGuest;
 import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -17,18 +17,19 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Disabled
 @SpringBootTest(classes = AgentTestContext.class, properties = "spring.profiles.active=dev")
 @Slf4j
-class OmhHotelsAvailabilityAgentTest {
+class OmhRoomsAvailabilityAgentTest {
 
     @Autowired
-    private OmhHotelsAvailabilityAgent agent;
+    private OmhRoomsAvailabilityAgent agent;
 
     @Test
     void getAvailability() {
-        OmhHotelsAvailabilityRequest request = OmhHotelsAvailabilityRequest.builder()
+        OmhRoomsAvailabilityRequest request = OmhRoomsAvailabilityRequest.builder()
             .language(Language.KO)
             .checkInDate(LocalDate.now().plusDays(30))
             .checkOutDate(LocalDate.now().plusDays(32))
@@ -37,12 +38,12 @@ class OmhHotelsAvailabilityAgentTest {
                                .childCount(0)
                                .childAges(List.of())
                                .build()))
-            .hotelCodes(List.of(862813L))
+            .hotelCode(862813L)
             .rateType(RateType.STANDARD_RATE)
             .build();
 
-        OmhHotelsAvailabilityResponse response = agent.getAvailability(request);
-        assertThat(response.getHotels()).isNotNull();
+        OmhRoomsAvailabilityResponse response = agent.getAvailability(request);
+        assertThat(response.getRooms()).isNotNull();
         log.info("{}", ObjectMapperUtils.writeAsString(response));
     }
 }
