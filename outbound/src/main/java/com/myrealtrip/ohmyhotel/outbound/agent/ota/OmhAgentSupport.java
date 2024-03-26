@@ -3,12 +3,17 @@ package com.myrealtrip.ohmyhotel.outbound.agent.ota;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.exception.OmhApiException;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCommonResponse;
 import com.myrealtrip.ohmyhotel.utils.Sha256Utils;
+import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.ClientResponse;
+import reactor.core.publisher.Mono;
 
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
@@ -27,9 +32,14 @@ public class OmhAgentSupport {
 
     public <T extends OmhCommonResponse> T checkFail(T res, String uri) {
         if (!res.isSuccess()) {
-            throw new OmhApiException(uri, res);
+            throw new OmhApiException(uri, res, 200);
         }
         return res;
+    }
+
+    public Mono<OmhApiException> getOmhApiExceptionMono(String uri, ClientResponse res) {
+        return res.bodyToMono(OmhCommonResponse.class)
+            .map(omhCommonResponse -> new OmhApiException(uri, omhCommonResponse, res.rawStatusCode()));
     }
 
     public void setAuthHeader(HttpHeaders httpHeaders) {

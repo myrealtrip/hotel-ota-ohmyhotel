@@ -6,6 +6,7 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.reactor.circuitbreaker.operator.CircuitBreakerOperator;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -38,6 +39,7 @@ public class OmhRoomsAvailabilityAgent {
             .headers(omhAgentSupport::setAuthHeader)
             .bodyValue(request)
             .retrieve()
+            .onStatus(HttpStatus::isError, res -> omhAgentSupport.getOmhApiExceptionMono(URI, res))
             .bodyToMono(OmhRoomsAvailabilityResponse.class)
             .map(res -> omhAgentSupport.checkFail(res, URI))
             .transform(CircuitBreakerOperator.of(this.circuitBreaker));
