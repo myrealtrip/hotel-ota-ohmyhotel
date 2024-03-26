@@ -12,17 +12,23 @@ import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
-public enum HotelStatus {
-    ACTIVE("Active"), INACTIVE("Inactive");
+public enum PromotionType {
 
-    private static final Map<String, HotelStatus> LABEL_TO_HOTEL_STATUS = Arrays.stream(HotelStatus.values())
-        .collect(Collectors.toMap(HotelStatus::getLabel, Function.identity()));
+    EARLY_BIRD("Early_Bird"),
+    LAST_MINUTE("Last_Minute"),
+    MIN_NIGHTS("Min_Nights"),
+    NTH_NIGHT_FREE("Nth_Night_Free"),
+    HOTEL_PACKAGE("Hotel_Package"),
+    NONE("None");
+
+    private static final Map<String, PromotionType> LABEL_TO_PROMOTION_TYPE = Arrays.stream(PromotionType.values())
+        .collect(Collectors.toMap(PromotionType::getLabel, Function.identity()));
 
     private final String label;
 
     @JsonCreator
-    public static HotelStatus get(String label) {
-        return LABEL_TO_HOTEL_STATUS.get(label);
+    public static PromotionType get(String label) {
+        return LABEL_TO_PROMOTION_TYPE.get(label);
     }
 
     @JsonValue

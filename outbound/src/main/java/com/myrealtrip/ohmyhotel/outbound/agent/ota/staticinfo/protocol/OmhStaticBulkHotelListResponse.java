@@ -20,6 +20,7 @@ import java.util.List;
 public class OmhStaticBulkHotelListResponse extends OmhCommonResponse {
 
     private Integer hotelCount;
+
     private List<OmhBulkHotel> hotels;
 
     @Builder
@@ -28,21 +29,37 @@ public class OmhStaticBulkHotelListResponse extends OmhCommonResponse {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhBulkHotel {
+
         private Long hotelCode;
+
         private String hotelName;
-        private String status;
+
+        private HotelStatus status;
+
         private String starRating;
+
         private String hotelType;
+
         private String phoneNo;
+
         private String zipCode;
+
         private String address;
+
         private Double latitude;
+
         private Double longitude;
+
         private Boolean recommendYn;
+
         private String countryCode;
+
         private Long regionCode;
+
         private String regionName;
+
         private Boolean directContractYn;
+
         private String legacyHotelCode;
     }
 }

@@ -10,19 +10,21 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Getter
 @RequiredArgsConstructor
-public enum HotelStatus {
-    ACTIVE("Active"), INACTIVE("Inactive");
+@Getter
+public enum PenaltyBasis {
 
-    private static final Map<String, HotelStatus> LABEL_TO_HOTEL_STATUS = Arrays.stream(HotelStatus.values())
-        .collect(Collectors.toMap(HotelStatus::getLabel, Function.identity()));
+    FIRST_NIGHT("first_night"),
+    WHOLE_NIGHTS("whole_nights");
+
+    private static final Map<String, PenaltyBasis> LABEL_TO_PENALTY_BASIS = Arrays.stream(PenaltyBasis.values())
+        .collect(Collectors.toMap(PenaltyBasis::getLabel, Function.identity()));
 
     private final String label;
 
     @JsonCreator
-    public static HotelStatus get(String label) {
-        return LABEL_TO_HOTEL_STATUS.get(label);
+    public static PenaltyBasis get(String label) {
+        return LABEL_TO_PENALTY_BASIS.get(label);
     }
 
     @JsonValue

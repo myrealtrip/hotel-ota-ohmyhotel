@@ -12,17 +12,19 @@ import java.util.stream.Collectors;
 
 @Getter
 @RequiredArgsConstructor
-public enum HotelStatus {
-    ACTIVE("Active"), INACTIVE("Inactive");
+public enum RateOrAmount {
 
-    private static final Map<String, HotelStatus> LABEL_TO_HOTEL_STATUS = Arrays.stream(HotelStatus.values())
-        .collect(Collectors.toMap(HotelStatus::getLabel, Function.identity()));
+    RATE("rate"),
+    AMOUNT("amount");
+
+    private static final Map<String, RateOrAmount> LABEL_TO_RATE_OR_AMOUNT = Arrays.stream(RateOrAmount.values())
+        .collect(Collectors.toMap(RateOrAmount::getLabel, Function.identity()));
 
     private final String label;
 
     @JsonCreator
-    public static HotelStatus get(String label) {
-        return LABEL_TO_HOTEL_STATUS.get(label);
+    public static RateOrAmount get(String label) {
+        return LABEL_TO_RATE_OR_AMOUNT.get(label);
     }
 
     @JsonValue
