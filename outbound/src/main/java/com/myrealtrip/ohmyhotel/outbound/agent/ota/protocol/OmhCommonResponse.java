@@ -31,7 +31,7 @@ public class OmhCommonResponse {
 
     private String serviceTime;
 
-    private String status;
+//    private String status; OmhPreCheckResponse.status 와 겹쳐 주석처리
 
     private String errorCode;
 
@@ -39,6 +39,7 @@ public class OmhCommonResponse {
 
     private List<OmhError> errors;
 
+    @JsonIgnore
     public List<String> getAllErrorMessages() {
         List<String> errorMessages = new ArrayList<>();
         if (nonNull(this.errorMessage)) {

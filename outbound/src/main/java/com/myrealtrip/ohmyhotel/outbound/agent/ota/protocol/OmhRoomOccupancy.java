@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol;
+package com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
