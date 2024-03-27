@@ -1,12 +1,13 @@
-package com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol;
+package com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation;
 
 import com.myrealtrip.ohmyhotel.enumarate.Gender;
 import com.myrealtrip.ohmyhotel.enumarate.Language;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
 import com.myrealtrip.ohmyhotel.outbound.AgentTestContext;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhCreateBookingAgent;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.OmhRoomGuestDetail;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.request.OmhCreateBookingRequest;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.request.OmhCreateBookingRequest.OmhCreateBookingContactPerson;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.request.OmhCreateBookingRequest.OmhRoomGuestDetail;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.request.OmhCreateBookingRequest.OmhRoomGuestInfo;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhCreateBookingResponse;
 import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
@@ -21,7 +22,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = AgentTestContext.class, properties = "spring.profiles.active=dev")
 @Slf4j

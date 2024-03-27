@@ -5,6 +5,7 @@ import com.myrealtrip.ohmyhotel.enumarate.BookingRequestCode;
 import com.myrealtrip.ohmyhotel.enumarate.Gender;
 import com.myrealtrip.ohmyhotel.enumarate.Language;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.OmhRoomGuestDetail;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -68,20 +69,6 @@ public class OmhCreateBookingRequest {
         private Integer roomNo;
 
         private List<OmhRoomGuestDetail> guests;
-    }
-
-    @Builder
-    @Getter
-    public static class OmhRoomGuestDetail {
-
-        private String lastName;
-
-        private String firstName;
-
-        private Gender gender;
-
-        @JsonFormat(pattern = "yyyy-MM-dd")
-        private LocalDate birthday;
     }
 
     @Builder

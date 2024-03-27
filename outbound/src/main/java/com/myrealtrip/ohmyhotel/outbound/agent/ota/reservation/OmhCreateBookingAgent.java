@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol;
+package com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation;
 
 import com.myrealtrip.ohmyhotel.outbound.agent.common.CircuitBreakerFactory;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.OmhAgentSupport;

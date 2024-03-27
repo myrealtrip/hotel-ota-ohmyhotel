@@ -3,7 +3,7 @@ package com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.respons
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.myrealtrip.ohmyhotel.enumarate.PreCheckStatus;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCancellationPolicy;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCancelPolicy;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCommonResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhNightlyAmount;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhRoomOccupancy;
@@ -29,7 +29,7 @@ public class OmhPreCheckResponse extends OmhCommonResponse {
 
     private OmhPreCheckAmount amount;
 
-    private OmhCancellationPolicy cancellationPolicy;
+    private OmhCancelPolicy cancellationPolicy;
 
     @SuperBuilder
     @Getter
