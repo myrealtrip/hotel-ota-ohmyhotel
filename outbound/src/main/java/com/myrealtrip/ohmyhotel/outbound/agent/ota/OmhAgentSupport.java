@@ -30,16 +30,16 @@ public class OmhAgentSupport {
         this.secret = properties.getDecryptedSecret(profile);
     }
 
-    public <T extends OmhCommonResponse> T checkFail(T res, String uri) {
+    public <T extends OmhCommonResponse> T checkFail(T res, String apiName) {
         if (!res.isSuccess()) {
-            throw new OmhApiException(uri, res, 200);
+            throw new OmhApiException(apiName, res, 200);
         }
         return res;
     }
 
-    public Mono<OmhApiException> getOmhApiExceptionMono(String uri, ClientResponse res) {
+    public Mono<OmhApiException> getOmhApiExceptionMono(String apiName, ClientResponse res) {
         return res.bodyToMono(OmhCommonResponse.class)
-            .map(omhCommonResponse -> new OmhApiException(uri, omhCommonResponse, res.rawStatusCode()));
+            .map(omhCommonResponse -> new OmhApiException(apiName, omhCommonResponse, res.rawStatusCode()));
     }
 
     public void setAuthHeader(HttpHeaders httpHeaders) {

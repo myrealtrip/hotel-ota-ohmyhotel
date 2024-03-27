@@ -1,23 +1,28 @@
 package com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation;
 
+import com.myrealtrip.ohmyhotel.outbound.agent.common.AgentConstants;
 import com.myrealtrip.ohmyhotel.outbound.agent.common.CircuitBreakerFactory;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.OmhAgentSupport;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhHotelsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhHotelsAvailabilityRequest;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.exception.OmhApiException;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.request.OmhPreCheckRequest;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhPreCheckResponse;
+import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.reactor.circuitbreaker.operator.CircuitBreakerOperator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @Component
+@Slf4j
 public class OmhPreCheckAgent {
 
-    private static final String CIRCUIT_BREAKER_NAME = "OmhPreCheckAgent";
     private static final String URI = "/channel/ota/v2.0/reservation/precheck";
+    private static final String PRE_CHECK = "Pre Check";
 
     private final WebClient webClient;
     private final CircuitBreaker circuitBreaker;
@@ -28,11 +33,19 @@ public class OmhPreCheckAgent {
                                       OmhAgentSupport omhAgentSupport) {
         this.webClient = omhPreCheckWebClient;
         this.omhAgentSupport = omhAgentSupport;
-        this.circuitBreaker = circuitBreakerFactory.create(CIRCUIT_BREAKER_NAME);
+        this.circuitBreaker = circuitBreakerFactory.create(PRE_CHECK);
     }
 
     public OmhPreCheckResponse preCheck(OmhPreCheckRequest request) {
-        return preCheckMono(request).block();
+        try {
+            return preCheckMono(request).block();
+        } catch (OmhApiException e) {
+            log.error(AgentConstants.LOG_FORMAT, PRE_CHECK, ObjectMapperUtils.writeAsString(request), ObjectMapperUtils.writeAsString(e.getOmhCommonResponse()));
+            throw e;
+        } catch (Throwable e) {
+            log.error(AgentConstants.LOG_FORMAT, PRE_CHECK, ObjectMapperUtils.writeAsString(request), "");
+            throw e;
+        }
     }
 
     public Mono<OmhPreCheckResponse> preCheckMono(OmhPreCheckRequest request) {
@@ -41,9 +54,9 @@ public class OmhPreCheckAgent {
             .headers(omhAgentSupport::setAuthHeader)
             .bodyValue(request)
             .retrieve()
-            .onStatus(HttpStatus::isError, res -> omhAgentSupport.getOmhApiExceptionMono(URI, res))
+            .onStatus(HttpStatus::isError, res -> omhAgentSupport.getOmhApiExceptionMono(PRE_CHECK, res))
             .bodyToMono(OmhPreCheckResponse.class)
-            .map(res -> omhAgentSupport.checkFail(res, URI))
+            .map(res -> omhAgentSupport.checkFail(res, PRE_CHECK))
             .transform(CircuitBreakerOperator.of(this.circuitBreaker));
     }
 }

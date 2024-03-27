@@ -41,7 +41,7 @@ class OmhRoomsAvailabilityAgentTest {
             .rateType(RateType.STANDARD_RATE)
             .build();
 
-        OmhRoomsAvailabilityResponse response = agent.getAvailability(request);
+        OmhRoomsAvailabilityResponse response = agent.getRoomsAvailability(request);
         assertThat(response.getRooms()).isNotNull();
         log.info("{}", ObjectMapperUtils.writeAsString(response));
     }

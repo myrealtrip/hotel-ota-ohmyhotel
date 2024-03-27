@@ -24,7 +24,7 @@ import java.time.LocalDate;
 public class OmhBookingDetailAgent {
 
     private static final String URI = "/channel/ota/v2.0/reservation/book/{channelBookingCode}";
-    private static final String BOOKING_DETAIL = "Booking-Detail";
+    private static final String BOOKING_DETAIL = "Booking Detail";
 
     private final WebClient webClient;
     private final CircuitBreaker circuitBreaker;

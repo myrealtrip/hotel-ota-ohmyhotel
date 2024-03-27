@@ -41,7 +41,7 @@ class OmhHotelsAvailabilityAgentTest {
             .rateType(RateType.STANDARD_RATE)
             .build();
 
-        OmhHotelsAvailabilityResponse response = agent.getAvailability(request);
+        OmhHotelsAvailabilityResponse response = agent.getHotelsAvailability(request);
         assertThat(response.getHotels()).isNotNull();
         log.info("{}", ObjectMapperUtils.writeAsString(response));
     }
