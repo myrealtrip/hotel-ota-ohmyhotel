@@ -24,7 +24,7 @@ public class OmhHotelsAvailabilityRequest {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate checkOutDate;
 
-    private List<OmhRoomGuest> rooms;
+    private List<OmhRoomGuestCount> rooms;
 
     private RateType rateType;
 

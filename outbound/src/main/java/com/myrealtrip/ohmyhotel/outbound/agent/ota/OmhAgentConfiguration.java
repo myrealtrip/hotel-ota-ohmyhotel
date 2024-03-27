@@ -48,4 +48,9 @@ public class OmhAgentConfiguration {
     public WebClient omhPreCheckWebClient() {
         return WebClientFactory.createDefaultWebClient(properties.getPreCheck(), properties.getBaseUrl());
     }
+
+    @Bean
+    public WebClient omhCreateBookingWebClient() {
+        return WebClientFactory.createDefaultWebClient(properties.getCreateBooking(), properties.getBaseUrl());
+    }
 }

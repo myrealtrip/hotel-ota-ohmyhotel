@@ -5,7 +5,7 @@ import com.myrealtrip.ohmyhotel.enumarate.RateType;
 import com.myrealtrip.ohmyhotel.outbound.AgentTestContext;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomsAvailabilityRequest;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomGuest;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomGuestCount;
 import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
@@ -32,7 +32,7 @@ class OmhRoomsAvailabilityAgentTest {
             .language(Language.KO)
             .checkInDate(LocalDate.now().plusDays(30))
             .checkOutDate(LocalDate.now().plusDays(32))
-            .rooms(List.of(OmhRoomGuest.builder()
+            .rooms(List.of(OmhRoomGuestCount.builder()
                                .adultCount(2)
                                .childCount(0)
                                .childAges(List.of())

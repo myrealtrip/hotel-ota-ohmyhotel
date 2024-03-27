@@ -24,6 +24,7 @@ public class OmhAgentProperties {
     private AgentProperties roomsAvailability;
     private AgentProperties roomInfo;
     private AgentProperties preCheck;
+    private AgentProperties createBooking;
 
     public String getDecryptedApiKey(String profile) {
         return CipherDecryptor.decrypt(profile, apiKey);

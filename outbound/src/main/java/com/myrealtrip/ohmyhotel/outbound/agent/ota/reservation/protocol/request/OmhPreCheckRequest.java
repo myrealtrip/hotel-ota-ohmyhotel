@@ -3,7 +3,7 @@ package com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.request
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.myrealtrip.ohmyhotel.enumarate.Language;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomGuest;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomGuestCount;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -32,7 +32,7 @@ public class OmhPreCheckRequest {
 
     private String ratePlanCode;
 
-    private List<OmhRoomGuest> rooms;
+    private List<OmhRoomGuestCount> rooms;
 
     private RateType rateType;
 

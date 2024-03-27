@@ -3,11 +3,10 @@ package com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation;
 import com.myrealtrip.ohmyhotel.enumarate.Language;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
 import com.myrealtrip.ohmyhotel.outbound.AgentTestContext;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomGuest;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomGuestCount;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.request.OmhPreCheckRequest;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhPreCheckResponse;
 import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
-import com.myrealtrip.unionstay.dto.hotelota.precheck.request.PreCheckRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -19,7 +18,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = AgentTestContext.class, properties = "spring.profiles.active=dev")
 @Slf4j
@@ -35,7 +33,7 @@ class OmhPreCheckAgentTest {
             .language(Language.KO)
             .checkInDate(LocalDate.now().plusDays(30))
             .checkOutDate(LocalDate.now().plusDays(32))
-            .rooms(List.of(OmhRoomGuest.builder()
+            .rooms(List.of(OmhRoomGuestCount.builder()
                                .adultCount(2)
                                .childCount(0)
                                .childAges(List.of())
