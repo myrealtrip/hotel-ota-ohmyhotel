@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Getter
 public class OmhApiException extends RuntimeException {
 
-    private static final String MESSAGE = "[%s] Ohmyhotel %s API Error: %s";
+    private static final String MESSAGE = "OhMyHotel [%s] API %s Error: %s";
 
     private final OmhCommonResponse omhCommonResponse;
 
