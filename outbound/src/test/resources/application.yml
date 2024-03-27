@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    include:
+      - config-kafka
+      - srt-common
+      - outbound
