@@ -65,7 +65,7 @@ public class OmhBookingDetailResponse extends OmhCommonResponse {
 
     private String freeBreakfastName;
 
-    private OmhBookingDetailRoomGuestInfo rooms;
+    private List<OmhBookingDetailRoomGuestInfo> rooms;
 
     private List<OmhBookingDetailRequest> requests;
 
