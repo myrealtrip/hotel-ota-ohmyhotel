@@ -1,7 +1,6 @@
 package com.myrealtrip.ohmyhotel.core.domain.hotel.converter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Facility;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Photo;
 import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import org.apache.commons.lang3.StringUtils;

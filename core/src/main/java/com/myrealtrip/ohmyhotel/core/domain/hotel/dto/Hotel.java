@@ -51,7 +51,9 @@ public class Hotel {
 
     private String zipCode;
 
-    private String address;
+    private String koAddress;
+
+    private String enAddress;
 
     private String homepageUrl;
 

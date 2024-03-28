@@ -73,8 +73,11 @@ public class HotelEntity extends BaseEntity {
     @Column(name = "zip_code")
     private String zipCode;
 
-    @Column(name = "address")
-    private String address;
+    @Column(name = "ko_address")
+    private String koAddress;
+
+    @Column(name = "en_address")
+    private String enAddress;
 
     @Column(name = "homepage_url")
     private String homepageUrl;
