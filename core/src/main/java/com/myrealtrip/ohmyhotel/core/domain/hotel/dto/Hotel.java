@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.core.domain.hotel.dto;
 
+import com.myrealtrip.ohmyhotel.core.domain.ModifyInfo;
 import com.myrealtrip.ohmyhotel.enumarate.HotelStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,11 +17,11 @@ import java.util.List;
 
 @Getter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
-public class Hotel {
+@SuperBuilder
+public class Hotel extends ModifyInfo {
 
     private Long hotelId;
 

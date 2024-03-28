@@ -9,8 +9,11 @@ import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.HotelDescriptions;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Photo;
 import com.myrealtrip.ohmyhotel.enumarate.HotelStatus;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -22,7 +25,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "hotel")
 public class HotelEntity extends BaseEntity {
