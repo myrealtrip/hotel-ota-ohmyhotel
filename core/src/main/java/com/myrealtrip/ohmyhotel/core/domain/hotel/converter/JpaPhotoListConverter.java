@@ -6,9 +6,11 @@ import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 import java.util.Collections;
 import java.util.List;
 
+@Converter
 public class JpaPhotoListConverter implements AttributeConverter<List<Photo>, String> {
 
     private final TypeReference<List<Photo>> ref = new TypeReference<>() {};

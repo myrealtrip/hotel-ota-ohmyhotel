@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.core.provider.hotel;
+package com.myrealtrip.ohmyhotel.core.provider.hotel.mapper;
 
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Hotel;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.entity.HotelEntity;
