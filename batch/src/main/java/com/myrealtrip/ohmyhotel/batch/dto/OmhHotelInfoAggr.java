@@ -13,4 +13,8 @@ public class OmhHotelInfoAggr {
     private final OmhHotelInfo koInfo;
 
     private final OmhHotelInfo enInfo;
+
+    public Long getHotelCode() {
+        return koInfo.getHotelCode();
+    }
 }
