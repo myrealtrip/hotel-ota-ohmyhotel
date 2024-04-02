@@ -31,7 +31,7 @@ public class Hotel extends ModifyInfo {
 
     private HotelStatus status;
 
-    private String regionCode;
+    private Long regionCode;
 
     private String regionName;
 
@@ -63,9 +63,9 @@ public class Hotel extends ModifyInfo {
 
     private String checkOutTime;
 
-    private LocalDate establishedDate;
+    private String establishedDate;
 
-    private LocalDate renovatedDate;
+    private String renovatedDate;
 
     private Double latitude;
 

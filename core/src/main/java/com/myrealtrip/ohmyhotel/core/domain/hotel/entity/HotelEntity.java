@@ -27,7 +27,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -49,7 +49,7 @@ public class HotelEntity extends BaseEntity {
     private HotelStatus status;
 
     @Column(name = "region_code")
-    private String regionCode;
+    private Long regionCode;
 
     @Column(name = "region_name")
     private String regionName;
@@ -97,10 +97,10 @@ public class HotelEntity extends BaseEntity {
     private String checkOutTime;
 
     @Column(name = "established_date")
-    private LocalDate establishedDate;
+    private String establishedDate;
 
     @Column(name = "renovated_date")
-    private LocalDate renovatedDate;
+    private String renovatedDate;
 
     @Column(name = "latitude")
     private Double latitude;

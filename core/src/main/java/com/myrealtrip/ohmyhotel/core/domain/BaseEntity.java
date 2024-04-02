@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public abstract class BaseEntity {
 
     @Column(name = "created_by", updatable = false)
