@@ -1,0 +1,36 @@
+@Library('mrt3-jenkins-library@hotelota-batch') _
+
+pipeline {
+  agent any
+
+  stages {
+    stage('Build') {
+      steps {
+        mrtBuildForJar()
+      }
+    }
+    stage('Push Revision') {
+      steps {
+        mrtPushRevisionForJarCustomHotelotaBatch()
+      }
+    }
+    stage('Deploy') {
+      steps {
+        mrtDeploy()
+      }
+    }
+  }
+
+  post {
+    always {
+      mrtSlackNotifier(currentBuild.currentResult)
+      cleanWs()
+    }
+  }
+
+  environment {
+    SUB_MODULE_NAME = 'batch'
+    APPLICATION_NAME = 'mrt-test-ohmyhotel-batch'
+    SPRING_PROFILES_ACTIVE = 'test'
+  }
+}
