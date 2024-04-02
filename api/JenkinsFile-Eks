@@ -1,0 +1,79 @@
+@Library('mrt3-jenkins-library@master') _
+
+def buildResult
+
+pipeline {
+    agent any
+
+    options {
+        disableConcurrentBuilds()
+        buildDiscarder(
+            logRotator(
+                numToKeepStr: '60',
+                daysToKeepStr: '120',
+            )
+        )
+    }
+
+    parameters {
+        choice(
+            name: 'STACK_NAME',
+            choices: ['dev', 'dev01', 'dev02', 'test', 'test01', 'test02'],
+            description: '배포 환경을 선택하세요'
+        )
+        gitParameter(
+            name: 'BRANCH',
+            type: 'PT_BRANCH',
+            branchFilter: 'origin/(.*)',
+            sortMode: 'ASCENDING_SMART',
+            selectedValue: 'DEFAULT',
+            listSize: '15',
+            quickFilterEnabled: 'true',
+            defaultValue: 'develop',
+            description: '배포할 브랜치를 선택하세요'
+        )
+    }
+
+    stages {
+        stage('Docker Build') {
+            steps {
+                script {
+                    buildResult = mrtEksBuildDocker([
+                        project            : 'hotel-ota-ohmyhotel',
+                        component          : 'api',
+                        dockerfile         : 'Dockerfile-spring-boot',
+                        dockerfileBuildArgs: [
+                            'SUB_MODULE_NAME': 'api',
+                            'JAVA_VERSION'   : '11'
+                        ]
+                    ])
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    mrtEksDeploy([
+                        project     : 'hotel-ota-ohmyhotel',
+                        component   : 'api',
+                        stack       : "${params.STACK_NAME}",
+                        dryRun      : "false",
+                        templatePath: '/specs/hotel-ota-ohmyhotel/api/dev.jsonnet',
+                        dynamicVars : [
+                            'DYNAMIC_TAG': buildResult.tag
+                        ]
+                    ])
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                currentBuild.description = "[${STACK_NAME}] ${BRANCH} tag:${buildResult.tag}"
+            }
+        }
+    }
+}
