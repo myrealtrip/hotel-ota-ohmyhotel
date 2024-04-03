@@ -132,4 +132,8 @@ public class HotelEntity extends BaseEntity {
     @Column(name = "photos")
     @Convert(converter = JpaPhotoListConverter.class)
     private List<Photo> photos;
+
+    public void updateStatus(HotelStatus status) {
+        this.status = status;
+    }
 }

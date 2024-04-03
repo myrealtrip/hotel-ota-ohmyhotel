@@ -10,4 +10,6 @@ public interface HotelCustomRepository {
     List<HotelModifyInfo> findHotelModifyInfoByHotelIds(List<Long> hotelIds);
 
     List<HotelEntity> findByHotelIds(List<Long> hotelIds);
+
+    List<Long> getAllHotelIds();
 }

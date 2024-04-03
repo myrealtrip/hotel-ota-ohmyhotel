@@ -2,6 +2,7 @@ package com.myrealtrip.ohmyhotel.batch.writer;
 
 import com.myrealtrip.ohmyhotel.batch.dto.OmhHotelInfoAggr;
 import com.myrealtrip.ohmyhotel.batch.mapper.OmhHotelInfoMapper;
+import com.myrealtrip.ohmyhotel.batch.storage.HotelCodeStorage;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Hotel;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.HotelModifyInfo;
 import com.myrealtrip.ohmyhotel.core.provider.hotel.HotelProvider;
@@ -17,12 +18,16 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * 호텔 상세정보를 DB 에 저장한다.
+ */
 @RequiredArgsConstructor
 public class HotelInfoWriter implements ItemWriter<Long> {
 
     private final HotelProvider hotelProvider;
     private final OmhHotelInfoMapper omhHotelInfoMapper;
     private final OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent;
+    private final HotelCodeStorage informationExistHotelCodeStorage;
 
 
     @Override
@@ -41,6 +46,7 @@ public class HotelInfoWriter implements ItemWriter<Long> {
             .collect(Collectors.toList());
 
         hotelProvider.upsert(hotels);
+        informationExistHotelCodeStorage.saveAll(hotelIds);
     }
 
     private List<OmhHotelInfoAggr> getOmhHotelInfoAggrs(List<Long> hotelCodes) {

@@ -23,18 +23,18 @@ import java.util.stream.Collectors;
 @Slf4j
 public class HotelCodeReader extends AbstractPagingItemReader<Long> {
 
-    private final HotelCodeStorage hotelCodeStorage;
+    private final HotelCodeStorage updatedHotelCodeStorage;
 
-    public HotelCodeReader(HotelCodeStorage hotelCodeStorage,
+    public HotelCodeReader(HotelCodeStorage updatedHotelCodeStorage,
                            int pageSize) {
-        this.hotelCodeStorage = hotelCodeStorage;
+        this.updatedHotelCodeStorage = updatedHotelCodeStorage;
         super.setPageSize(pageSize);
     }
 
     @Override
     protected void doReadPage() {
         log.info("page {} read", super.getPage());
-        super.results = hotelCodeStorage.getHotelCodes().stream()
+        super.results = updatedHotelCodeStorage.getHotelCodes().stream()
             .skip((long) super.getPage() * super.getPageSize())
             .limit(getPageSize())
             .collect(Collectors.toList());

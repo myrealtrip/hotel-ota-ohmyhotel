@@ -42,4 +42,12 @@ public class HotelCustomRepositoryImpl implements HotelCustomRepository {
                    hotelEntity.deletedAt.isNull())
             .fetch();
     }
+
+    @Override
+    public List<Long> getAllHotelIds() {
+        return jpaQueryFactory.from(hotelEntity)
+            .select(hotelEntity.hotelId)
+            .where(hotelEntity.deletedAt.isNull())
+            .fetch();
+    }
 }
