@@ -5,7 +5,7 @@ spring:
     timeout-per-shutdown-phase: 90s
 
 myrealtrip:
-  staynet:
+  ohmyhotel:
     context: consumer
 
 management:
@@ -85,7 +85,7 @@ logging:
     root: warn
     "org.*": warn
     "com.*": warn
-    "com.myrealtrip.staynet.*": info
+    "com.myrealtrip.ohmyhotel.*": info
   file:
     name: /myrealtrip/logs/tomcat/catalina.out
   logback:
@@ -129,7 +129,7 @@ logging:
     root: warn
     "org.*": warn
     "com.*": warn
-    "com.myrealtrip.staynet.*": info
+    "com.myrealtrip.ohmyhotel.*": info
   file:
     name: /myrealtrip/logs/tomcat/catalina.out
   logback:

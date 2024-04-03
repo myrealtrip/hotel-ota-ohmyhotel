@@ -12,6 +12,10 @@ management:
     distribution:
       percentiles:
         http.server.requests: 0.5, 0.95, 0.99
+
+myrealtrip:
+  ohmyhotel:
+    context: api
 ---
 spring:
   config:

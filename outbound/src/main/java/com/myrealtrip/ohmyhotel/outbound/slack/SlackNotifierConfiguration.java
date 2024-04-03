@@ -15,7 +15,7 @@ import static com.myrealtrip.ohmyhotel.outbound.slack.SlackChannel.*;
  */
 @Configuration
 public class SlackNotifierConfiguration {
-    @Value("${myrealtrip.staynet.context:NONE}")
+    @Value("${myrealtrip.ohmyhotel.context:NONE}")
     private String context;
 
     private NotifierType type() {
