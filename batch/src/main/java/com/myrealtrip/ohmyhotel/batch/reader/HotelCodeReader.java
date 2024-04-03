@@ -21,15 +21,12 @@ import java.util.stream.Collectors;
  * 오마이호텔에서 호텔정보를 가져온다.
  */
 @Slf4j
-public class HotelInfoReader extends AbstractPagingItemReader<OmhHotelInfoAggr> {
+public class HotelCodeReader extends AbstractPagingItemReader<Long> {
 
-    private final OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent;
     private final HotelCodeStorage hotelCodeStorage;
 
-    public HotelInfoReader(OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent,
-                           HotelCodeStorage hotelCodeStorage,
+    public HotelCodeReader(HotelCodeStorage hotelCodeStorage,
                            int pageSize) {
-        this.omhStaticHotelInfoListAgent = omhStaticHotelInfoListAgent;
         this.hotelCodeStorage = hotelCodeStorage;
         super.setPageSize(pageSize);
     }
@@ -37,26 +34,26 @@ public class HotelInfoReader extends AbstractPagingItemReader<OmhHotelInfoAggr> 
     @Override
     protected void doReadPage() {
         log.info("page {} read", super.getPage());
-        List<Long> hotelCodes = hotelCodeStorage.getHotelCodes().stream()
+        super.results = hotelCodeStorage.getHotelCodes().stream()
             .skip((long) super.getPage() * super.getPageSize())
             .limit(getPageSize())
             .collect(Collectors.toList());
 
-        if (CollectionUtils.isEmpty(hotelCodes)) {
-            super.results = Collections.emptyList();
-        }
-
-        List<OmhHotelInfo> koOmhHotelInfoList = omhStaticHotelInfoListAgent.getHotelInfo(OmhStaticHotelInfoListRequest.create(Language.KO, hotelCodes))
-            .getHotels();
-
-        Map<Long, OmhHotelInfo> enOmhHotelInfoMap = omhStaticHotelInfoListAgent.getHotelInfo(OmhStaticHotelInfoListRequest.create(Language.EN, hotelCodes))
-            .getHotels()
-            .stream()
-            .collect(Collectors.toMap(OmhHotelInfo::getHotelCode, Function.identity()));
-
-        super.results = koOmhHotelInfoList.stream()
-            .map(koOmhHotelInfo -> new OmhHotelInfoAggr(koOmhHotelInfo, enOmhHotelInfoMap.get(koOmhHotelInfo.getHotelCode())))
-            .collect(Collectors.toList());
+//        if (CollectionUtils.isEmpty(hotelCodes)) {
+//            super.results = Collections.emptyList();
+//        }
+//
+//        List<OmhHotelInfo> koOmhHotelInfoList = omhStaticHotelInfoListAgent.getHotelInfo(OmhStaticHotelInfoListRequest.create(Language.KO, hotelCodes))
+//            .getHotels();
+//
+//        Map<Long, OmhHotelInfo> enOmhHotelInfoMap = omhStaticHotelInfoListAgent.getHotelInfo(OmhStaticHotelInfoListRequest.create(Language.EN, hotelCodes))
+//            .getHotels()
+//            .stream()
+//            .collect(Collectors.toMap(OmhHotelInfo::getHotelCode, Function.identity()));
+//
+//        super.results = koOmhHotelInfoList.stream()
+//            .map(koOmhHotelInfo -> new OmhHotelInfoAggr(koOmhHotelInfo, enOmhHotelInfoMap.get(koOmhHotelInfo.getHotelCode())))
+//            .collect(Collectors.toList());
     }
 
     @Override

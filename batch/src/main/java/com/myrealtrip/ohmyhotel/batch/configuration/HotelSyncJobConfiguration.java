@@ -2,7 +2,7 @@ package com.myrealtrip.ohmyhotel.batch.configuration;
 
 import com.myrealtrip.ohmyhotel.batch.dto.OmhHotelInfoAggr;
 import com.myrealtrip.ohmyhotel.batch.mapper.OmhHotelInfoMapper;
-import com.myrealtrip.ohmyhotel.batch.reader.HotelInfoReader;
+import com.myrealtrip.ohmyhotel.batch.reader.HotelCodeReader;
 import com.myrealtrip.ohmyhotel.batch.storage.HotelCodeStorage;
 import com.myrealtrip.ohmyhotel.batch.tasklet.GetUpdatedHotelCodesTasklet;
 import com.myrealtrip.ohmyhotel.batch.writer.HotelInfoWriter;
@@ -65,9 +65,9 @@ public class HotelSyncJobConfiguration {
     public Step hotelUpsertStep() {
         return stepBuilderFactory.get("hotelUpsertStep")
             .transactionManager(transactionManager)
-            .<OmhHotelInfoAggr, OmhHotelInfoAggr>chunk(CHUNK_SIZE)
-            .reader(hotelInfoReader(null, null))
-            .writer(hotelInfoWriter(null, null))
+            .<Long, Long>chunk(CHUNK_SIZE)
+            .reader(hotelInfoReader(null))
+            .writer(hotelInfoWriter(null, null, null))
             .build();
     }
 
@@ -84,16 +84,16 @@ public class HotelSyncJobConfiguration {
 
     @Bean
     @StepScope
-    public ItemReader<OmhHotelInfoAggr> hotelInfoReader(OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent,
-                                                        HotelCodeStorage hotelCodeStorage) {
-        return new HotelInfoReader(omhStaticHotelInfoListAgent, hotelCodeStorage, CHUNK_SIZE);
+    public ItemReader<Long> hotelInfoReader(HotelCodeStorage hotelCodeStorage) {
+        return new HotelCodeReader(hotelCodeStorage, CHUNK_SIZE);
     }
 
     @Bean
     @StepScope
-    public ItemWriter<OmhHotelInfoAggr> hotelInfoWriter(HotelProvider hotelProvider,
-                                                        OmhHotelInfoMapper omhHotelInfoMapper) {
-        return new HotelInfoWriter(hotelProvider, omhHotelInfoMapper);
+    public ItemWriter<Long> hotelInfoWriter(HotelProvider hotelProvider,
+                                            OmhHotelInfoMapper omhHotelInfoMapper,
+                                            OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent) {
+        return new HotelInfoWriter(hotelProvider, omhHotelInfoMapper, omhStaticHotelInfoListAgent);
     }
 
     @Bean
