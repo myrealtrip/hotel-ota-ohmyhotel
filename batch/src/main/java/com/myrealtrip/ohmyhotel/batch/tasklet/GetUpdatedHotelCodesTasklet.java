@@ -5,6 +5,7 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.OmhStaticHotelBulk
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response.OmhStaticBulkHotelListResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response.OmhStaticBulkHotelListResponse.OmhBulkHotel;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
  * 특정 날짜 이후 업데이트된 호텔 코드를 가져와 로컬에 저장한다.
  */
 @RequiredArgsConstructor
+@Slf4j
 public class GetUpdatedHotelCodesTasklet implements Tasklet {
 
     private final HotelCodeStorage hotelCodeStorage;
@@ -38,6 +40,7 @@ public class GetUpdatedHotelCodesTasklet implements Tasklet {
             hotelCodeStorage.saveAll(hotelCodes);
             lastHotelCode = hotelCodes.get(hotelCodes.size() - 1);
         }
+        log.info("total updated hotel size: {}", hotelCodeStorage.getHotelCodes().size());
         return RepeatStatus.FINISHED;
     }
 }
