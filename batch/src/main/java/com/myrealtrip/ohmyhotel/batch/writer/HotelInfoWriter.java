@@ -27,7 +27,6 @@ public class HotelInfoWriter implements ItemWriter<Long> {
     private final HotelProvider hotelProvider;
     private final OmhHotelInfoMapper omhHotelInfoMapper;
     private final OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent;
-    private final HotelCodeStorage informationExistHotelCodeStorage;
 
 
     @Override
@@ -46,7 +45,6 @@ public class HotelInfoWriter implements ItemWriter<Long> {
             .collect(Collectors.toList());
 
         hotelProvider.upsert(hotels);
-        informationExistHotelCodeStorage.saveAll(hotelIds);
     }
 
     private List<OmhHotelInfoAggr> getOmhHotelInfoAggrs(List<Long> hotelCodes) {

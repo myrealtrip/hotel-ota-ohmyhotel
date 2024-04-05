@@ -1,11 +1,9 @@
 package com.myrealtrip.ohmyhotel.batch.configuration;
 
-import com.myrealtrip.ohmyhotel.batch.dto.OmhHotelInfoAggr;
 import com.myrealtrip.ohmyhotel.batch.mapper.OmhHotelInfoMapper;
-import com.myrealtrip.ohmyhotel.batch.reader.HotelCodeReader;
+import com.myrealtrip.ohmyhotel.batch.reader.HotelCodeApiReader;
 import com.myrealtrip.ohmyhotel.batch.storage.HotelCodeStorage;
 import com.myrealtrip.ohmyhotel.batch.tasklet.GetUpdatedHotelCodesTasklet;
-import com.myrealtrip.ohmyhotel.batch.tasklet.InformationNotExistHotelProcessTasklet;
 import com.myrealtrip.ohmyhotel.batch.writer.HotelInfoWriter;
 import com.myrealtrip.ohmyhotel.core.provider.hotel.HotelProvider;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.OmhStaticHotelBulkListAgent;
@@ -50,7 +48,6 @@ public class HotelSyncJobConfiguration {
         return jobBuilderFactory.get(HOTEL_SYNC_JOB)
             .start(getUpdatedHotelCodesStep())
             .next(hotelUpsertStep())
-            .next(informationNotExistHotelProcessStep())
             .build();
     }
 
@@ -70,16 +67,7 @@ public class HotelSyncJobConfiguration {
             .transactionManager(transactionManager)
             .<Long, Long>chunk(CHUNK_SIZE)
             .reader(hotelInfoReader(null))
-            .writer(hotelInfoWriter(null, null, null, null))
-            .build();
-    }
-
-    @Bean
-    @JobScope
-    public Step informationNotExistHotelProcessStep() {
-        return stepBuilderFactory.get("informationNotExistHotelProcessStep")
-            .transactionManager(transactionManager)
-            .tasklet(informationNotExistHotelProcessTasklet(null, null))
+            .writer(hotelInfoWriter(null, null, null))
             .build();
     }
 
@@ -97,32 +85,20 @@ public class HotelSyncJobConfiguration {
     @Bean
     @StepScope
     public ItemReader<Long> hotelInfoReader(@Qualifier("updatedHotelCodeStorage") HotelCodeStorage hotelCodeStorage) {
-        return new HotelCodeReader(hotelCodeStorage, CHUNK_SIZE);
+        return new HotelCodeApiReader(hotelCodeStorage, CHUNK_SIZE);
     }
 
     @Bean
     @StepScope
     public ItemWriter<Long> hotelInfoWriter(HotelProvider hotelProvider,
                                             OmhHotelInfoMapper omhHotelInfoMapper,
-                                            OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent,
-                                            @Qualifier("informationExistHotelCodeStorage") HotelCodeStorage hotelCodeStorage) {
-        return new HotelInfoWriter(hotelProvider, omhHotelInfoMapper, omhStaticHotelInfoListAgent, hotelCodeStorage);
+                                            OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent) {
+        return new HotelInfoWriter(hotelProvider, omhHotelInfoMapper, omhStaticHotelInfoListAgent);
     }
 
-    @Bean
-    @StepScope
-    public Tasklet informationNotExistHotelProcessTasklet(@Qualifier("informationExistHotelCodeStorage") HotelCodeStorage informationExistHotelCodeStorage,
-                                                          HotelProvider hotelProvider) {
-        return new InformationNotExistHotelProcessTasklet(informationExistHotelCodeStorage, hotelProvider);
-    }
 
     @Bean(name = "updatedHotelCodeStorage")
     public HotelCodeStorage updatedHotelCodeStorage() {
-        return new HotelCodeStorage();
-    }
-
-    @Bean(name = "informationExistHotelCodeStorage")
-    public HotelCodeStorage informationExistHotelCodeStorage() {
         return new HotelCodeStorage();
     }
 }

@@ -47,4 +47,12 @@ public class HotelProvider {
         }
         hotelRepository.saveAll(entities);
     }
+
+    @Transactional(readOnly = true)
+    public List<Hotel> getByHotelIdGreaterThan(Long hotelId, int limit) {
+        return hotelRepository.findAllByHotelIdGreaterThan(hotelId, limit)
+            .stream()
+            .map(hotelMapper::toDto)
+            .collect(Collectors.toList());
+    }
 }

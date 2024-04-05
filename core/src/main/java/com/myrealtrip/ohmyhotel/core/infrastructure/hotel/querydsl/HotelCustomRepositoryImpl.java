@@ -50,4 +50,14 @@ public class HotelCustomRepositoryImpl implements HotelCustomRepository {
             .where(hotelEntity.deletedAt.isNull())
             .fetch();
     }
+
+    @Override
+    public List<HotelEntity> findAllByHotelIdGreaterThan(Long hotelId, int limit) {
+        return jpaQueryFactory.selectFrom(hotelEntity)
+            .where(hotelEntity.hotelId.gt(hotelId),
+                   hotelEntity.deletedAt.isNull())
+            .orderBy(hotelEntity.hotelId.asc())
+            .limit(limit)
+            .fetch();
+    }
 }

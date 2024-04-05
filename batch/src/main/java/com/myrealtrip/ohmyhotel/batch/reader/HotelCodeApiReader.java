@@ -18,15 +18,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * 오마이호텔에서 호텔정보를 가져온다.
+ * 오마이호텔에서 호텔코드를 가져온다.
  */
 @Slf4j
-public class HotelCodeReader extends AbstractPagingItemReader<Long> {
+public class HotelCodeApiReader extends AbstractPagingItemReader<Long> {
 
     private final HotelCodeStorage updatedHotelCodeStorage;
 
-    public HotelCodeReader(HotelCodeStorage updatedHotelCodeStorage,
-                           int pageSize) {
+    public HotelCodeApiReader(HotelCodeStorage updatedHotelCodeStorage,
+                              int pageSize) {
         this.updatedHotelCodeStorage = updatedHotelCodeStorage;
         super.setPageSize(pageSize);
     }
