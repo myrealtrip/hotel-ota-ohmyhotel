@@ -38,22 +38,6 @@ public class HotelCodeReader extends AbstractPagingItemReader<Long> {
             .skip((long) super.getPage() * super.getPageSize())
             .limit(getPageSize())
             .collect(Collectors.toList());
-
-//        if (CollectionUtils.isEmpty(hotelCodes)) {
-//            super.results = Collections.emptyList();
-//        }
-//
-//        List<OmhHotelInfo> koOmhHotelInfoList = omhStaticHotelInfoListAgent.getHotelInfo(OmhStaticHotelInfoListRequest.create(Language.KO, hotelCodes))
-//            .getHotels();
-//
-//        Map<Long, OmhHotelInfo> enOmhHotelInfoMap = omhStaticHotelInfoListAgent.getHotelInfo(OmhStaticHotelInfoListRequest.create(Language.EN, hotelCodes))
-//            .getHotels()
-//            .stream()
-//            .collect(Collectors.toMap(OmhHotelInfo::getHotelCode, Function.identity()));
-//
-//        super.results = koOmhHotelInfoList.stream()
-//            .map(koOmhHotelInfo -> new OmhHotelInfoAggr(koOmhHotelInfo, enOmhHotelInfoMap.get(koOmhHotelInfo.getHotelCode())))
-//            .collect(Collectors.toList());
     }
 
     @Override
