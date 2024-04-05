@@ -30,6 +30,9 @@ import java.time.LocalDate;
 
 import static java.util.Objects.isNull;
 
+/**
+ * 오마이호텔로부터 호텔 정보를 싱크한다.
+ */
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
