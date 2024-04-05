@@ -1,8 +1,7 @@
 package com.myrealtrip.ohmyhotel.batch.configuration;
 
-import com.myrealtrip.ohmyhotel.batch.dto.OmhHotelInfoAggr;
 import com.myrealtrip.ohmyhotel.batch.mapper.OmhHotelInfoMapper;
-import com.myrealtrip.ohmyhotel.batch.reader.HotelInfoReader;
+import com.myrealtrip.ohmyhotel.batch.reader.HotelCodeApiReader;
 import com.myrealtrip.ohmyhotel.batch.storage.HotelCodeStorage;
 import com.myrealtrip.ohmyhotel.batch.tasklet.GetUpdatedHotelCodesTasklet;
 import com.myrealtrip.ohmyhotel.batch.writer.HotelInfoWriter;
@@ -20,6 +19,7 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +30,9 @@ import java.time.LocalDate;
 
 import static java.util.Objects.isNull;
 
+/**
+ * 오마이호텔로부터 호텔 정보를 싱크한다.
+ */
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -65,16 +68,16 @@ public class HotelSyncJobConfiguration {
     public Step hotelUpsertStep() {
         return stepBuilderFactory.get("hotelUpsertStep")
             .transactionManager(transactionManager)
-            .<OmhHotelInfoAggr, OmhHotelInfoAggr>chunk(CHUNK_SIZE)
-            .reader(hotelInfoReader(null, null))
-            .writer(hotelInfoWriter(null, null))
+            .<Long, Long>chunk(CHUNK_SIZE)
+            .reader(hotelInfoReader(null))
+            .writer(hotelInfoWriter(null, null, null))
             .build();
     }
 
     @Bean
     @StepScope
     public Tasklet getUpdatedHotelCodesTasklet(@Value("#{jobParameters[beforeDays]}") Integer beforeDays,
-                                               HotelCodeStorage hotelCodeStorage,
+                                               @Qualifier("updatedHotelCodeStorage") HotelCodeStorage hotelCodeStorage,
                                                OmhStaticHotelBulkListAgent omhStaticHotelBulkListAgent) {
         LocalDate lastUpdatedDate = isNull(beforeDays) ?
                                     LocalDate.of(1970, 1, 1) :
@@ -84,20 +87,21 @@ public class HotelSyncJobConfiguration {
 
     @Bean
     @StepScope
-    public ItemReader<OmhHotelInfoAggr> hotelInfoReader(OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent,
-                                                        HotelCodeStorage hotelCodeStorage) {
-        return new HotelInfoReader(omhStaticHotelInfoListAgent, hotelCodeStorage, CHUNK_SIZE);
+    public ItemReader<Long> hotelInfoReader(@Qualifier("updatedHotelCodeStorage") HotelCodeStorage hotelCodeStorage) {
+        return new HotelCodeApiReader(hotelCodeStorage, CHUNK_SIZE);
     }
 
     @Bean
     @StepScope
-    public ItemWriter<OmhHotelInfoAggr> hotelInfoWriter(HotelProvider hotelProvider,
-                                                        OmhHotelInfoMapper omhHotelInfoMapper) {
-        return new HotelInfoWriter(hotelProvider, omhHotelInfoMapper);
+    public ItemWriter<Long> hotelInfoWriter(HotelProvider hotelProvider,
+                                            OmhHotelInfoMapper omhHotelInfoMapper,
+                                            OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent) {
+        return new HotelInfoWriter(hotelProvider, omhHotelInfoMapper, omhStaticHotelInfoListAgent);
     }
 
-    @Bean
-    public HotelCodeStorage hotelCodeStorage() {
+
+    @Bean(name = "updatedHotelCodeStorage")
+    public HotelCodeStorage updatedHotelCodeStorage() {
         return new HotelCodeStorage();
     }
 }

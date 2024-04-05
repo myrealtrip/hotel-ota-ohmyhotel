@@ -42,4 +42,22 @@ public class HotelCustomRepositoryImpl implements HotelCustomRepository {
                    hotelEntity.deletedAt.isNull())
             .fetch();
     }
+
+    @Override
+    public List<Long> getAllHotelIds() {
+        return jpaQueryFactory.from(hotelEntity)
+            .select(hotelEntity.hotelId)
+            .where(hotelEntity.deletedAt.isNull())
+            .fetch();
+    }
+
+    @Override
+    public List<HotelEntity> findAllByHotelIdGreaterThan(Long hotelId, int limit) {
+        return jpaQueryFactory.selectFrom(hotelEntity)
+            .where(hotelEntity.hotelId.gt(hotelId),
+                   hotelEntity.deletedAt.isNull())
+            .orderBy(hotelEntity.hotelId.asc())
+            .limit(limit)
+            .fetch();
+    }
 }

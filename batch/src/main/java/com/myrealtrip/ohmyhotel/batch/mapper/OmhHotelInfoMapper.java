@@ -48,7 +48,8 @@ public interface OmhHotelInfoMapper {
             .recommendYn(koInfo.getRecommendYn())
             .legacyHotelCode(koInfo.getLegacyHotelCode())
             .lastUpdateDateTime(koInfo.getLastUpdateDatetime())
-            .koDescriptions(HotelDescriptions.builder()
+            .koDescriptions(isNull(koInfo.getDescriptions()) ? null :
+                            HotelDescriptions.builder()
                                 .introduction(koInfo.getDescriptions().getIntroduction())
                                 .getThere(koInfo.getDescriptions().getGetThere())
                                 .hotelFacility(koInfo.getDescriptions().getHotelFacility())
@@ -57,7 +58,8 @@ public interface OmhHotelInfoMapper {
                                 .cautions(koInfo.getDescriptions().getCautions())
                                 .specialDescription(koInfo.getDescriptions().getSpecialDescription())
                                 .build())
-            .enDescriptions(HotelDescriptions.builder()
+            .enDescriptions(isNull(enInfo.getDescriptions()) ? null :
+                            HotelDescriptions.builder()
                                 .introduction(enInfo.getDescriptions().getIntroduction())
                                 .getThere(enInfo.getDescriptions().getGetThere())
                                 .hotelFacility(enInfo.getDescriptions().getHotelFacility())

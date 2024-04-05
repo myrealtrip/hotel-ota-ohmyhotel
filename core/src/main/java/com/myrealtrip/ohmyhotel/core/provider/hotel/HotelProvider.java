@@ -5,6 +5,7 @@ import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.HotelModifyInfo;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.entity.HotelEntity;
 import com.myrealtrip.ohmyhotel.core.infrastructure.hotel.HotelRepository;
 import com.myrealtrip.ohmyhotel.core.provider.hotel.mapper.HotelMapper;
+import com.myrealtrip.ohmyhotel.enumarate.HotelStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,14 +30,29 @@ public class HotelProvider {
     }
 
     @Transactional(readOnly = true)
-    public List<Hotel> getByHotelIds(List<Long> hotelIds) {
-        return hotelRepository.findByHotelIds(hotelIds).stream()
-            .map(hotelMapper::toDto)
-            .collect(Collectors.toList());
+    public List<HotelModifyInfo> getHotelModifyInfoByHotelIds(List<Long> hotelIds) {
+        return hotelRepository.findHotelModifyInfoByHotelIds(hotelIds);
     }
 
     @Transactional(readOnly = true)
-    public List<HotelModifyInfo> getHotelModifyInfoByHotelIds(List<Long> hotelIds) {
-        return hotelRepository.findHotelModifyInfoByHotelIds(hotelIds);
+    public List<Long> getAllHotelIds() {
+        return hotelRepository.getAllHotelIds();
+    }
+
+    @Transactional
+    public void updateStatusByHotelIds(List<Long> hotelIds, HotelStatus status) {
+        List<HotelEntity> entities = hotelRepository.findAllById(hotelIds);
+        for (HotelEntity entity : entities) {
+            entity.updateStatus(status);
+        }
+        hotelRepository.saveAll(entities);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Hotel> getByHotelIdGreaterThan(Long hotelId, int limit) {
+        return hotelRepository.findAllByHotelIdGreaterThan(hotelId, limit)
+            .stream()
+            .map(hotelMapper::toDto)
+            .collect(Collectors.toList());
     }
 }
