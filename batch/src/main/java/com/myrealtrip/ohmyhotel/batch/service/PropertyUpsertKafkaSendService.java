@@ -3,6 +3,7 @@ package com.myrealtrip.ohmyhotel.batch.service;
 import com.myrealtrip.ohmyhotel.batch.mapper.UpsertPropertyMessageMapper;
 import com.myrealtrip.ohmyhotel.core.provider.hotel.HotelProvider;
 import com.myrealtrip.ohmyhotel.outbound.producer.CommonProducer;
+import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import com.myrealtrip.unionstay.common.message.property.UpsertPropertyMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

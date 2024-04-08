@@ -35,7 +35,7 @@ public interface UpsertPropertyMessageMapper {
     DateTimeFormatter CHECK_IN_OUT_FORMATTER = DateTimeFormatter.ofPattern("[H:mm][HH:mm]");
 
     default UpsertPropertyMessage toUpsertPropertyMessage(Hotel hotel) {
-        UpsertPropertyMessage message = UpsertPropertyMessage.builder()
+        return UpsertPropertyMessage.builder()
             .providerType(ProviderType.GDS)
             .providerCode(ProviderCode.UNKNOWN) // TODO
             .providerPropertyId(String.valueOf((hotel.getHotelId())))
@@ -77,9 +77,6 @@ public interface UpsertPropertyMessageMapper {
             .mrtDiscountTypes(null) // TODO 제로마진 스펙 추가 후 작업
             .mrtPartnerId(null) // TODO 파트너 ID 생성 후 작업
             .build();
-
-
-        return null;
     }
 
     private List<Image> toImages(Hotel hotel) {
