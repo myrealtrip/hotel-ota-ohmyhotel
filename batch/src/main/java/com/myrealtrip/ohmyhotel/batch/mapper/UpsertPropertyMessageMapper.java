@@ -126,8 +126,8 @@ public interface UpsertPropertyMessageMapper {
             .enStreetName(null)
             .koStreetName(null)
             .streetNumber(null)
-            .koAddressLines(List.of(hotel.getKoAddress()))
-            .enAddressLines(List.of(hotel.getEnAddress()))
+            .koAddressLines(isNull(hotel.getKoAddress()) ? Collections.emptyList() : List.of(hotel.getKoAddress()))
+            .enAddressLines(isNull(hotel.getEnAddress()) ? Collections.emptyList() : List.of(hotel.getEnAddress()))
             .latitude(hotel.getLatitude())
             .longitude(hotel.getLongitude())
             .build();
