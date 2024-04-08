@@ -53,7 +53,7 @@ public class HotelSyncJobConfiguration {
     public Job hotelSyncJob() {
         return jobBuilderFactory.get(HOTEL_SYNC_JOB)
             .start(getUpdatedHotelCodesStep())
-            .next(hotelUpsertStep())
+            .next(hotelUpsertStep(null, null))
             .build();
     }
 
@@ -68,13 +68,14 @@ public class HotelSyncJobConfiguration {
 
     @Bean
     @JobScope
-    public Step hotelUpsertStep() {
+    public Step hotelUpsertStep(@Qualifier("chunkUpdatedHotelCodeStorage") HotelCodeStorage chunkUpdatedHotelCodeStorage,
+                                PropertyUpsertKafkaSendService propertyUpsertKafkaSendService) {
         return stepBuilderFactory.get("hotelUpsertStep")
             .transactionManager(transactionManager)
             .<Long, Long>chunk(CHUNK_SIZE)
             .reader(hotelInfoReader(null))
             .writer(hotelInfoWriter(null, null, null, null))
-            .listener(hotelUpdateChunkListener(null, null))
+            .listener(new HotelUpdateChunkListener(chunkUpdatedHotelCodeStorage, propertyUpsertKafkaSendService))
             .build();
     }
 
@@ -103,12 +104,6 @@ public class HotelSyncJobConfiguration {
                                             @Qualifier("chunkUpdatedHotelCodeStorage") HotelCodeStorage chunkUpdatedHotelCodeStorage) {
         return new HotelInfoWriter(hotelProvider, omhHotelInfoMapper, omhStaticHotelInfoListAgent, chunkUpdatedHotelCodeStorage);
     }
-
-    public ChunkListener hotelUpdateChunkListener(@Qualifier("chunkUpdatedHotelCodeStorage") HotelCodeStorage chunkUpdatedHotelCodeStorage,
-                                                  PropertyUpsertKafkaSendService propertyUpsertKafkaSendService) {
-        return new HotelUpdateChunkListener(chunkUpdatedHotelCodeStorage, propertyUpsertKafkaSendService);
-    }
-
 
     @Bean(name = "updatedHotelCodeStorage")
     public HotelCodeStorage updatedHotelCodeStorage() {

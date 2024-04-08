@@ -44,19 +44,20 @@ public class InformationNotExistHotelProcessJob {
     @Bean
     public Job hotelSyncJob() {
         return jobBuilderFactory.get(INFORMATION_NOT_EXIST_HOTEL_PROCESS_JOB)
-            .start(informationNotExistHotelProcessStep())
+            .start(informationNotExistHotelProcessStep(null, null))
             .build();
     }
 
     @Bean
     @JobScope
-    public Step informationNotExistHotelProcessStep() {
+    public Step informationNotExistHotelProcessStep(@Qualifier("chunkUpdatedHotelCodeStorage") HotelCodeStorage chunkUpdatedHotelCodeStorage,
+                                                    PropertyUpsertKafkaSendService propertyUpsertKafkaSendService) {
         return stepBuilderFactory.get("informationNotExistHotelProcessStep")
             .transactionManager(transactionManager)
             .<Hotel, Hotel>chunk(CHUNK_SIZE)
             .reader(hotelReader(null))
             .writer(informationNotExistHotelWriter(null, null, null))
-            .listener(hotelUpdateChunkListener(null, null))
+            .listener(new HotelUpdateChunkListener(chunkUpdatedHotelCodeStorage, propertyUpsertKafkaSendService))
             .build();
     }
 
@@ -73,11 +74,6 @@ public class InformationNotExistHotelProcessJob {
                                                             OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent,
                                                             @Qualifier("chunkUpdatedHotelCodeStorage") HotelCodeStorage chunkUpdatedHotelCodeStorage) {
         return new InformationNotExistHotelWriter(hotelProvider, omhStaticHotelInfoListAgent, chunkUpdatedHotelCodeStorage);
-    }
-
-    public ChunkListener hotelUpdateChunkListener(@Qualifier("chunkUpdatedHotelCodeStorage") HotelCodeStorage chunkUpdatedHotelCodeStorage,
-                                                  PropertyUpsertKafkaSendService propertyUpsertKafkaSendService) {
-        return new HotelUpdateChunkListener(chunkUpdatedHotelCodeStorage, propertyUpsertKafkaSendService);
     }
 
     @Bean(name = "chunkUpdatedHotelCodeStorage")
