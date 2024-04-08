@@ -7,8 +7,10 @@ import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import com.myrealtrip.unionstay.common.message.property.UpsertPropertyMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +33,9 @@ public class PropertyUpsertKafkaSendService {
     }
 
     private void send(List<UpsertPropertyMessage> upsertPropertyMessageList) {
+        if (CollectionUtils.isEmpty(upsertPropertyMessageList)) {
+            return;
+        }
         for (UpsertPropertyMessage upsertPropertyMessage : upsertPropertyMessageList) {
             commonProducer.publishPropertyUpsert(upsertPropertyMessage);
         }
