@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@AllArgsConstructor TODO 필드 추가 후 주석 제거
+//@AllArgsConstructor 필드 추가 후 주석 제거
 @SuperBuilder
 public class AdditionalOrderInfo {
 }
