@@ -3,6 +3,7 @@ package com.myrealtrip.ohmyhotel.configuration.kafka;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 @EnableKafka
 @Configuration
+@EnableConfigurationProperties(KafkaTopics.class)
 public class KafkaProducerConfiguration {
     @Value("${myrealtrip.kafka.common.bootstrap-servers}")
     private String bootstrapServers;

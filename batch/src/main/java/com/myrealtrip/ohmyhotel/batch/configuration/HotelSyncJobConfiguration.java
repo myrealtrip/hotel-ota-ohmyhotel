@@ -1,7 +1,9 @@
 package com.myrealtrip.ohmyhotel.batch.configuration;
 
+import com.myrealtrip.ohmyhotel.batch.listener.HotelUpdateChunkListener;
 import com.myrealtrip.ohmyhotel.batch.mapper.OmhHotelInfoMapper;
 import com.myrealtrip.ohmyhotel.batch.reader.HotelCodeApiReader;
+import com.myrealtrip.ohmyhotel.batch.service.PropertyUpsertKafkaSendService;
 import com.myrealtrip.ohmyhotel.batch.storage.HotelCodeStorage;
 import com.myrealtrip.ohmyhotel.batch.tasklet.GetUpdatedHotelCodesTasklet;
 import com.myrealtrip.ohmyhotel.batch.writer.HotelInfoWriter;
@@ -10,6 +12,7 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.OmhStaticHotelBulk
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.OmhStaticHotelInfoListAgent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -70,7 +73,8 @@ public class HotelSyncJobConfiguration {
             .transactionManager(transactionManager)
             .<Long, Long>chunk(CHUNK_SIZE)
             .reader(hotelInfoReader(null))
-            .writer(hotelInfoWriter(null, null, null))
+            .writer(hotelInfoWriter(null, null, null, null))
+            .listener(hotelUpdateChunkListener(null, null))
             .build();
     }
 
@@ -95,13 +99,24 @@ public class HotelSyncJobConfiguration {
     @StepScope
     public ItemWriter<Long> hotelInfoWriter(HotelProvider hotelProvider,
                                             OmhHotelInfoMapper omhHotelInfoMapper,
-                                            OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent) {
-        return new HotelInfoWriter(hotelProvider, omhHotelInfoMapper, omhStaticHotelInfoListAgent);
+                                            OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent,
+                                            @Qualifier("chunkUpdatedHotelCodeStorage") HotelCodeStorage chunkUpdatedHotelCodeStorage) {
+        return new HotelInfoWriter(hotelProvider, omhHotelInfoMapper, omhStaticHotelInfoListAgent, chunkUpdatedHotelCodeStorage);
+    }
+
+    public ChunkListener hotelUpdateChunkListener(@Qualifier("chunkUpdatedHotelCodeStorage") HotelCodeStorage chunkUpdatedHotelCodeStorage,
+                                                  PropertyUpsertKafkaSendService propertyUpsertKafkaSendService) {
+        return new HotelUpdateChunkListener(chunkUpdatedHotelCodeStorage, propertyUpsertKafkaSendService);
     }
 
 
     @Bean(name = "updatedHotelCodeStorage")
     public HotelCodeStorage updatedHotelCodeStorage() {
+        return new HotelCodeStorage();
+    }
+
+    @Bean(name = "chunkUpdatedHotelCodeStorage")
+    public HotelCodeStorage chunkUpdatedHotelCodeStorage() {
         return new HotelCodeStorage();
     }
 }
