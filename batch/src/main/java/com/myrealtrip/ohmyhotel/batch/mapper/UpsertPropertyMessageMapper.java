@@ -136,7 +136,7 @@ public interface UpsertPropertyMessageMapper {
             .build();
     }
 
-    private GuestPolicy toGuestPolicy(Hotel hotel) {
+    default GuestPolicy toGuestPolicy(Hotel hotel) {
         return UpsertPropertyMessage.GuestPolicy.builder()
             .checkInMinAge(null)
             .checkInStartTime(toCheckInStartTime(hotel))
@@ -162,8 +162,11 @@ public interface UpsertPropertyMessageMapper {
         if (StringUtils.isBlank(hotel.getCheckInTime())) {
             return null;
         }
-        String checkInEndTimeStr = StringUtils.substringAfter(hotel.getCheckInTime(), "~");
-        return toLocalTime(hotel.getHotelId(), checkInEndTimeStr);
+        if (hotel.getCheckInTime().contains("~")) {
+            String checkInEndTimeStr = StringUtils.substringAfter(hotel.getCheckInTime(), "~");
+            return toLocalTime(hotel.getHotelId(), checkInEndTimeStr);
+        }
+        return null;
     }
 
     default LocalTime toCheckOutStartTime(Hotel hotel) {

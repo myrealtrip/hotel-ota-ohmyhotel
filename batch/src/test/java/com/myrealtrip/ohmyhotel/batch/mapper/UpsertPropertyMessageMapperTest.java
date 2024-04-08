@@ -91,4 +91,14 @@ class UpsertPropertyMessageMapperTest {
         assertThat(mapper.toCheckOutEndTime(Hotel.builder().checkOutTime(time2).build()))
             .isEqualTo(LocalTime.of(14, 0));
     }
+
+    @Test
+    void a() {
+        Hotel hotel = Hotel.builder()
+            .checkInTime("2:00 PM")
+            .checkOutTime("11:00 AM")
+            .build();
+
+        mapper.toGuestPolicy(hotel);
+    }
 }
