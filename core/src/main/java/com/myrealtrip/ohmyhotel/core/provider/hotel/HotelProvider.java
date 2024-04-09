@@ -29,14 +29,17 @@ public class HotelProvider {
         hotelRepository.saveAll(entities);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public List<HotelModifyInfo> getHotelModifyInfoByHotelIds(List<Long> hotelIds) {
         return hotelRepository.findHotelModifyInfoByHotelIds(hotelIds);
     }
 
-    @Transactional(readOnly = true)
-    public List<Long> getAllHotelIds() {
-        return hotelRepository.getAllHotelIds();
+    @Transactional
+    public List<Hotel> getByHotelIds(List<Long> hotelIds) {
+        return hotelRepository.findByHotelIds(hotelIds)
+            .stream()
+            .map(hotelMapper::toDto)
+            .collect(Collectors.toList());
     }
 
     @Transactional

@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.batch.writer;
 
+import com.myrealtrip.ohmyhotel.batch.storage.HotelCodeStorage;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Hotel;
 import com.myrealtrip.ohmyhotel.core.provider.hotel.HotelProvider;
 import com.myrealtrip.ohmyhotel.enumarate.HotelStatus;
@@ -20,6 +21,7 @@ public class InformationNotExistHotelWriter implements ItemWriter<Hotel> {
 
     private final HotelProvider hotelProvider;
     private final OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent;
+    private final HotelCodeStorage chunkUpdatedHotelCodeStorage;
 
     @Override
     public void write(List<? extends Hotel> hotels) throws Exception {
@@ -30,6 +32,8 @@ public class InformationNotExistHotelWriter implements ItemWriter<Hotel> {
         List<Long> informationNotExistHotelIds = filterInformationNotExistHotelIds(hotelIds);
 
         hotelProvider.updateStatusByHotelIds(informationNotExistHotelIds, HotelStatus.INACTIVE);
+        chunkUpdatedHotelCodeStorage.clear();
+        chunkUpdatedHotelCodeStorage.saveAll(informationNotExistHotelIds);
     }
 
     private List<Long> filterInformationNotExistHotelIds(List<Long> hotelIds) {

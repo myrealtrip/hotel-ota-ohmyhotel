@@ -27,7 +27,7 @@ public class HotelInfoWriter implements ItemWriter<Long> {
     private final HotelProvider hotelProvider;
     private final OmhHotelInfoMapper omhHotelInfoMapper;
     private final OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent;
-
+    private final HotelCodeStorage chunkUpdatedHotelCodeStorage;
 
     @Override
     public void write(List<? extends Long> hotelCodes) throws Exception {
@@ -45,6 +45,8 @@ public class HotelInfoWriter implements ItemWriter<Long> {
             .collect(Collectors.toList());
 
         hotelProvider.upsert(hotels);
+        chunkUpdatedHotelCodeStorage.clear();
+        chunkUpdatedHotelCodeStorage.saveAll((List<Long>) hotelCodes);
     }
 
     private List<OmhHotelInfoAggr> getOmhHotelInfoAggrs(List<Long> hotelCodes) {

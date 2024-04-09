@@ -15,6 +15,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true)
@@ -84,4 +86,8 @@ public class Hotel extends ModifyInfo {
     private List<Facility> facilities;
 
     private List<Photo> photos;
+
+    public boolean isActive() {
+        return isNull(getDeletedAt()) && this.status == HotelStatus.ACTIVE;
+    }
 }
