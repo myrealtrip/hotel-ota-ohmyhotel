@@ -1,14 +1,20 @@
 package com.myrealtrip.ohmyhotel.batch.mapper;
 
+import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Facility;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Hotel;
+import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.HotelDescriptions;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Photo;
 import com.myrealtrip.unionstay.common.constant.CountryCode;
+import com.myrealtrip.unionstay.common.constant.PropertyAttributeGroupLevel.GroupLevel1;
+import com.myrealtrip.unionstay.common.constant.PropertyDescriptionType;
 import com.myrealtrip.unionstay.common.constant.ProviderCode;
 import com.myrealtrip.unionstay.common.constant.ProviderPropertyStatus;
 import com.myrealtrip.unionstay.common.constant.ProviderType;
 import com.myrealtrip.unionstay.common.message.property.UpsertPropertyMessage;
 import com.myrealtrip.unionstay.common.message.property.UpsertPropertyMessage.Address;
+import com.myrealtrip.unionstay.common.message.property.UpsertPropertyMessage.Attribute;
 import com.myrealtrip.unionstay.common.message.property.UpsertPropertyMessage.Contact;
+import com.myrealtrip.unionstay.common.message.property.UpsertPropertyMessage.Description;
 import com.myrealtrip.unionstay.common.message.property.UpsertPropertyMessage.GuestPolicy;
 import com.myrealtrip.unionstay.common.message.property.UpsertPropertyMessage.Image;
 import org.apache.commons.collections4.MapUtils;
@@ -54,9 +60,9 @@ public interface UpsertPropertyMessageMapper {
             .address(toAddress(hotel))
             .contact(toContact(hotel))
             .starRating(StringUtils.isEmpty(hotel.getStarRating()) ? null : Float.parseFloat(hotel.getStarRating()))
-            .descriptions(null) // TODO DescriptionType 매핑필요
+            .descriptions(toDescriptions(hotel))
             .images(toImages(hotel))
-            .attributes(null) // TODO Attribute 매핑 필요
+            .attributes(toAttributes(hotel))
             .localInformations(Collections.emptyList())
             .ranking(null)
             .overallRating(null)
@@ -78,6 +84,48 @@ public interface UpsertPropertyMessageMapper {
             .mrtPartnerId(null) // TODO 파트너 ID 생성 후 작업
             .build();
     }
+
+    private List<Attribute> toAttributes(Hotel hotel) {
+        List<Attribute> attributes = new ArrayList<>();
+        Attribute categoryAttribute = Attribute.builder()
+            .attributeId(hotel.getHotelType())
+            .groupLevel1(GroupLevel1.CATEGORIES)
+            .build();
+        attributes.add(categoryAttribute);
+
+        for (Facility facility : hotel.getFacilities()) {
+            Attribute attribute = Attribute.builder()
+                .attributeId(facility.getFacilityCode())
+                .groupLevel1("FACILITY")
+                .build();
+            attributes.add(attribute);
+        }
+        return attributes;
+    }
+
+    private List<Description> toDescriptions(Hotel hotel) {
+        HotelDescriptions omhKoDescriptions = hotel.getKoDescriptions();
+        HotelDescriptions omhEnDescriptions = hotel.getEnDescriptions();
+
+        return List.of(
+            toDescription(PropertyDescriptionType.OVERVIEW, omhKoDescriptions.getIntroduction(), omhEnDescriptions.getIntroduction()),
+            toDescription(PropertyDescriptionType.BUSINESS_AMENITY, omhKoDescriptions.getHotelFacility(), omhEnDescriptions.getHotelFacility()),
+            toDescription(PropertyDescriptionType.ROOM, omhKoDescriptions.getRoomFacility(), omhEnDescriptions.getRoomFacility()),
+            toDescription(PropertyDescriptionType.REMARK, omhKoDescriptions.getCautions(), omhEnDescriptions.getCautions()),
+            toDescription(PropertyDescriptionType.OPTIONAL_CHECK_IN_GUIDE, omhKoDescriptions.getSpecialDescription(), omhEnDescriptions.getSpecialDescription()),
+            toDescription(PropertyDescriptionType.ATTRACTION, omhKoDescriptions.getAttractions(), omhEnDescriptions.getAttractions())
+            // TODO 운영 데이터 받은 후 getThere 타입 매핑 필요
+        );
+    }
+
+    private Description toDescription(PropertyDescriptionType type, String koDesc, String enDesc) {
+        return UpsertPropertyMessage.Description.builder()
+            .propertyDescriptionType(type)
+            .koDescription(koDesc)
+            .enDescription(enDesc)
+            .build();
+    }
+
 
     private List<Image> toImages(Hotel hotel) {
         List<UpsertPropertyMessage.Image> images = new ArrayList<>();
