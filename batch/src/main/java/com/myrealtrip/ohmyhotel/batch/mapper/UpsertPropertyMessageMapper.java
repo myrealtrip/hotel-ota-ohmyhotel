@@ -5,6 +5,7 @@ import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Hotel;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.HotelDescriptions;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Photo;
 import com.myrealtrip.unionstay.common.constant.CountryCode;
+import com.myrealtrip.unionstay.common.constant.MrtDiscountType;
 import com.myrealtrip.unionstay.common.constant.PropertyAttributeGroupLevel.GroupLevel1;
 import com.myrealtrip.unionstay.common.constant.PropertyDescriptionType;
 import com.myrealtrip.unionstay.common.constant.ProviderCode;
@@ -40,7 +41,7 @@ public interface UpsertPropertyMessageMapper {
     org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UpsertPropertyMessageMapper.class);
     DateTimeFormatter CHECK_IN_OUT_FORMATTER = DateTimeFormatter.ofPattern("[H:mm][HH:mm]");
 
-    default UpsertPropertyMessage toUpsertPropertyMessage(Hotel hotel) {
+    default UpsertPropertyMessage toUpsertPropertyMessage(Hotel hotel, boolean zeroMarginApply) {
         return UpsertPropertyMessage.builder()
             .providerType(ProviderType.GDS)
             .providerCode(ProviderCode.UNKNOWN) // TODO
@@ -80,7 +81,7 @@ public interface UpsertPropertyMessageMapper {
             .lastUpdatedAt(hotel.getUpdatedAt())
             .discountable(true)
             .forceUpdate(true)
-            .mrtDiscountTypes(null) // TODO 제로마진 스펙 추가 후 작업
+            .mrtDiscountTypes(toMrtDiscountTypes(zeroMarginApply))
             .mrtPartnerId(null) // TODO 파트너 ID 생성 후 작업
             .build();
     }
@@ -263,5 +264,9 @@ public interface UpsertPropertyMessageMapper {
             log.error("hotel {} LocalTime parse fail", hotelId, e);
             return null;
         }
+    }
+
+    private List<String> toMrtDiscountTypes(boolean zeroMarginApply) {
+        return zeroMarginApply ? List.of(MrtDiscountType.ZERO_MARGIN.name()) : List.of();
     }
 }

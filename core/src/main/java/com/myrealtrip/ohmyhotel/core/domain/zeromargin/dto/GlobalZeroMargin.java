@@ -30,4 +30,8 @@ public class GlobalZeroMargin {
     public boolean isOn() {
         return this.switchValue == SwitchValue.ON;
     }
+
+    public boolean isOff() {
+        return !isOn();
+    }
 }

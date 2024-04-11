@@ -18,7 +18,7 @@ public class CircuitBreakerFactory {
                                  CircuitBreakerSlackSender circuitBreakerSlackSender) {
         this.circuitBreakerRegistry = circuitBreakerRegistry;
         this.defaultCircuitBreakerConfig = circuitBreakerConfigBuilder // application-srt-common.yml 에 디폴트 설정 정의되어 있음
-            .ignoreExceptions() // TODO
+            .ignoreExceptions()
             .build();
         this.circuitBreakerSlackSender = circuitBreakerSlackSender;
     }
