@@ -26,4 +26,8 @@ public class GlobalZeroMargin {
     private SwitchValue switchValue;
 
     private String applyEnv;
+
+    public boolean isOn() {
+        return this.switchValue == SwitchValue.ON;
+    }
 }

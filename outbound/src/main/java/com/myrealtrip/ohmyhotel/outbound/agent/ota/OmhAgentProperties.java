@@ -10,7 +10,6 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @Getter
 @Setter
 @ConfigurationProperties("ohmyhotel.api")
-@ConstructorBinding
 public class OmhAgentProperties {
 
     private String baseUrl;

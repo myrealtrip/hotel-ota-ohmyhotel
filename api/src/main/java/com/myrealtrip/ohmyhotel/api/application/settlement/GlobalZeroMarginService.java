@@ -4,6 +4,9 @@ import com.myrealtrip.ohmyhotel.api.protocol.settlement.GlobalZeroMarginResponse
 import com.myrealtrip.ohmyhotel.api.protocol.settlement.GlobalZeroMarginUpsertRequest;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.GlobalZeroMargin;
 import com.myrealtrip.ohmyhotel.core.provider.zeromargin.GlobalZeroMarginProvider;
+import com.myrealtrip.ohmyhotel.outbound.agent.mrt.unionstay.UnionstaySwitchAgent;
+import com.myrealtrip.unionstay.dto.hotelota.switching.UnionstaySwitchKey;
+import com.myrealtrip.unionstay.dto.hotelota.switching.UnionstaySwitchKey.UnionstaySwitchValue;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ public class GlobalZeroMarginService {
     private String profile;
 
     private final GlobalZeroMarginProvider globalZeroMarginProvider;
+    private final UnionstaySwitchAgent unionstaySwitchAgent;
 
     @Transactional
     public void upsertGlobalZeroMargin(GlobalZeroMarginUpsertRequest globalZeroMarginUpsertRequest) {
@@ -45,5 +49,17 @@ public class GlobalZeroMarginService {
             .zeroMarginRate(globalZeroMargin.getZeroMarginRate())
             .switchValue(globalZeroMargin.getSwitchValue())
             .build();
+    }
+
+    @Transactional
+    public void callUnionstayZeroMarginSwitch() {
+        GlobalZeroMargin globalZeroMargin = globalZeroMarginProvider.getByGlobalZeroMarginId(globalZeroMarginId);
+        if (isNull(globalZeroMargin)) {
+            throw new IllegalStateException("GlobalZeroMargin 이 존재하지 않습니다.");
+        }
+        unionstaySwitchAgent.updateSwitch(
+            UnionstaySwitchKey.ZERO_MARGIN_OH_MY_HOTEL,
+            globalZeroMargin.isOn() ? UnionstaySwitchValue.A : UnionstaySwitchValue.B
+        );
     }
 }

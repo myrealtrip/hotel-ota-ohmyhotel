@@ -32,7 +32,7 @@ public class GlobalZeroMarginController {
     @PostMapping("/globalZeroMargin")
     public Resource<Void> updateSwitch(@RequestBody GlobalZeroMarginUpsertRequest globalZeroMarginUpsertRequest) {
         globalZeroMarginService.upsertGlobalZeroMargin(globalZeroMarginUpsertRequest);
-        // TODO 통합숙소 스위치 API 호출
+        globalZeroMarginService.callUnionstayZeroMarginSwitch();
         return Resource.<Void>builder()
             .data(null)
             .build();
