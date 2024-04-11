@@ -28,8 +28,8 @@ public class GlobalZeroMarginEntity extends BaseEntity {
     @Column(name = "global_zero_margin_id", nullable = false)
     private Long globalZeroMarginId;
 
-    @Column(name = "zero_margin_mark_up_rate")
-    private BigDecimal zeroMarginMarkUpRate;
+    @Column(name = "zero_margin_rate")
+    private BigDecimal zeroMarginRate;
 
     @Column(name = "switch_value")
     @Enumerated(value = EnumType.STRING)

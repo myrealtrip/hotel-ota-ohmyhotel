@@ -1,0 +1,78 @@
+---
+spring:
+  config:
+    activate:
+      on-profile: "local"
+
+zero-margin:
+  global-zero-margin-id: 1
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "dev"
+
+zero-margin:
+  global-zero-margin-id: 1
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "dev01"
+
+zero-margin:
+  global-zero-margin-id: 2
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "dev02"
+
+zero-margin:
+  global-zero-margin-id: 3
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "test"
+
+zero-margin:
+  global-zero-margin-id: 1
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "test01"
+
+zero-margin:
+  global-zero-margin-id: 2
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - "test02"
+
+zero-margin:
+  global-zero-margin-id: 3
+---
+spring:
+  config:
+    activate:
+      on-profile: "stage"
+
+zero-margin:
+  global-zero-margin-id: 1
+---
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+
+zero-margin:
+  global-zero-margin-id: 2

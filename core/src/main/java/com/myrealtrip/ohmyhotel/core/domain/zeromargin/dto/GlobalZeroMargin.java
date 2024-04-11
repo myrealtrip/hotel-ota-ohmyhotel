@@ -21,7 +21,7 @@ public class GlobalZeroMargin {
 
     private Long globalZeroMarginId;
 
-    private BigDecimal zeroMarginMarkUpRate;
+    private BigDecimal zeroMarginRate;
 
     private SwitchValue switchValue;
 
