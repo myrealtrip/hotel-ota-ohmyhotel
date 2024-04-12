@@ -7,16 +7,53 @@ import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.HotelDescriptions;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.HotelModifyInfo;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Photo;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response.OmhStaticHotelInfoListResponse.OmhHotelInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
-@Mapper(componentModel = "spring")
-public interface OmhHotelInfoMapper {
+@Component
+@Slf4j
+public class OmhHotelInfoMapper {
 
-    default Hotel toHotel(OmhHotelInfoAggr omhHotelInfoAggr, HotelModifyInfo hotelModifyInfo) {
+    private static final Long TEST_HOTEL_ID = 862813L;
+
+    @Value("${spring.profiles.active}")
+    private String profile;
+
+    public Hotel toHotel(OmhHotelInfoAggr omhHotelInfoAggr, HotelModifyInfo hotelModifyInfo) {
+        if (!profile.contains("stage") &&
+            !profile.contains("prod") &&
+            omhHotelInfoAggr.getHotelCode().equals(TEST_HOTEL_ID)) {
+            return toTestHotel(omhHotelInfoAggr, hotelModifyInfo);
+        }
+        return toHotelBuilder(omhHotelInfoAggr, hotelModifyInfo).build();
+    }
+
+    /**
+     * 통합숙소 입점을 위해 필요한 필수정보를 테스트 호텔이 가지고 있지 않아 임의로 정보를 채웁니다.
+     */
+    private Hotel toTestHotel(OmhHotelInfoAggr omhHotelInfoAggr, HotelModifyInfo hotelModifyInfo) {
+        return toHotelBuilder(omhHotelInfoAggr, hotelModifyInfo)
+            .koAddress("2-19-2 Chiyozaki, Nishi-ku")
+            .enAddress("2-19-2 Chiyozaki, Nishi-ku")
+            .checkInTime("3:00 PM")
+            .checkOutTime("11:00 AM")
+            .latitude(34.67234)
+            .longitude(135.479768)
+            .photos(List.of(Photo.builder()
+                                .url("https://photos01.ohmyhotel.com/hotels/11000000/10010000/10007500/10007435/039152d8_z.jpg")
+                                .order(1)
+                                .build()))
+            .build();
+    }
+
+    private Hotel.HotelBuilder toHotelBuilder(OmhHotelInfoAggr omhHotelInfoAggr, HotelModifyInfo hotelModifyInfo) {
         OmhHotelInfo koInfo = omhHotelInfoAggr.getKoInfo();
         OmhHotelInfo enInfo = omhHotelInfoAggr.getEnInfo();
 
@@ -79,7 +116,6 @@ public interface OmhHotelInfoMapper {
             .updatedAt(isNull(hotelModifyInfo) ? null : hotelModifyInfo.getUpdatedAt())
             .updatedBy(isNull(hotelModifyInfo) ? null : hotelModifyInfo.getUpdatedBy())
             .deletedAt(isNull(hotelModifyInfo) ? null : hotelModifyInfo.getDeletedAt())
-            .deletedBy(isNull(hotelModifyInfo) ? null : hotelModifyInfo.getDeletedBy())
-            .build();
+            .deletedBy(isNull(hotelModifyInfo) ? null : hotelModifyInfo.getDeletedBy());
     }
 }
