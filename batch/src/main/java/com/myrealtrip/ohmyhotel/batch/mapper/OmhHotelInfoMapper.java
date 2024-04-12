@@ -29,7 +29,7 @@ public class OmhHotelInfoMapper {
         if (!profile.contains("stage") &&
             !profile.contains("prod") &&
             omhHotelInfoAggr.getHotelCode().equals(TEST_HOTEL_ID)) {
-            toTestHotel(omhHotelInfoAggr, hotelModifyInfo);
+            return toTestHotel(omhHotelInfoAggr, hotelModifyInfo);
         }
         return toHotelBuilder(omhHotelInfoAggr, hotelModifyInfo).build();
     }
@@ -38,7 +38,6 @@ public class OmhHotelInfoMapper {
      * 통합숙소 입점을 위해 필요한 필수정보를 테스트 호텔이 가지고 있지 않아 임의로 정보를 채웁니다.
      */
     private Hotel toTestHotel(OmhHotelInfoAggr omhHotelInfoAggr, HotelModifyInfo hotelModifyInfo) {
-        log.info("테스트 실행!");
         return toHotelBuilder(omhHotelInfoAggr, hotelModifyInfo)
             .koAddress("2-19-2 Chiyozaki, Nishi-ku")
             .enAddress("2-19-2 Chiyozaki, Nishi-ku")
