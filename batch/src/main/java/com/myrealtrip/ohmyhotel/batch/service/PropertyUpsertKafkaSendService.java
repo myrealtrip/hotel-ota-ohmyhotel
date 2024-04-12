@@ -29,9 +29,17 @@ public class PropertyUpsertKafkaSendService {
     private final ZeroMarginSearchService zeroMarginSearchService;
 
     public void sendByHotelIds(List<Long> hotelIds) {
+        List<Hotel> hotels = hotelProvider.getByHotelIds(hotelIds);
+        sendByHotels(hotels);
+    }
+
+    public void sendByHotels(List<Hotel> hotels) {
+        List<Long> hotelIds = hotels.stream()
+            .map(Hotel::getHotelId)
+            .collect(Collectors.toList());
+
         Map<Long, ZeroMargin> zeroMarginMap = zeroMarginSearchService.getZeroMargins(hotelIds, false);
-        List<UpsertPropertyMessage> messages = hotelProvider.getByHotelIds(hotelIds)
-            .stream()
+        List<UpsertPropertyMessage> messages = hotels.stream()
             .map(hotel -> {
                 ZeroMargin zeroMargin = zeroMarginMap.get(hotel.getHotelId());
                 return upsertPropertyMessageMapper.toUpsertPropertyMessage(hotel, zeroMargin.isOn());
