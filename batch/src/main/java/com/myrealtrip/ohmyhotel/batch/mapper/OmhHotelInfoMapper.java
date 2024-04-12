@@ -12,6 +12,7 @@ import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -45,6 +46,10 @@ public class OmhHotelInfoMapper {
             .checkOutTime("11:00 AM")
             .latitude(34.67234)
             .longitude(135.479768)
+            .photos(List.of(Photo.builder()
+                                .url("https://photos01.ohmyhotel.com/hotels/11000000/10010000/10007500/10007435/039152d8_z.jpg")
+                                .order(1)
+                                .build()))
             .build();
     }
 
