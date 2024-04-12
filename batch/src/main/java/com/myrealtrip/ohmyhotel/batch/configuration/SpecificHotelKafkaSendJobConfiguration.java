@@ -5,6 +5,7 @@ import com.myrealtrip.ohmyhotel.batch.service.PropertyUpsertKafkaSendService;
 import com.myrealtrip.ohmyhotel.batch.storage.HotelCodeStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;

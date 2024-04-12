@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 
 @Mapper(componentModel = "spring")
 public interface UpsertPropertyMessageMapper {
@@ -107,6 +108,10 @@ public interface UpsertPropertyMessageMapper {
     private List<Description> toDescriptions(Hotel hotel) {
         HotelDescriptions omhKoDescriptions = hotel.getKoDescriptions();
         HotelDescriptions omhEnDescriptions = hotel.getEnDescriptions();
+
+        if (isNull(omhEnDescriptions)) {
+            return List.of();
+        }
 
         return List.of(
             toDescription(PropertyDescriptionType.OVERVIEW, omhKoDescriptions.getIntroduction(), omhEnDescriptions.getIntroduction()),

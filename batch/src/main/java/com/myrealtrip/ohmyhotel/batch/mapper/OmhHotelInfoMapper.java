@@ -8,15 +8,45 @@ import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.HotelModifyInfo;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Photo;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response.OmhStaticHotelInfoListResponse.OmhHotelInfo;
 import org.mapstruct.Mapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
-@Mapper(componentModel = "spring")
-public interface OmhHotelInfoMapper {
+@Component
+public class OmhHotelInfoMapper {
 
-    default Hotel toHotel(OmhHotelInfoAggr omhHotelInfoAggr, HotelModifyInfo hotelModifyInfo) {
+    private static final Long TEST_HOTEL_ID = 862813L;
+
+    @Value("${spring.profiles.active}")
+    private String profile;
+
+    public Hotel toHotel(OmhHotelInfoAggr omhHotelInfoAggr, HotelModifyInfo hotelModifyInfo) {
+        if (!profile.contains("stage") &&
+            !profile.contains("prod") &&
+            omhHotelInfoAggr.getHotelCode().equals(TEST_HOTEL_ID)) {
+            toTestHotel(omhHotelInfoAggr, hotelModifyInfo);
+        }
+        return toHotelBuilder(omhHotelInfoAggr, hotelModifyInfo).build();
+    }
+
+    /**
+     * 통합숙소 입점을 위해 필요한 필수정보를 테스트 호텔이 가지고 있지 않아 임의로 정보를 채웁니다.
+     */
+    private Hotel toTestHotel(OmhHotelInfoAggr omhHotelInfoAggr, HotelModifyInfo hotelModifyInfo) {
+        return toHotelBuilder(omhHotelInfoAggr, hotelModifyInfo)
+            .koAddress("2-19-2 Chiyozaki, Nishi-ku")
+            .enAddress("2-19-2 Chiyozaki, Nishi-ku")
+            .checkInTime("3:00 PM")
+            .checkOutTime("11:00 AM")
+            .latitude(34.67234)
+            .longitude(135.479768)
+            .build();
+    }
+
+    private Hotel.HotelBuilder toHotelBuilder(OmhHotelInfoAggr omhHotelInfoAggr, HotelModifyInfo hotelModifyInfo) {
         OmhHotelInfo koInfo = omhHotelInfoAggr.getKoInfo();
         OmhHotelInfo enInfo = omhHotelInfoAggr.getEnInfo();
 
@@ -79,7 +109,6 @@ public interface OmhHotelInfoMapper {
             .updatedAt(isNull(hotelModifyInfo) ? null : hotelModifyInfo.getUpdatedAt())
             .updatedBy(isNull(hotelModifyInfo) ? null : hotelModifyInfo.getUpdatedBy())
             .deletedAt(isNull(hotelModifyInfo) ? null : hotelModifyInfo.getDeletedAt())
-            .deletedBy(isNull(hotelModifyInfo) ? null : hotelModifyInfo.getDeletedBy())
-            .build();
+            .deletedBy(isNull(hotelModifyInfo) ? null : hotelModifyInfo.getDeletedBy());
     }
 }
