@@ -266,7 +266,7 @@ public interface UpsertPropertyMessageMapper {
         try {
             return LocalTime.parse(StringUtils.replace(checkInOutTimeStr, " ", ""));
         } catch (Exception e) {
-            log.error("hotel {} LocalTime parse fail", hotelId, e);
+            log.error("hotel {} check-in-out LocalTime parse fail", hotelId);
             return null;
         }
     }
