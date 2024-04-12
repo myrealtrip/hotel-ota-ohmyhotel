@@ -24,7 +24,7 @@ public class HotelUpdateChunkListener implements ChunkListener {
 
     @Override
     public void afterChunk(ChunkContext context) {
-        propertyUpsertKafkaSendService.sendByHotelIds(chunkUpdatedHotelCodeStorage.getHotelCodes());
+//        propertyUpsertKafkaSendService.sendByHotelIds(chunkUpdatedHotelCodeStorage.getHotelCodes());
     }
 
     @Override
