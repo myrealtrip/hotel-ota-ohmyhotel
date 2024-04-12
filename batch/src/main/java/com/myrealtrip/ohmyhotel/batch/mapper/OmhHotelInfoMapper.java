@@ -7,6 +7,7 @@ import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.HotelDescriptions;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.HotelModifyInfo;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Photo;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response.OmhStaticHotelInfoListResponse.OmhHotelInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.isNull;
 
 @Component
+@Slf4j
 public class OmhHotelInfoMapper {
 
     private static final Long TEST_HOTEL_ID = 862813L;
@@ -36,6 +38,7 @@ public class OmhHotelInfoMapper {
      * 통합숙소 입점을 위해 필요한 필수정보를 테스트 호텔이 가지고 있지 않아 임의로 정보를 채웁니다.
      */
     private Hotel toTestHotel(OmhHotelInfoAggr omhHotelInfoAggr, HotelModifyInfo hotelModifyInfo) {
+        log.info("테스트 실행!");
         return toHotelBuilder(omhHotelInfoAggr, hotelModifyInfo)
             .koAddress("2-19-2 Chiyozaki, Nishi-ku")
             .enAddress("2-19-2 Chiyozaki, Nishi-ku")
