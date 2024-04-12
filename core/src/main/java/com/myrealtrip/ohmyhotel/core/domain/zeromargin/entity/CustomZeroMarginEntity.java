@@ -36,6 +36,7 @@ public class CustomZeroMarginEntity extends BaseEntity {
     private Long hotelId;
 
     @Column(name = "zero_margin_type")
+    @Enumerated(value = EnumType.STRING)
     private ZeroMarginType zeroMarginType;
 
     @Column(name = "zero_margin_rate")

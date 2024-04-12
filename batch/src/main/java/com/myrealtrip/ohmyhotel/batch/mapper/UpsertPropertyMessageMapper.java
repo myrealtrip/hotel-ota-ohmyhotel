@@ -44,7 +44,7 @@ public interface UpsertPropertyMessageMapper {
     default UpsertPropertyMessage toUpsertPropertyMessage(Hotel hotel, boolean zeroMarginApply) {
         return UpsertPropertyMessage.builder()
             .providerType(ProviderType.GDS)
-            .providerCode(ProviderCode.UNKNOWN) // TODO
+            .providerCode(ProviderCode.OH_MY_HOTEL)
             .providerPropertyId(String.valueOf((hotel.getHotelId())))
             .providerPropertyStatus(hotel.isActive() ? ProviderPropertyStatus.ON_SALE : ProviderPropertyStatus.OFF_SALE)
             .chainId(null)

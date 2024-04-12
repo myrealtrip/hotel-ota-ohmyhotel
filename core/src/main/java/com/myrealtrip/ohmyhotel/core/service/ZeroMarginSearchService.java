@@ -78,7 +78,7 @@ public class ZeroMarginSearchService {
     }
 
     @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
-    private void setGlobalZeroMargin() {
+    void setGlobalZeroMargin() {
         GlobalZeroMargin globalZeroMargin = globalZeroMarginProvider.getByGlobalZeroMarginId(globalZeroMarginId);
         if (isNull(globalZeroMargin)) {
             this.globalZeroMargin = GlobalZeroMargin.builder()

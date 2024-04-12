@@ -1,15 +1,20 @@
 package com.myrealtrip.ohmyhotel.api.application.settlement;
 
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.CustomZeroMargin;
+import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.core.provider.zeromargin.CustomZeroMarginProvider;
 import com.myrealtrip.ohmyhotel.core.service.MrtDiscountTypesUpdateKafkaSendService;
+import com.myrealtrip.ohmyhotel.core.service.ZeroMarginSearchService;
 import com.myrealtrip.ohmyhotel.enumarate.ZeroMarginType;
+import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import com.myrealtrip.unionstay.common.constant.ProviderCode;
 import com.myrealtrip.unionstay.common.constant.ProviderType;
 import com.myrealtrip.unionstay.common.constant.SettlementApplyType;
 import com.myrealtrip.unionstay.common.constant.SettlementConfigType;
+import com.myrealtrip.unionstay.dto.hotelota.settlementconfig.SettlementConfigGetRequest;
 import com.myrealtrip.unionstay.dto.hotelota.settlementconfig.SettlementConfigItem;
 import com.myrealtrip.unionstay.dto.hotelota.settlementconfig.SettlementConfigRequest;
+import com.myrealtrip.unionstay.dto.hotelota.settlementconfig.SettlementConfigResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -29,6 +34,7 @@ public class SettlementService {
 
     private final CustomZeroMarginProvider customZeroMarginProvider;
     private final MrtDiscountTypesUpdateKafkaSendService mrtDiscountTypesUpdateKafkaSendService;
+    private final ZeroMarginSearchService zeroMarginSearchService;
 
     @Transactional
     public void upsert(SettlementConfigRequest request) {
@@ -49,6 +55,25 @@ public class SettlementService {
         List<CustomZeroMargin> updateCustomZeroMargins = getUpdateCustomZeroMargins(request, existCustomZeroMarginMap);
         customZeroMarginProvider.upsert(ListUtils.union(insertCustomZeroMargins, updateCustomZeroMargins));
         mrtDiscountTypesUpdateKafkaSendService.sendByHotelIds(propertyIdsForCustomZeroMarginUpsert);
+    }
+
+    public SettlementConfigResponse getSettlementConfig(SettlementConfigGetRequest request) {
+        if (request.getProviderType() != request.getProviderType() ||
+            request.getProviderCode() != ProviderCode.OH_MY_HOTEL ||
+            request.getConfigType() != SettlementConfigType.ZERO_MARGIN) {
+            log.info("{}", ObjectMapperUtils.writeAsString(request));
+            throw new IllegalArgumentException("처리할 수 없는 요청 입니다.");
+        }
+        ZeroMargin zeroMargin = zeroMarginSearchService.getZeroMargin(Long.valueOf(request.getProviderPropertyId()), false);
+        return SettlementConfigResponse.builder()
+            .providerType(ProviderType.GDS)
+            .providerCode(ProviderCode.OH_MY_HOTEL)
+            .providerPropertyId(request.getProviderPropertyId())
+            .configType(SettlementConfigType.ZERO_MARGIN)
+            .applyType(toSettlementApplyType(zeroMargin.getType()))
+            .commissionRate(zeroMargin.getZeroMarginRate())
+            .mrtCommissionRate(null) // TODO 수수료 확인 후 세팅
+            .build();
     }
 
     private List<Long> getHotelIdsForCustomZeroMarginUpsert(SettlementConfigRequest request) {
