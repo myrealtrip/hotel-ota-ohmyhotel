@@ -2,7 +2,7 @@ package com.myrealtrip.ohmyhotel.batch.configuration;
 
 import com.myrealtrip.ohmyhotel.batch.listener.HotelUpdateChunkListener;
 import com.myrealtrip.ohmyhotel.batch.mapper.OmhHotelInfoMapper;
-import com.myrealtrip.ohmyhotel.batch.reader.HotelCodeApiReader;
+import com.myrealtrip.ohmyhotel.batch.reader.HotelCodeStorageReader;
 import com.myrealtrip.ohmyhotel.batch.service.PropertyUpsertKafkaSendService;
 import com.myrealtrip.ohmyhotel.batch.storage.HotelCodeStorage;
 import com.myrealtrip.ohmyhotel.batch.tasklet.GetUpdatedHotelCodesTasklet;
@@ -12,7 +12,6 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.OmhStaticHotelBulk
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.OmhStaticHotelInfoListAgent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -73,7 +72,7 @@ public class HotelSyncJobConfiguration {
         return stepBuilderFactory.get("hotelUpsertStep")
             .transactionManager(transactionManager)
             .<Long, Long>chunk(CHUNK_SIZE)
-            .reader(hotelInfoReader(null))
+            .reader(hotelCodeStorageReader(null))
             .writer(hotelInfoWriter(null, null, null, null))
             .listener(new HotelUpdateChunkListener(chunkUpdatedHotelCodeStorage, propertyUpsertKafkaSendService))
             .build();
@@ -92,8 +91,8 @@ public class HotelSyncJobConfiguration {
 
     @Bean
     @StepScope
-    public ItemReader<Long> hotelInfoReader(@Qualifier("updatedHotelCodeStorage") HotelCodeStorage hotelCodeStorage) {
-        return new HotelCodeApiReader(hotelCodeStorage, CHUNK_SIZE);
+    public ItemReader<Long> hotelCodeStorageReader(@Qualifier("updatedHotelCodeStorage") HotelCodeStorage hotelCodeStorage) {
+        return new HotelCodeStorageReader(hotelCodeStorage, CHUNK_SIZE);
     }
 
     @Bean

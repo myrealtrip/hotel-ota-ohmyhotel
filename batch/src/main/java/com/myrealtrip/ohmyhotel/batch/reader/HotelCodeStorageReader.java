@@ -17,16 +17,13 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-/**
- * 오마이호텔에서 호텔코드를 가져온다.
- */
 @Slf4j
-public class HotelCodeApiReader extends AbstractPagingItemReader<Long> {
+public class HotelCodeStorageReader extends AbstractPagingItemReader<Long> {
 
     private final HotelCodeStorage updatedHotelCodeStorage;
 
-    public HotelCodeApiReader(HotelCodeStorage updatedHotelCodeStorage,
-                              int pageSize) {
+    public HotelCodeStorageReader(HotelCodeStorage updatedHotelCodeStorage,
+                                  int pageSize) {
         this.updatedHotelCodeStorage = updatedHotelCodeStorage;
         super.setPageSize(pageSize);
     }
