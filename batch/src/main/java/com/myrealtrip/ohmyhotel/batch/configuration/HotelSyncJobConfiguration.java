@@ -81,7 +81,7 @@ public class HotelSyncJobConfiguration {
     @Bean
     @StepScope
     public Tasklet getUpdatedHotelCodesTasklet(@Value("#{jobParameters[beforeDays]}") Integer beforeDays,
-                                               @Qualifier("updatedHotelCodeStorage") HotelCodeStorage hotelCodeStorage,
+                                               @Qualifier("allHotelCodeStorage") HotelCodeStorage hotelCodeStorage,
                                                OmhStaticHotelBulkListAgent omhStaticHotelBulkListAgent) {
         LocalDate lastUpdatedDate = isNull(beforeDays) ?
                                     LocalDate.of(1970, 1, 1) :
@@ -91,7 +91,7 @@ public class HotelSyncJobConfiguration {
 
     @Bean
     @StepScope
-    public ItemReader<Long> hotelCodeStorageReader(@Qualifier("updatedHotelCodeStorage") HotelCodeStorage hotelCodeStorage) {
+    public ItemReader<Long> hotelCodeStorageReader(@Qualifier("allHotelCodeStorage") HotelCodeStorage hotelCodeStorage) {
         return new HotelCodeStorageReader(hotelCodeStorage, CHUNK_SIZE);
     }
 
@@ -104,7 +104,7 @@ public class HotelSyncJobConfiguration {
         return new HotelInfoWriter(hotelProvider, omhHotelInfoMapper, omhStaticHotelInfoListAgent, chunkUpdatedHotelCodeStorage);
     }
 
-    @Bean(name = "updatedHotelCodeStorage")
+    @Bean(name = "allHotelCodeStorage")
     public HotelCodeStorage updatedHotelCodeStorage() {
         return new HotelCodeStorage();
     }
