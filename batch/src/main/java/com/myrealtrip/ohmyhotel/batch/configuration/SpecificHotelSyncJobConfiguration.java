@@ -5,10 +5,8 @@ import com.myrealtrip.ohmyhotel.batch.mapper.OmhHotelInfoMapper;
 import com.myrealtrip.ohmyhotel.batch.reader.HotelCodeStorageReader;
 import com.myrealtrip.ohmyhotel.batch.service.PropertyUpsertKafkaSendService;
 import com.myrealtrip.ohmyhotel.batch.storage.HotelCodeStorage;
-import com.myrealtrip.ohmyhotel.batch.tasklet.GetUpdatedHotelCodesTasklet;
 import com.myrealtrip.ohmyhotel.batch.writer.HotelInfoWriter;
 import com.myrealtrip.ohmyhotel.core.provider.hotel.HotelProvider;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.OmhStaticHotelBulkListAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.OmhStaticHotelInfoListAgent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +16,6 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,20 +25,20 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import java.time.LocalDate;
-
-import static java.util.Objects.isNull;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * 오마이호텔로부터 호텔 정보를 싱크한다.
+ * 특정 호텔을 오마이호텔로부터 싱크한다.
  */
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-@ConditionalOnProperty(name = "spring.batch.job.names", havingValue = HotelSyncJobConfiguration.HOTEL_SYNC_JOB)
-public class HotelSyncJobConfiguration {
+@ConditionalOnProperty(name = "spring.batch.job.names", havingValue = SpecificHotelSyncJobConfiguration.SPECIFIC_HOTEL_SYNC_JOB)
+public class SpecificHotelSyncJobConfiguration {
 
-    public static final String HOTEL_SYNC_JOB = "HOTEL_SYNC_JOB";
+    public static final String SPECIFIC_HOTEL_SYNC_JOB = "SPECIFIC_HOTEL_SYNC_JOB";
     private static final int CHUNK_SIZE = 100;
 
     private final JobBuilderFactory jobBuilderFactory;
@@ -49,30 +46,20 @@ public class HotelSyncJobConfiguration {
     private final PlatformTransactionManager transactionManager;
 
     @Bean
-    public Job hotelSyncJob() {
-        return jobBuilderFactory.get(HOTEL_SYNC_JOB)
-            .start(getUpdatedHotelCodesStep())
-            .next(hotelUpsertStep(null, null))
+    public Job specificHotelSyncJob() {
+        return jobBuilderFactory.get(SPECIFIC_HOTEL_SYNC_JOB)
+            .start(specificHotelSyncStep(null, null))
             .build();
     }
 
     @Bean
     @JobScope
-    public Step getUpdatedHotelCodesStep() {
-        return stepBuilderFactory.get("getUpdatedHotelCodesStep")
-            .transactionManager(transactionManager)
-            .tasklet(getUpdatedHotelCodesTasklet(null, null, null))
-            .build();
-    }
-
-    @Bean
-    @JobScope
-    public Step hotelUpsertStep(@Qualifier("chunkUpdatedHotelCodeStorage") HotelCodeStorage chunkUpdatedHotelCodeStorage,
-                                PropertyUpsertKafkaSendService propertyUpsertKafkaSendService) {
-        return stepBuilderFactory.get("hotelUpsertStep")
+    public Step specificHotelSyncStep(@Qualifier("chunkUpdatedHotelCodeStorage") HotelCodeStorage chunkUpdatedHotelCodeStorage,
+                                      PropertyUpsertKafkaSendService propertyUpsertKafkaSendService) {
+        return stepBuilderFactory.get("specificHotelSyncStep")
             .transactionManager(transactionManager)
             .<Long, Long>chunk(CHUNK_SIZE)
-            .reader(hotelCodeStorageReader(null))
+            .reader(hotelCodeStorageReader(null, null))
             .writer(hotelInfoWriter(null, null, null, null))
             .listener(new HotelUpdateChunkListener(chunkUpdatedHotelCodeStorage, propertyUpsertKafkaSendService))
             .build();
@@ -80,19 +67,14 @@ public class HotelSyncJobConfiguration {
 
     @Bean
     @StepScope
-    public Tasklet getUpdatedHotelCodesTasklet(@Value("#{jobParameters[beforeDays]}") Integer beforeDays,
-                                               @Qualifier("allHotelCodeStorage") HotelCodeStorage hotelCodeStorage,
-                                               OmhStaticHotelBulkListAgent omhStaticHotelBulkListAgent) {
-        LocalDate lastUpdatedDate = isNull(beforeDays) ?
-                                    LocalDate.of(1970, 1, 1) :
-                                    LocalDate.now().minusDays(beforeDays);
-        return new GetUpdatedHotelCodesTasklet(hotelCodeStorage, omhStaticHotelBulkListAgent, lastUpdatedDate);
-    }
-
-    @Bean
-    @StepScope
-    public ItemReader<Long> hotelCodeStorageReader(@Qualifier("allHotelCodeStorage") HotelCodeStorage hotelCodeStorage) {
-        return new HotelCodeStorageReader(hotelCodeStorage, CHUNK_SIZE);
+    public ItemReader<Long> hotelCodeStorageReader(@Value("#{jobParameters[hotelIds]}") String hotelIdsParam,
+                                                   @Qualifier("allHotelCodeStorage") HotelCodeStorage allHotelCodeStorage) {
+        List<Long> hotelIds = Arrays.stream(hotelIdsParam.replaceAll(" ", "").split(","))
+            .distinct()
+            .map(Long::valueOf)
+            .collect(Collectors.toList());
+        allHotelCodeStorage.saveAll(hotelIds);
+        return new HotelCodeStorageReader(allHotelCodeStorage, CHUNK_SIZE);
     }
 
     @Bean
@@ -105,7 +87,7 @@ public class HotelSyncJobConfiguration {
     }
 
     @Bean(name = "allHotelCodeStorage")
-    public HotelCodeStorage updatedHotelCodeStorage() {
+    public HotelCodeStorage hotelCodeStorage() {
         return new HotelCodeStorage();
     }
 

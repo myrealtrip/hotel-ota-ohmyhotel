@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class GetUpdatedHotelCodesTasklet implements Tasklet {
 
-    private final HotelCodeStorage updatedHotelCodeStorage;
+    private final HotelCodeStorage allHotelCodeStorage;
     private final OmhStaticHotelBulkListAgent omhStaticHotelBulkListAgent;
     private final LocalDate lastUpdateDate;
 
@@ -37,10 +37,10 @@ public class GetUpdatedHotelCodesTasklet implements Tasklet {
             List<Long> hotelCodes = response.getHotels().stream()
                 .map(OmhBulkHotel::getHotelCode)
                 .collect(Collectors.toList());
-            updatedHotelCodeStorage.saveAll(hotelCodes);
+            allHotelCodeStorage.saveAll(hotelCodes);
             lastHotelCode = hotelCodes.get(hotelCodes.size() - 1);
         }
-        log.info("total updated hotel size: {}", updatedHotelCodeStorage.getHotelCodes().size());
+        log.info("total updated hotel size: {}", allHotelCodeStorage.getHotelCodes().size());
         return RepeatStatus.FINISHED;
     }
 }
