@@ -15,7 +15,7 @@ public enum BedTypeCode {
     BDT06("Extrabed"),
     BDT07("Floor Bedding"),
     BDT08("Sofa bed"),
-    BDT09("Bung Bed"),
+    BDT09("Bunk Bed"),
     BDT10("Capsule Bed"),
     BDT11("Camping Deck");
 

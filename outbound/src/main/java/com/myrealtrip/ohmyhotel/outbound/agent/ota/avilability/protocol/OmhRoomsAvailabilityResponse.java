@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
 import com.myrealtrip.ohmyhotel.enumarate.PromotionType;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhHotelsAvailabilityResponse.OmhRoomSimpleAvailability;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCancelPolicy;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhNightlyAmount;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCommonResponse;
@@ -15,7 +16,12 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
 
 @SuperBuilder
 @Getter
@@ -24,14 +30,22 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhRoomsAvailabilityResponse extends OmhCommonResponse {
 
-    private List<RoomAvailability> rooms;
+    private List<OmhRoomAvailability> rooms;
+
+    public Map<String, List<OmhRoomAvailability>> getRoomsGroupByRoomTypeCode() {
+        if (isNull(rooms)) {
+            return Collections.emptyMap();
+        }
+        return rooms.stream()
+            .collect(Collectors.groupingBy(OmhRoomAvailability::getRoomTypeCode));
+    }
 
     @SuperBuilder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class RoomAvailability {
+    public static class OmhRoomAvailability {
 
         private String roomTypeCode;
 

@@ -14,7 +14,12 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
 
 @SuperBuilder
 @Getter
@@ -23,14 +28,14 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhHotelsAvailabilityResponse extends OmhCommonResponse {
 
-    private List<HotelAvailability> hotels;
+    private List<OmhHotelAvailability> hotels;
 
     @SuperBuilder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class HotelAvailability {
+    public static class OmhHotelAvailability {
 
         private Long hotelCode;
 
@@ -54,7 +59,15 @@ public class OmhHotelsAvailabilityResponse extends OmhCommonResponse {
 
         private Boolean recommendYn;
 
-        private List<RoomSimpleAvailability> rooms;
+        private List<OmhRoomSimpleAvailability> rooms;
+
+        public Map<String, List<OmhRoomSimpleAvailability>> getRoomsGroupByRoomTypeCode() {
+            if (isNull(rooms)) {
+                return Collections.emptyMap();
+            }
+            return rooms.stream()
+                .collect(Collectors.groupingBy(OmhRoomSimpleAvailability::getRoomTypeCode));
+        }
     }
 
     @SuperBuilder
@@ -62,7 +75,7 @@ public class OmhHotelsAvailabilityResponse extends OmhCommonResponse {
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class RoomSimpleAvailability {
+    public static class OmhRoomSimpleAvailability {
 
         private String roomTypeCode;
 

@@ -7,19 +7,20 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum MealBasisCode {
 
-    A("All meals"),
-    B("Breakfast included"),
-    C("Dinner included"),
-    D("Breakfast and dinner included"),
-    E("Launch included"),
-    F("Breakfast, lunch and dinner included"),
-    G("Gold"),
-    H("Halfboard"),
-    I("All Inclusive"),
-    L("Breakfast and lunch included"),
-    N("None"),
-    S("Silver"),
-    Z("N/A");
+    A("All meals", "조식, 중식, 석식 포함"),
+    B("Breakfast included", "조식 포함"),
+    C("Dinner included", "석식 포함"),
+    D("Breakfast and dinner included", "조식, 석식 포함"),
+    E("Launch included", "중식 포함"),
+    F("Breakfast, lunch and dinner included", "조식, 중식, 석식 포함"),
+    G("Gold", "Gold"),
+    H("Halfboard", "Halfboard"),
+    I("All Inclusive", "올 인클루시브"),
+    L("Breakfast and lunch included", "조식, 중식 포함"),
+    N("None", null),
+    S("Silver", "Silver"),
+    Z("N/A", null);
 
     private final String description;
+    private final String exposedName;
 }
