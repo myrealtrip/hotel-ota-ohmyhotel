@@ -9,6 +9,7 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhHotel
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhHotelsAvailabilityRequest;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomsAvailabilityRequest;
+import com.myrealtrip.unionstay.common.constant.ProviderCode;
 import com.myrealtrip.unionstay.dto.hotelota.search.request.SearchRequest;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.SearchResponse;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class SearchService {
     public SearchResponse search(SearchRequest searchRequest) {
         if (CollectionUtils.isEmpty(searchRequest.getPropertyIds())) {
             return SearchResponse.builder()
+                .providerCode(ProviderCode.OH_MY_HOTEL)
                 .searchId(null)
                 .properties(Collections.emptyList())
                 .build();
