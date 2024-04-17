@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.api.application.search;
+package com.myrealtrip.ohmyhotel.api.application.search.converter;
 
 import com.myrealtrip.ohmyhotel.api.protocol.search.RateSearchId;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhHotelsAvailabilityResponse;
@@ -31,9 +31,9 @@ public class MultipleSearchResponseConverter {
 
     /**
      * 오마이호텔 재고/검색 응답을 통합숙소 재고/검색 응답으로 변환한다. (다건 검색시 사용)
-     *
      * @param omhHotelsAvailabilityResponse 오마이호텔 다건 재고검색 API 응답
-     * @param mrtCommissionRate             마리트 수수료율 (입금가 기준)
+     * @param mrtCommissionRate 마리트 수수료율 (입금가 기준)
+     * @param ratePlanCount 조회할 ratePlan 개수
      * @return
      */
     public SearchResponse toSearchResponse(OmhHotelsAvailabilityResponse omhHotelsAvailabilityResponse,

@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.api.application.search;
+package com.myrealtrip.ohmyhotel.api.application.search.converter;
 
 import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
 import com.myrealtrip.ohmyhotel.enumarate.PenaltyBasis;

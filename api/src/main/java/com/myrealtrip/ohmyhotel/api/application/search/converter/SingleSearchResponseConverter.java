@@ -1,5 +1,6 @@
-package com.myrealtrip.ohmyhotel.api.application.search;
+package com.myrealtrip.ohmyhotel.api.application.search.converter;
 
+import com.myrealtrip.ohmyhotel.api.application.search.converter.CommonSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.protocol.search.RateSearchId;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhBedGroup;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
@@ -31,9 +32,10 @@ public class SingleSearchResponseConverter {
 
     /**
      * 오마이호텔 재고/검색 응답을 통합숙소 재고/검색 응답으로 변환한다. (단건 검색시 사용)
-     *
+     * @param hotelId 호텔 id
      * @param omhRoomsAvailabilityResponse 오마이호텔 단건 재고검색 API 응답
-     * @param mrtCommissionRate            마리트 수수료율 (입금가 기준)
+     * @param mrtCommissionRate 마리트 수수료율 (입금가 기준)
+     * @param ratePlanCount 조회할 ratePlan 개수
      * @return
      */
     public SearchResponse toSearchResponse(Long hotelId,
@@ -155,7 +157,7 @@ public class SingleSearchResponseConverter {
 
     private String toBedGroupDescription(OmhBedGroup omhBedGroup) {
         return omhBedGroup.getBeds().stream()
-            .map(bed -> bed.getBedTypeName() + " " + bed.getBedTypeCode() + "개") // TODO bedTypeName 정책 필요
+            .map(bed -> bed.getBedTypeName() + " " + bed.getBedTypeCount() + "개") // TODO bedTypeName 정책 필요
             .collect(Collectors.joining(","));
     }
 }
