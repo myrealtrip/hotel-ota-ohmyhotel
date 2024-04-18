@@ -3,6 +3,7 @@ package com.myrealtrip.ohmyhotel.api.application.settlement;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.CustomZeroMargin;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.core.provider.zeromargin.CustomZeroMarginProvider;
+import com.myrealtrip.ohmyhotel.core.service.CommissionRateService;
 import com.myrealtrip.ohmyhotel.core.service.MrtDiscountTypesUpdateKafkaSendService;
 import com.myrealtrip.ohmyhotel.core.service.ZeroMarginSearchService;
 import com.myrealtrip.ohmyhotel.enumarate.ZeroMarginType;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SettlementService {
 
+    private final CommissionRateService commissionRateService;
     private final CustomZeroMarginProvider customZeroMarginProvider;
     private final MrtDiscountTypesUpdateKafkaSendService mrtDiscountTypesUpdateKafkaSendService;
     private final ZeroMarginSearchService zeroMarginSearchService;
@@ -72,7 +74,7 @@ public class SettlementService {
             .configType(SettlementConfigType.ZERO_MARGIN)
             .applyType(toSettlementApplyType(zeroMargin.getType()))
             .commissionRate(zeroMargin.getZeroMarginRate())
-            .mrtCommissionRate(null) // TODO 수수료 확인 후 세팅
+            .mrtCommissionRate(commissionRateService.getMrtCommissionRate())
             .build();
     }
 
