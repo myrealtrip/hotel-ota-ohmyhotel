@@ -130,7 +130,6 @@ subprojects {
         implementation ('com.myrealtrip.slack:slack-notifier-client:0.0.4-SNAPSHOT')
 
         implementation("com.google.guava:guava:32.1.1-jre")
-
     }
 
     test {
