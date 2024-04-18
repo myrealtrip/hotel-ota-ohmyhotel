@@ -74,6 +74,14 @@ myrealtrip:
         read-timeout: 10
         response-timeout: 10
         max-in-memory-size: -1
+    settle:
+      base-url: http://api-settle-v2.dev-myrealtrip.net
+      settlement-config:
+        conn-timeout: 5
+        write-timeout: 5
+        read-timeout: 10
+        response-timeout: 10
+        max-in-memory-size: -1
 
 ---
 spring:

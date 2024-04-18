@@ -11,6 +11,7 @@ import com.myrealtrip.unionstay.common.message.property.UpsertPropertyMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -22,6 +23,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class PropertyUpsertKafkaSendService {
+
+    @Value("${ohmyhotel.partner-id}")
+    private Long partnerId;
 
     private final CommonProducer commonProducer;
     private final HotelProvider hotelProvider;
@@ -42,7 +46,7 @@ public class PropertyUpsertKafkaSendService {
         List<UpsertPropertyMessage> messages = hotels.stream()
             .map(hotel -> {
                 ZeroMargin zeroMargin = zeroMarginMap.get(hotel.getHotelId());
-                return upsertPropertyMessageMapper.toUpsertPropertyMessage(hotel, zeroMargin.isOn());
+                return upsertPropertyMessageMapper.toUpsertPropertyMessage(hotel, zeroMargin.isOn(), partnerId);
             })
             .collect(Collectors.toList());
 

@@ -3,6 +3,7 @@ package com.myrealtrip.ohmyhotel.api.application.search;
 import com.myrealtrip.ohmyhotel.api.application.search.converter.MultipleSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.application.search.converter.SearchRequestConverter;
 import com.myrealtrip.ohmyhotel.api.application.search.converter.SingleSearchResponseConverter;
+import com.myrealtrip.ohmyhotel.core.service.CommissionRateService;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.OmhHotelsAvailabilityAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.OmhRoomsAvailabilityAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhHotelsAvailabilityResponse;
@@ -24,7 +25,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class SearchService {
 
-    private final BigDecimal mrtCommissionRate = BigDecimal.valueOf(20); // TODO 파트너 정보 연동 필요
+    private final CommissionRateService commissionRateService;
 
     private final OmhHotelsAvailabilityAgent omhHotelsAvailabilityAgent;
     private final OmhRoomsAvailabilityAgent omhRoomsAvailabilityAgent;
@@ -45,9 +46,10 @@ public class SearchService {
                 .properties(Collections.emptyList())
                 .build();
         }
+
+        BigDecimal mrtCommissionRate = commissionRateService.getMrtCommissionRate();
         if (searchRequest.getPropertyIds().size() == 1) {
-            OmhRoomsAvailabilityRequest omhRoomsAvailabilityRequest = searchRequestConverter.toOmhRoomsAvailabilityRequest(searchRequest);
-            OmhRoomsAvailabilityResponse omhRoomsAvailabilityResponse = omhRoomsAvailabilityAgent.getRoomsAvailability(omhRoomsAvailabilityRequest);
+            OmhRoomsAvailabilityResponse omhRoomsAvailabilityResponse = singleOmhSearch(searchRequest);
             return singleSearchResponseConverter.toSearchResponse(
                 Long.valueOf(searchRequest.getPropertyIds().get(0)),
                 omhRoomsAvailabilityResponse,
@@ -55,12 +57,21 @@ public class SearchService {
                 searchRequest.getRatePlanCount()
             );
         }
-        OmhHotelsAvailabilityRequest omhHotelsAvailabilityRequest = searchRequestConverter.toOmhHotelsAvailabilityRequest(searchRequest);
-        OmhHotelsAvailabilityResponse omhHotelsAvailabilityResponse = omhHotelsAvailabilityAgent.getHotelsAvailability(omhHotelsAvailabilityRequest);
+        OmhHotelsAvailabilityResponse omhHotelsAvailabilityResponse = multipleOmhSearch(searchRequest);
         return multipleSearchResponseConverter.toSearchResponse(
             omhHotelsAvailabilityResponse,
             mrtCommissionRate,
             searchRequest.getRatePlanCount()
         );
+    }
+
+    private OmhHotelsAvailabilityResponse multipleOmhSearch(SearchRequest searchRequest) {
+        OmhHotelsAvailabilityRequest omhHotelsAvailabilityRequest = searchRequestConverter.toOmhHotelsAvailabilityRequest(searchRequest);
+        return omhHotelsAvailabilityAgent.getHotelsAvailability(omhHotelsAvailabilityRequest);
+    }
+
+    private OmhRoomsAvailabilityResponse singleOmhSearch(SearchRequest searchRequest) {
+        OmhRoomsAvailabilityRequest omhRoomsAvailabilityRequest = searchRequestConverter.toOmhRoomsAvailabilityRequest(searchRequest);
+        return omhRoomsAvailabilityAgent.getRoomsAvailability(omhRoomsAvailabilityRequest);
     }
 }

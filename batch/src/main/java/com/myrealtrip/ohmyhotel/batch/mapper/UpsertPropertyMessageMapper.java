@@ -42,7 +42,7 @@ public interface UpsertPropertyMessageMapper {
     org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UpsertPropertyMessageMapper.class);
     DateTimeFormatter CHECK_IN_OUT_FORMATTER = DateTimeFormatter.ofPattern("[H:mm][HH:mm]");
 
-    default UpsertPropertyMessage toUpsertPropertyMessage(Hotel hotel, boolean zeroMarginApply) {
+    default UpsertPropertyMessage toUpsertPropertyMessage(Hotel hotel, boolean zeroMarginApply, Long partnerId) {
         return UpsertPropertyMessage.builder()
             .providerType(ProviderType.GDS)
             .providerCode(ProviderCode.OH_MY_HOTEL)
@@ -83,7 +83,7 @@ public interface UpsertPropertyMessageMapper {
             .discountable(true)
             .forceUpdate(true)
             .mrtDiscountTypes(toMrtDiscountTypes(zeroMarginApply))
-            .mrtPartnerId(null) // TODO 파트너 ID 생성 후 작업
+            .mrtPartnerId(partnerId)
             .build();
     }
 

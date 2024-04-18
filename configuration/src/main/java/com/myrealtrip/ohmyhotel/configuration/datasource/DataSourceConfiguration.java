@@ -10,6 +10,7 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -65,8 +66,10 @@ public class DataSourceConfiguration {
     }
 
     @Bean
-    public TransactionRoutingDataSource routingDataSource(@Qualifier("readWriteDataSource") DataSource readWriteDataSource, @Qualifier("readOnlyDataSource") DataSource readOnlyDataSource) {
-        TransactionRoutingDataSource transactionRoutingDataSource = new TransactionRoutingDataSource();
+    public TransactionRoutingDataSource routingDataSource(@Qualifier("readWriteDataSource") DataSource readWriteDataSource,
+                                                          @Qualifier("readOnlyDataSource") DataSource readOnlyDataSource,
+                                                          Environment environment) {
+        TransactionRoutingDataSource transactionRoutingDataSource = new TransactionRoutingDataSource(environment);
 
         Map<Object, Object> dataSourceMap = new HashMap<>();
 
