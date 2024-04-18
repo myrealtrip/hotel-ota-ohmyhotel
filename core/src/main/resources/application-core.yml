@@ -6,6 +6,9 @@ spring:
 
 zero-margin:
   global-zero-margin-id: 1
+
+ohmyhotel:
+  partner-id: 3147309
 ---
 spring:
   config:
@@ -15,6 +18,9 @@ spring:
 
 zero-margin:
   global-zero-margin-id: 1
+
+ohmyhotel:
+  partner-id: 3147309
 ---
 spring:
   config:
@@ -24,6 +30,9 @@ spring:
 
 zero-margin:
   global-zero-margin-id: 2
+
+ohmyhotel:
+  partner-id: 3147309
 ---
 spring:
   config:
@@ -33,6 +42,9 @@ spring:
 
 zero-margin:
   global-zero-margin-id: 3
+
+ohmyhotel:
+  partner-id: 3147309
 ---
 spring:
   config:
@@ -42,6 +54,9 @@ spring:
 
 zero-margin:
   global-zero-margin-id: 1
+
+ohmyhotel:
+  partner-id: 100847
 ---
 spring:
   config:
@@ -51,6 +66,9 @@ spring:
 
 zero-margin:
   global-zero-margin-id: 2
+
+ohmyhotel:
+  partner-id: 100847
 ---
 spring:
   config:
@@ -60,6 +78,9 @@ spring:
 
 zero-margin:
   global-zero-margin-id: 3
+
+ohmyhotel:
+  partner-id: 100847
 ---
 spring:
   config:
@@ -68,6 +89,9 @@ spring:
 
 zero-margin:
   global-zero-margin-id: 1
+
+ohmyhotel:
+  partner-id: 120525
 ---
 spring:
   config:
@@ -76,3 +100,6 @@ spring:
 
 zero-margin:
   global-zero-margin-id: 2
+
+ohmyhotel:
+  partner-id: 120525

@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.core.domain.partner.dto;
 
+import com.myrealtrip.ohmyhotel.core.domain.ModifyInfo;
 import com.myrealtrip.ohmyhotel.enumarate.PartnerCommissionType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -9,19 +10,15 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
 import java.math.BigDecimal;
 
 @Getter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@SuperBuilder
-public class Partner {
+@SuperBuilder(toBuilder = true)
+public class Partner extends ModifyInfo {
 
     private Long partnerId;
 
