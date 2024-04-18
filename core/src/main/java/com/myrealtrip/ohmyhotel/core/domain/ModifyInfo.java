@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 public class ModifyInfo {
 
     private LocalDateTime createdAt;
