@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.batch.configuration;
 
+import com.myrealtrip.ohmyhotel.batch.UniqueRunIdIncrementer;
 import com.myrealtrip.ohmyhotel.batch.tasklet.PartnerSettleInfoSyncTasklet;
 import com.myrealtrip.ohmyhotel.core.provider.partner.PartnerProvider;
 import com.myrealtrip.ohmyhotel.outbound.agent.mrt.settle.SettleConfigAgent;
@@ -39,6 +40,7 @@ public class PartnerSettleInfoSyncJobConfiguration {
     public Job partnerSettleInfoSyncJob() {
         return jobBuilderFactory.get(PARTNER_SETTLE_INFO_SYNC_JOB)
             .start(partnerSettleInfoSyncStep())
+            .incrementer(new UniqueRunIdIncrementer())
             .build();
     }
 
