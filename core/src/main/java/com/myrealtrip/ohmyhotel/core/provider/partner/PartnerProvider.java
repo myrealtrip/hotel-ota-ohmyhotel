@@ -15,7 +15,7 @@ public class PartnerProvider {
     private final PartnerMapper partnerMapper;
     private final PartnerRepository partnerRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Partner getByPartnerId(Long partnerId) {
         return partnerRepository.findById(partnerId)
             .map(partnerMapper::toDto)
