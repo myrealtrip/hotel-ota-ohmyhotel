@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.api.application.search.converter;
 
+import com.myrealtrip.ohmyhotel.api.application.common.BedDescriptionConverter;
 import com.myrealtrip.ohmyhotel.api.application.search.converter.CommonSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.protocol.search.RateSearchId;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhBedGroup;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 public class SingleSearchResponseConverter {
 
     private final CommonSearchResponseConverter commonSearchResponseConverter;
+    private final BedDescriptionConverter bedDescriptionConverter;
 
     /**
      * 오마이호텔 재고/검색 응답을 통합숙소 재고/검색 응답으로 변환한다. (단건 검색시 사용)
@@ -142,22 +144,12 @@ public class SingleSearchResponseConverter {
     }
 
     private List<Bed> toBeds(OmhRoomAvailability omhRoomAvailability) {
-        String unionStayBedDescription = omhRoomAvailability.getBedGroups().stream()
-            .map(this::toBedGroupDescription)
-            .collect(Collectors.joining("또는 "));
-
         Bed bed = Bed.builder()
             .id(new RateSearchId(omhRoomAvailability.getRoomTypeCode(), omhRoomAvailability.getRatePlanCode()).toString())
             .token(omhRoomAvailability.getRatePlanCode())
-            .description(unionStayBedDescription)
+            .description(bedDescriptionConverter.toUnionStayBedDescription(omhRoomAvailability.getBedGroups()))
             .extraBeds(0)
             .build();
         return List.of(bed);
-    }
-
-    private String toBedGroupDescription(OmhBedGroup omhBedGroup) {
-        return omhBedGroup.getBeds().stream()
-            .map(bed -> bed.getBedTypeName() + " " + bed.getBedTypeCount() + "개") // TODO bedTypeName 정책 필요
-            .collect(Collectors.joining(","));
     }
 }
