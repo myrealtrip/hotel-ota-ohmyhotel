@@ -33,7 +33,6 @@ public class RoomMetaService {
             .runOn(Schedulers.fromExecutorService(fixedThreadPool))
             .map(omhRoomInfoRequest -> {
                 try {
-                    Thread.sleep(3000);
                     return omhRoomInfoAgent.getRoomInfo(omhRoomInfoRequest);
                 } catch (Throwable t) {
                     log.error("Room Info API Error", t);
