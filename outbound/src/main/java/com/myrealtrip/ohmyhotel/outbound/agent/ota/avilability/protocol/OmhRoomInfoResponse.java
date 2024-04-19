@@ -40,6 +40,8 @@ public class OmhRoomInfoResponse extends OmhCommonResponse {
 
     private List<OmhRoomFacility> facilities;
 
+    private List<OmhRoomPhoto> photos;
+
     @SuperBuilder
     @Getter
     @AllArgsConstructor

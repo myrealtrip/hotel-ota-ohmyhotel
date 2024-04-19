@@ -109,7 +109,7 @@ subprojects {
         // mrt3-common
         implementation("com.myrealtrip.common:mrt3-common:${mrtCommonVersion}")
         // unionstay-common
-        implementation("com.myrealtrip.unionstay-common:unionstay-common:1.3.8.1-OHMYHOTEL-SNAPSHOT")
+        implementation("com.myrealtrip.unionstay-common:unionstay-common:1.3.8.2-OHMYHOTEL-SNAPSHOT")
 
         // 단위 테스트는 JUnit 5를 사용합니다.
         testImplementation("org.junit.jupiter:junit-jupiter")

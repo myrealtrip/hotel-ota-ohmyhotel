@@ -135,12 +135,12 @@ public interface UpsertPropertyMessageMapper {
 
     private List<Image> toImages(Hotel hotel) {
         List<UpsertPropertyMessage.Image> images = new ArrayList<>();
-        List<Photo> sortedPhoto = hotel.getPhotos().stream()
+        List<Photo> sortedPhotos = hotel.getPhotos().stream()
             .sorted(Comparator.comparing(Photo::getOrder))
             .collect(Collectors.toList());
 
-        for (int i = 0; i < sortedPhoto.size(); i++) {
-            Photo photo = sortedPhoto.get(i);
+        for (int i = 0; i < sortedPhotos.size(); i++) {
+            Photo photo = sortedPhotos.get(i);
             Image image = Image.builder()
                 .imageId(null)
                 .propertyImageType(null)
