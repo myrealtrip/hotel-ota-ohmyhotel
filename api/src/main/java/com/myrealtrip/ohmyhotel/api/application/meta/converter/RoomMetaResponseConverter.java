@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.api.application.meta;
+package com.myrealtrip.ohmyhotel.api.application.meta.converter;
 
 import com.myrealtrip.ohmyhotel.api.application.common.BedDescriptionConverter;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Photo;
@@ -56,7 +56,7 @@ public class RoomMetaResponseConverter {
             .enName(omhRoomInfoResponse.getRoomTypeName())
             .koDescription(omhRoomInfoResponse.getRoomTypeDescriptionByLanguage())
             .enDescription(omhRoomInfoResponse.getRoomTypeDescription())
-            .guestPolicy(RoomMetaGuestPolicy.builder().build())
+            .guestPolicy(RoomMetaGuestPolicy.builder().build()) // 오마이호텔 GuestPolicy 정보는 ratePlanCode 에 따라 달라지므로 객실레벨 정보에는 넣지 않는다.
             .attributes(toRoomMetaAttributes(omhRoomInfoResponse))
             .images(toRoomMetaImages(omhRoomInfoResponse))
             .beds(toBeds(omhRoomInfoResponse))

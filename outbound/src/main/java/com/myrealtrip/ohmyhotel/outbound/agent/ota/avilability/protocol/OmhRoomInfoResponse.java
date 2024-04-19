@@ -11,6 +11,8 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 @SuperBuilder
 @Getter
 @AllArgsConstructor
@@ -56,5 +58,9 @@ public class OmhRoomInfoResponse extends OmhCommonResponse {
         private String caption;
 
         private String captionByLanguage;
+    }
+
+    public boolean isEmpty() {
+        return isNull(hotelCode);
     }
 }
