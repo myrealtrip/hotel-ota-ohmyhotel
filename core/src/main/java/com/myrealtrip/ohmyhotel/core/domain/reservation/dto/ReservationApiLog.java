@@ -1,7 +1,7 @@
 package com.myrealtrip.ohmyhotel.core.domain.reservation.dto;
 
 import com.myrealtrip.ohmyhotel.enumarate.ApiLogType;
-import com.myrealtrip.ohmyhotel.enumarate.ApiForReservationSteps;
+import com.myrealtrip.ohmyhotel.enumarate.ReservationStepApi;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -22,7 +22,7 @@ public class ReservationApiLog {
 
     private String logKey;
 
-    private ApiForReservationSteps api;
+    private ReservationStepApi api;
 
     private String url;
 

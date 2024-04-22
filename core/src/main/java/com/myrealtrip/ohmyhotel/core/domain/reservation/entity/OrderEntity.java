@@ -56,17 +56,14 @@ public class OrderEntity extends BaseEntity {
     @Column(name = "check_in_date")
     private LocalDate checkInDate;
 
-    @Column(name = "check_in_start_time")
-    private LocalTime checkInStartTime;
-
     @Column(name = "check_out_date")
     private LocalDate checkOutDate;
 
-    @Column(name = "check_out_end_time")
-    private LocalTime checkOutEndTime;
+    @Column(name = "sale_price")
+    private BigDecimal salePrice;
 
-    @Column(name = "total_price")
-    private BigDecimal totalPrice;
+    @Column(name = "deposit_price")
+    private BigDecimal depositPrice;
 
     @Column(name = "zero_margin_apply")
     private Boolean zeroMarginApply;

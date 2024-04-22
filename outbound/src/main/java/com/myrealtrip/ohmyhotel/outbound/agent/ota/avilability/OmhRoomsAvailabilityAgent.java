@@ -19,7 +19,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class OmhRoomsAvailabilityAgent {
 
-    private static final String URI = "/channel/ota/v2.0/hotels/rooms/availability";
+    public static final String URI = "/channel/ota/v2.0/hotels/rooms/availability";
     private static final String ROOMS_AVAILABILITY = "Rooms Availability";
 
     private final WebClient webClient;

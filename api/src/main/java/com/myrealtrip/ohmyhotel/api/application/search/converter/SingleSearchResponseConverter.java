@@ -3,6 +3,7 @@ package com.myrealtrip.ohmyhotel.api.application.search.converter;
 import com.myrealtrip.ohmyhotel.api.application.common.BedDescriptionConverter;
 import com.myrealtrip.ohmyhotel.api.application.search.converter.CommonSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.protocol.search.RateSearchId;
+import com.myrealtrip.ohmyhotel.constants.AttributeConstants;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhBedGroup;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse.OmhRoomAvailability;
@@ -12,7 +13,9 @@ import com.myrealtrip.unionstay.dto.hotelota.search.response.Bed;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.PropertyAvailability;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.RateAvailability;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.RoomAvailability;
+import com.myrealtrip.unionstay.dto.hotelota.search.response.RoomBenefit;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.SearchResponse;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -32,13 +35,38 @@ public class SingleSearchResponseConverter {
     private final CommonSearchResponseConverter commonSearchResponseConverter;
     private final BedDescriptionConverter bedDescriptionConverter;
 
+    public SearchResponse empty() {
+        return SearchResponse.builder()
+            .providerCode(ProviderCode.OH_MY_HOTEL)
+            .searchId(null)
+            .properties(Collections.emptyList())
+            .build();
+    }
+
     /**
-     * 오마이호텔 재고/검색 응답을 통합숙소 재고/검색 응답으로 변환한다. (단건 검색시 사용)
-     * @param hotelId 호텔 id
-     * @param omhRoomsAvailabilityResponse 오마이호텔 단건 재고검색 API 응답
-     * @param mrtCommissionRate 마리트 수수료율 (입금가 기준)
-     * @param ratePlanCount 조회할 ratePlan 개수
-     * @return
+     * 오마이호텔 재고/검색 응답을 통합숙소 재고/검색 응답으로 변환한다. (주문서 검색시 사용)
+     */
+    public SearchResponse toSearchResponse(Long hotelId,
+                                           OmhRoomAvailability omhRoomAvailability,
+                                           BigDecimal mrtCommissionRate,
+                                           int ratePlanCount) {
+        PropertyAvailability propertyAvailability = PropertyAvailability.builder()
+            .propertyId(String.valueOf(hotelId))
+            .providerType(ProviderType.GDS)
+            .providerCode(ProviderCode.OH_MY_HOTEL)
+            .score(null)
+            .rooms(toRoomAvailabilities(Map.of(omhRoomAvailability.getRoomTypeCode(), List.of(omhRoomAvailability)), mrtCommissionRate, ratePlanCount))
+            .build();
+
+        return SearchResponse.builder()
+            .searchId(null)
+            .providerCode(ProviderCode.OH_MY_HOTEL)
+            .properties(List.of(propertyAvailability))
+            .build();
+    }
+
+    /**
+     * 오마이호텔 재고/검색 응답을 통합숙소 재고/검색 응답으로 변환한다. (단건 호텔 검색시 사용)
      */
     public SearchResponse toSearchResponse(Long hotelId,
                                            OmhRoomsAvailabilityResponse omhRoomsAvailabilityResponse,
@@ -63,7 +91,7 @@ public class SingleSearchResponseConverter {
     }
 
     private PropertyAvailability toPropertyAvailability(Long hotelId,
-                                                        OmhRoomsAvailabilityResponse omhHotelsAvailabilityResponse,
+                                                        OmhRoomsAvailabilityResponse omhRoomsAvailabilityResponse,
                                                         BigDecimal mrtCommissionRate,
                                                         int ratePlanCount) {
         return PropertyAvailability.builder()
@@ -71,7 +99,7 @@ public class SingleSearchResponseConverter {
             .providerType(ProviderType.GDS)
             .providerCode(ProviderCode.OH_MY_HOTEL)
             .score(null)
-            .rooms(toRoomAvailabilities(omhHotelsAvailabilityResponse.getRoomsGroupByRoomTypeCode(), mrtCommissionRate, ratePlanCount))
+            .rooms(toRoomAvailabilities(omhRoomsAvailabilityResponse.getRoomsGroupByRoomTypeCode(), mrtCommissionRate, ratePlanCount))
             .build();
     }
 
@@ -97,7 +125,23 @@ public class SingleSearchResponseConverter {
                       omhRoomAvailabilities.get(0).getRoomTypeNameByLanguage() :
                       omhRoomAvailabilities.get(0).getRoomTypeName())
             .rates(toRateAvailabilities(omhRoomAvailabilities, mrtCommissionRate, ratePlanCount))
+            .benefits(toRoomBenefit(omhRoomAvailabilities.get(0)))
             .build();
+    }
+
+    private List<RoomBenefit> toRoomBenefit(OmhRoomAvailability omhRoomAvailability) {
+        if (CollectionUtils.isEmpty(omhRoomAvailability.getFacilities())) {
+            return Collections.emptyList();
+        }
+        return omhRoomAvailability.getFacilities().stream()
+            .map(omhRoomFacility -> RoomBenefit.builder()
+                .id(omhRoomFacility.getFacilityCode())
+                .group(AttributeConstants.ROOM_FACILITY_PROVIDER_ATTRIBUTE_GROUP)
+                .benefitName(StringUtils.isNotBlank(omhRoomFacility.getFacilityNameByLanguage()) ?
+                             omhRoomFacility.getFacilityNameByLanguage() :
+                             omhRoomFacility.getFacilityName())
+                .build())
+            .collect(Collectors.toList());
     }
 
     private List<RateAvailability> toRateAvailabilities(List<OmhRoomAvailability> omhSimpleAvailabilities,
