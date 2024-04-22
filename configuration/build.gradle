@@ -27,7 +27,13 @@ dependencies {
     // Kafka
     implementation("org.springframework.kafka:spring-kafka")
 
+    // Redis
+    api("org.springframework.data:spring-data-redis:${springDataVersion}")
+    api("org.redisson:redisson:${redissonVersion}")
+    implementation("org.redisson:redisson-spring-data-25:${redissonSpringDataVersion}")
+    implementation("de.ruedigermoeller:fst:${fstVersion}") // fst codec
+    implementation("com.esotericsoftware:kryo:${kryoVersion}") // kryo codec
+
     // Myrealtrip
     implementation("com.myrealtrip.cipher:mrt-cipher:${mrtCipherVersion}")
-
 }

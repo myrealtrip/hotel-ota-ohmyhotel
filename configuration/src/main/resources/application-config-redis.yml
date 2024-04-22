@@ -1,0 +1,69 @@
+spring:
+  config:
+    activate:
+      on-profile:
+        - local
+        - dev
+        - dev01
+        - dev02
+        - test
+        - test01
+        - test02
+myrealtrip:
+  redis:
+    redis-server-config:
+      idle-connection-timeout: 10000
+      connect-timeout: 10000
+      timeout: 3000
+      retry-attempts: 3
+      retry-interval: 1500
+      password: null
+      subscriptions-per-connection: 5
+      client-name: null
+      master-address: "redis://unionstay-redis.nusudq.ng.0001.apn2.cache.amazonaws.com:6379"
+      replica-addresses:
+        - "redis://unionstay-redis-ro.nusudq.ng.0001.apn2.cache.amazonaws.com:6379"
+      subscription-connection-minimum-idle-size: 1
+      subscription-connection-pool-size: 50
+      master-connection-minimum-idle-size: 24
+      slave-connection-minimum-idle-size: 48
+      master-connection-pool-size: 24
+      slave-connection-pool-size: 48
+      database: 0
+      dns-monitoring-interval: 5000
+    threads: 32
+    nettyThreads: 64
+    transportMode: "NIO"
+
+---
+spring:
+  config:
+    activate:
+      on-profile:
+        - stage
+        - prod
+myrealtrip:
+  redis:
+    redis-server-config:
+      idle-connection-timeout: 10000
+      connect-timeout: 10000
+      timeout: 3000
+      retry-attempts: 3
+      retry-interval: 1500
+      password: null
+      subscriptions-per-connection: 5
+      client-name: null
+      master-address: "redis://unionstay-redis.htoaez.ng.0001.apn2.cache.amazonaws.com:6379"
+      replica-addresses:
+        - "redis://unionstay-redis-ro.htoaez.ng.0001.apn2.cache.amazonaws.com:6379"
+      subscription-connection-minimum-idle-size: 1
+      subscription-connection-pool-size: 50
+      master-connection-minimum-idle-size: 24
+      slave-connection-minimum-idle-size: 48
+      master-connection-pool-size: 24
+      slave-connection-pool-size: 48
+      database: 0
+      dns-monitoring-interval: 5000
+    threads: 32
+    nettyThreads: 64
+    transportMode: "NIO"
