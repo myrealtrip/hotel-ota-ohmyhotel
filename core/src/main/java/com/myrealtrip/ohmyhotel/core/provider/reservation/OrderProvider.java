@@ -16,8 +16,8 @@ public class OrderProvider {
     private final OrderMapper orderMapper;
 
     @Transactional
-    public void upsert(Order order) {
+    public Order upsert(Order order) {
         OrderEntity entity = orderMapper.toEntity(order);
-        orderRepository.save(entity);
+        return orderMapper.toDto(orderRepository.save(entity));
     }
 }

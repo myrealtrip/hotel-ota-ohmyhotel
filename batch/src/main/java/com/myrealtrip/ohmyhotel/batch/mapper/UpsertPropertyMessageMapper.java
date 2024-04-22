@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.batch.mapper;
 
+import com.myrealtrip.ohmyhotel.constants.AttributeConstants;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Facility;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Hotel;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.HotelDescriptions;
@@ -98,7 +99,7 @@ public interface UpsertPropertyMessageMapper {
         for (Facility facility : hotel.getFacilities()) {
             Attribute attribute = Attribute.builder()
                 .attributeId(facility.getFacilityCode())
-                .groupLevel1("FACILITY")
+                .groupLevel1(AttributeConstants.HOTEL_FACILITY_PROVIDER_ATTRIBUTE_GROUP)
                 .build();
             attributes.add(attribute);
         }

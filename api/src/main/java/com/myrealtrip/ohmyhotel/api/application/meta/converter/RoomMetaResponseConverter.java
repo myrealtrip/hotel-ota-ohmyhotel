@@ -20,28 +20,24 @@ import com.myrealtrip.unionstay.dto.hotelota.meta.room.RoomMetaGuestPolicy;
 import com.myrealtrip.unionstay.dto.hotelota.meta.room.RoomMetaImage;
 import com.myrealtrip.unionstay.dto.hotelota.meta.room.RoomMetaResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.myrealtrip.ohmyhotel.constants.AttributeConstants.*;
 import static java.util.Objects.nonNull;
 
 @Component
 @RequiredArgsConstructor
 public class RoomMetaResponseConverter {
-
-    private static final String FACILITY_PROVIDER_ATTRIBUTE_GROUP = "FACILITY";
-    private static final String ROOM_SIZE_PROVIDER_ATTRIBUTE_GROUP = "AMENITIES_ROOMS";
-    private static final String ROOM_SIZE_METER_PROVIDER_ATTRIBUTE_ID = "cid_square_meters";
-    private static final String ROOM_SIZE_FEET_PROVIDER_ATTRIBUTE_ID = "cid_square_feet";
-    private static final String ROOM_SIZE_METER_PROVIDER_LABEL_FORMAT = "객실 크기(㎡) - %s";
-    private static final String ROOM_SIZE_FEET_PROVIDER_LABEL_FORMAT = "객실 크기(제곱피트) - %s";
 
     private final BedDescriptionConverter bedDescriptionConverter;
 
@@ -65,10 +61,13 @@ public class RoomMetaResponseConverter {
     }
 
     private List<RoomMetaAttribute> toRoomMetaAttributes(OmhRoomInfoResponse omhRoomInfoResponse) {
+        if (CollectionUtils.isEmpty(omhRoomInfoResponse.getFacilities())) {
+            return Collections.emptyList();
+        }
         List<RoomMetaAttribute> roomMetaAttributes = new ArrayList<>();
         for (OmhRoomFacility omhRoomFacility : omhRoomInfoResponse.getFacilities()) {
             RoomMetaAttribute roomMetaAttribute = RoomMetaAttribute.builder()
-                .providerAttributeGroup(FACILITY_PROVIDER_ATTRIBUTE_GROUP)
+                .providerAttributeGroup(ROOM_FACILITY_PROVIDER_ATTRIBUTE_GROUP)
                 .providerAttributeId(omhRoomFacility.getFacilityCode())
                 .providerLabel(StringUtils.isNotBlank((omhRoomFacility.getFacilityNameByLanguage())) ?
                                omhRoomFacility.getFacilityNameByLanguage() :
@@ -94,6 +93,9 @@ public class RoomMetaResponseConverter {
     }
 
     private List<RoomMetaImage> toRoomMetaImages(OmhRoomInfoResponse omhRoomInfoResponse) {
+        if (CollectionUtils.isEmpty(omhRoomInfoResponse.getPhotos())) {
+            return Collections.emptyList();
+        }
         List<RoomMetaImage> images = new ArrayList<>();
         List<OmhRoomPhoto> sortedPhotos = omhRoomInfoResponse.getPhotos().stream()
             .sorted(Comparator.comparing(OmhRoomPhoto::getOrder))

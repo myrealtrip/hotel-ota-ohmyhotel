@@ -1,7 +1,7 @@
 package com.myrealtrip.ohmyhotel.core.domain.reservation.entity;
 
 import com.myrealtrip.ohmyhotel.core.domain.BaseEntity;
-import com.myrealtrip.ohmyhotel.enumarate.ApiForReservationSteps;
+import com.myrealtrip.ohmyhotel.enumarate.ReservationStepApi;
 import com.myrealtrip.ohmyhotel.enumarate.ApiLogType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -36,7 +36,7 @@ public class ReservationApiLogEntity extends BaseEntity {
 
     @Column(name = "api")
     @Enumerated(value = EnumType.STRING)
-    private ApiForReservationSteps api;
+    private ReservationStepApi api;
 
     @Column(name = "url")
     private String url;
