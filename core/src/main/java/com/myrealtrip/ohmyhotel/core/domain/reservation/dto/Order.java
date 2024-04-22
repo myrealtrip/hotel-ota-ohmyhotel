@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import javax.persistence.Column;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -37,13 +38,11 @@ public class Order {
 
     private LocalDate checkInDate;
 
-    private LocalTime checkInStartTime;
-
     private LocalDate checkOutDate;
 
-    private LocalTime checkOutEndTime;
+    private BigDecimal salePrice;
 
-    private BigDecimal totalPrice;
+    private BigDecimal depositPrice;
 
     private Boolean zeroMarginApply;
 
