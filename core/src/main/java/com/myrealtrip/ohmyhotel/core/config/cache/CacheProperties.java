@@ -11,6 +11,7 @@ public class CacheProperties {
     @Getter
     @AllArgsConstructor
     public enum CacheName {
+        ROOM_META("room_meta")
         ;
 
         private final String cacheKeyType;
@@ -19,6 +20,7 @@ public class CacheProperties {
     @Getter
     @AllArgsConstructor
     public enum GlobalCache {
+        ROOM_META(CacheName.ROOM_META, 6L, TimeUnit.HOURS);
         ;
 
         private static final String GLOBAL_CACHE_KEY_FORMAT = "%s:%s:%s:%s";    // ex. unionstay:{environment}:{cacheName}:{key}
@@ -29,27 +31,6 @@ public class CacheProperties {
 
         public String generateKey(String environment, String param) {
             return String.format(GLOBAL_CACHE_KEY_FORMAT, DOMAIN_NAME, environment, cacheName.getCacheKeyType(), param);
-        }
-
-        public long giveTtlInMinutes() {
-            if (ttl == null || ttlUnit == null) {
-                return 0;
-            }
-
-            switch (ttlUnit) {
-                case DAYS:
-                    return ttl * 24 * 60;
-                case HOURS:
-                    return ttl * 60;
-                case MINUTES:
-                    return ttl;
-                case SECONDS:
-                    return ttl / 60;
-                case MILLISECONDS:
-                    return ttl / 60 / 1000;
-                default:
-                    return ttl;
-            }
         }
     }
 

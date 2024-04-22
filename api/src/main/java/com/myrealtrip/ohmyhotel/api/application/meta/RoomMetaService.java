@@ -2,6 +2,7 @@ package com.myrealtrip.ohmyhotel.api.application.meta;
 
 import com.myrealtrip.ohmyhotel.api.application.meta.converter.RoomMetaRequestConverter;
 import com.myrealtrip.ohmyhotel.api.application.meta.converter.RoomMetaResponseConverter;
+import com.myrealtrip.ohmyhotel.api.protocol.meta.OmhRoomInfoCacheRequest;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.OmhRoomInfoAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomInfoResponse;
 import com.myrealtrip.unionstay.dto.hotelota.meta.room.RoomMetaRequest;
@@ -23,7 +24,7 @@ public class RoomMetaService {
 
     private final ExecutorService fixedThreadPool = Executors.newFixedThreadPool(200);
 
-    private final OmhRoomInfoAgent omhRoomInfoAgent;
+    private final RoomMetaCacheService roomMetaCacheService;
     private final RoomMetaRequestConverter roomMetaRequestConverter;
     private final RoomMetaResponseConverter roomMetaResponseConverter;
 
@@ -33,7 +34,7 @@ public class RoomMetaService {
             .runOn(Schedulers.fromExecutorService(fixedThreadPool))
             .map(omhRoomInfoRequest -> {
                 try {
-                    return omhRoomInfoAgent.getRoomInfo(omhRoomInfoRequest);
+                    return roomMetaCacheService.getRoomInfo(new OmhRoomInfoCacheRequest(omhRoomInfoRequest));
                 } catch (Throwable t) {
                     log.error("Room Info API Error", t);
                     return OmhRoomInfoResponse.builder().hotelCode(null).build();

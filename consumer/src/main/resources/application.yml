@@ -4,6 +4,7 @@ spring:
       - consumer
       - config-db
       - config-kafka
+      - config-redis
       - srt-common
       - outbound
       - core

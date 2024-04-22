@@ -21,7 +21,7 @@ public class LocalCacheAspect implements CacheAspectHandleable {
     private final CacheManager localCacheManager;
 
     @Override
-    @Around("@annotation(com.myrealtrip.unionstay.core.config.cache.annotation.LocalCacheable)")
+    @Around("@annotation(com.myrealtrip.ohmyhotel.core.config.cache.annotation.LocalCacheable)")
     public Object handleCacheable(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         MethodSignature methodSignature = ((MethodSignature) proceedingJoinPoint.getSignature());
         LocalCacheable localCacheable = methodSignature.getMethod().getAnnotation(LocalCacheable.class);
@@ -42,7 +42,7 @@ public class LocalCacheAspect implements CacheAspectHandleable {
     }
 
     @Override
-    @Around("@annotation(com.myrealtrip.unionstay.core.config.cache.annotation.LocalCachePut)")
+    @Around("@annotation(com.myrealtrip.ohmyhotel.core.config.cache.annotation.LocalCachePut)")
     public Object handleCachePut(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         MethodSignature methodSignature = ((MethodSignature) proceedingJoinPoint.getSignature());
         LocalCachePut localCachePut = methodSignature.getMethod().getAnnotation(LocalCachePut.class);
@@ -59,7 +59,7 @@ public class LocalCacheAspect implements CacheAspectHandleable {
     }
 
     @Override
-    @Around("@annotation(com.myrealtrip.unionstay.core.config.cache.annotation.LocalCacheEvict)")
+    @Around("@annotation(com.myrealtrip.ohmyhotel.core.config.cache.annotation.LocalCacheEvict)")
     public Object handleCacheEvict(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         log.info(">>> [LocalCacheAspect] handleCacheEvict");
         MethodSignature methodSignature = ((MethodSignature) proceedingJoinPoint.getSignature());
