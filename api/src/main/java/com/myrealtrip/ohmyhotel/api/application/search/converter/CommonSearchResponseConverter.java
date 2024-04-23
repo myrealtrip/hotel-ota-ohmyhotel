@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.api.application.search.converter;
 
+import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
 import com.myrealtrip.ohmyhotel.enumarate.PenaltyBasis;
 import com.myrealtrip.ohmyhotel.enumarate.PromotionType;
@@ -8,7 +9,11 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhHotel
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCancelPolicy;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCancelPolicy.OmhCancelPolicyDetail;
 import com.myrealtrip.ohmyhotel.utils.OmhPriceCalculateUtils;
+import com.myrealtrip.srtcommon.support.utils.NumericUtils;
+import com.myrealtrip.srtcommon.support.utils.ZeroMarginUtils;
 import com.myrealtrip.unionstay.common.constant.CancelPolicyType;
+import com.myrealtrip.unionstay.common.constant.shop.DiscountType;
+import com.myrealtrip.unionstay.common.model.common.MrtPromotion;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.Commissions;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.Commissions.UnionstayRatePriceMode;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.RateAvailability;
@@ -89,6 +94,33 @@ public class CommonSearchResponseConverter {
             .inclusive(salePrice)
             .baseInclusive(salePrice)
             .build();
+    }
+
+    public TotalPayment toZeroMarginTotalPayment(BigDecimal omhTotalNetAmount, BigDecimal mrtCommissionRate, ZeroMargin zeroMargin) {
+        BigDecimal salePrice = OmhPriceCalculateUtils.toSalePrice(omhTotalNetAmount, mrtCommissionRate);
+        BigDecimal zeroMarginSalePrice = ZeroMarginUtils.toZeroMarginSalePrice(omhTotalNetAmount, zeroMargin.getZeroMarginRate());
+        return TotalPayment.builder()
+            .exclusive(zeroMarginSalePrice.doubleValue())
+            .baseExclusive(salePrice.doubleValue())
+            .inclusive(zeroMarginSalePrice.doubleValue())
+            .baseInclusive(salePrice.doubleValue())
+            .build();
+    }
+
+    public List<MrtPromotion> toZeroMarginMrtPromotions(BigDecimal omhTotalNetAmount, BigDecimal mrtCommissionRate, ZeroMargin zeroMargin) {
+        BigDecimal salePrice = OmhPriceCalculateUtils.toSalePrice(omhTotalNetAmount, mrtCommissionRate);
+        BigDecimal zeroMarginSalePrice = ZeroMarginUtils.toZeroMarginSalePrice(omhTotalNetAmount, zeroMargin.getZeroMarginRate());
+        if (NumericUtils.equals(salePrice, zeroMarginSalePrice)) {
+            return Collections.emptyList();
+        }
+
+        MrtPromotion mrtPromotion = MrtPromotion.builder()
+            .discountType(DiscountType.ZERO_MARGIN)
+            .mrtPromotionName(null)
+            .mrtPromotionDescription(null)
+            .totalDiscountAmount(salePrice.subtract(zeroMarginSalePrice))
+            .build();
+        return List.of(mrtPromotion);
     }
 
     public Commissions toCommissions(BigDecimal omhTotalNetAmount, BigDecimal mrtCommissionRate) {

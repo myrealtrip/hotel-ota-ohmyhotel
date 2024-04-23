@@ -17,7 +17,7 @@ public class BedDescriptionConverter {
 
     private String toBedGroupDescription(OmhBedGroup omhBedGroup) {
         return omhBedGroup.getBeds().stream()
-            .map(bed -> bed.getBedTypeName() + " " + bed.getBedTypeCount() + "개") // TODO bedTypeName 정책 필요
+            .map(bed -> bed.getBedTypeCode().getExposedName() + " " + bed.getBedTypeCount() + "개")
             .collect(Collectors.joining(","));
     }
 }

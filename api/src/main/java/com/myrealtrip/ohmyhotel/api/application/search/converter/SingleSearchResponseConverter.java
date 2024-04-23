@@ -4,6 +4,7 @@ import com.myrealtrip.ohmyhotel.api.application.common.BedDescriptionConverter;
 import com.myrealtrip.ohmyhotel.api.application.search.converter.CommonSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.protocol.search.RateSearchId;
 import com.myrealtrip.ohmyhotel.constants.AttributeConstants;
+import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhBedGroup;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse.OmhRoomAvailability;
@@ -49,13 +50,14 @@ public class SingleSearchResponseConverter {
     public SearchResponse toSearchResponse(Long hotelId,
                                            OmhRoomAvailability omhRoomAvailability,
                                            BigDecimal mrtCommissionRate,
-                                           int ratePlanCount) {
+                                           int ratePlanCount,
+                                           ZeroMargin zeroMargin) {
         PropertyAvailability propertyAvailability = PropertyAvailability.builder()
             .propertyId(String.valueOf(hotelId))
             .providerType(ProviderType.GDS)
             .providerCode(ProviderCode.OH_MY_HOTEL)
             .score(null)
-            .rooms(toRoomAvailabilities(Map.of(omhRoomAvailability.getRoomTypeCode(), List.of(omhRoomAvailability)), mrtCommissionRate, ratePlanCount))
+            .rooms(toRoomAvailabilities(Map.of(omhRoomAvailability.getRoomTypeCode(), List.of(omhRoomAvailability)), mrtCommissionRate, ratePlanCount, zeroMargin))
             .build();
 
         return SearchResponse.builder()
@@ -71,19 +73,21 @@ public class SingleSearchResponseConverter {
     public SearchResponse toSearchResponse(Long hotelId,
                                            OmhRoomsAvailabilityResponse omhRoomsAvailabilityResponse,
                                            BigDecimal mrtCommissionRate,
-                                           int ratePlanCount) {
+                                           int ratePlanCount,
+                                           ZeroMargin zeroMargin) {
         return SearchResponse.builder()
             .searchId(ProviderCode.OH_MY_HOTEL.name())
             .providerCode(ProviderCode.OH_MY_HOTEL)
-            .properties(toPropertyAvailabilities(hotelId, omhRoomsAvailabilityResponse, mrtCommissionRate, ratePlanCount))
+            .properties(toPropertyAvailabilities(hotelId, omhRoomsAvailabilityResponse, mrtCommissionRate, ratePlanCount, zeroMargin))
             .build();
     }
 
     private List<PropertyAvailability> toPropertyAvailabilities(Long hotelId,
                                                                 OmhRoomsAvailabilityResponse omhHotelsAvailabilityResponse,
                                                                 BigDecimal mrtCommissionRate,
-                                                                int ratePlanCount) {
-        PropertyAvailability propertyAvailability = toPropertyAvailability(hotelId, omhHotelsAvailabilityResponse, mrtCommissionRate, ratePlanCount);
+                                                                int ratePlanCount,
+                                                                ZeroMargin zeroMargin) {
+        PropertyAvailability propertyAvailability = toPropertyAvailability(hotelId, omhHotelsAvailabilityResponse, mrtCommissionRate, ratePlanCount, zeroMargin);
         if (CollectionUtils.isEmpty(propertyAvailability.getRooms())) {
             return Collections.emptyList();
         }
@@ -93,24 +97,26 @@ public class SingleSearchResponseConverter {
     private PropertyAvailability toPropertyAvailability(Long hotelId,
                                                         OmhRoomsAvailabilityResponse omhRoomsAvailabilityResponse,
                                                         BigDecimal mrtCommissionRate,
-                                                        int ratePlanCount) {
+                                                        int ratePlanCount,
+                                                        ZeroMargin zeroMargin) {
         return PropertyAvailability.builder()
             .propertyId(String.valueOf(hotelId))
             .providerType(ProviderType.GDS)
             .providerCode(ProviderCode.OH_MY_HOTEL)
             .score(null)
-            .rooms(toRoomAvailabilities(omhRoomsAvailabilityResponse.getRoomsGroupByRoomTypeCode(), mrtCommissionRate, ratePlanCount))
+            .rooms(toRoomAvailabilities(omhRoomsAvailabilityResponse.getRoomsGroupByRoomTypeCode(), mrtCommissionRate, ratePlanCount, zeroMargin))
             .build();
     }
 
     private List<RoomAvailability> toRoomAvailabilities(Map<String, List<OmhRoomAvailability>> roomsGroupByRoomTypeCode,
                                                         BigDecimal mrtCommissionRate,
-                                                        int ratePlanCount) {
+                                                        int ratePlanCount,
+                                                        ZeroMargin zeroMargin) {
         if (MapUtils.isEmpty(roomsGroupByRoomTypeCode)) {
             return Collections.emptyList();
         }
         return roomsGroupByRoomTypeCode.keySet().stream()
-            .map(roomTypeCode -> toRoomAvailability(roomsGroupByRoomTypeCode.get(roomTypeCode), mrtCommissionRate, ratePlanCount))
+            .map(roomTypeCode -> toRoomAvailability(roomsGroupByRoomTypeCode.get(roomTypeCode), mrtCommissionRate, ratePlanCount, zeroMargin))
             .filter(roomAvailability -> CollectionUtils.isNotEmpty(roomAvailability.getRates()))
             .sorted(CommonSearchResponseConverter.ROOM_COMPARATOR)
             .collect(Collectors.toList());
@@ -118,13 +124,14 @@ public class SingleSearchResponseConverter {
 
     private RoomAvailability toRoomAvailability(List<OmhRoomAvailability> omhRoomAvailabilities,
                                                 BigDecimal mrtCommissionRate,
-                                                int ratePlanCount) {
+                                                int ratePlanCount,
+                                                ZeroMargin zeroMargin) {
         return RoomAvailability.builder()
             .roomId(omhRoomAvailabilities.get(0).getRoomTypeCode())
             .roomName(StringUtils.isNotBlank(omhRoomAvailabilities.get(0).getRoomTypeNameByLanguage()) ?
                       omhRoomAvailabilities.get(0).getRoomTypeNameByLanguage() :
                       omhRoomAvailabilities.get(0).getRoomTypeName())
-            .rates(toRateAvailabilities(omhRoomAvailabilities, mrtCommissionRate, ratePlanCount))
+            .rates(toRateAvailabilities(omhRoomAvailabilities, mrtCommissionRate, ratePlanCount, zeroMargin))
             .benefits(toRoomBenefit(omhRoomAvailabilities.get(0)))
             .build();
     }
@@ -146,18 +153,19 @@ public class SingleSearchResponseConverter {
 
     private List<RateAvailability> toRateAvailabilities(List<OmhRoomAvailability> omhSimpleAvailabilities,
                                                         BigDecimal mrtCommissionRate,
-                                                        int ratePlanCount) {
+                                                        int ratePlanCount,
+                                                        ZeroMargin zeroMargin) {
         if (CollectionUtils.isEmpty(omhSimpleAvailabilities)) {
             return Collections.emptyList();
         }
         return omhSimpleAvailabilities.stream()
-            .map(omhRoomSimpleAvailability -> toRateAvailability(omhRoomSimpleAvailability, mrtCommissionRate))
+            .map(omhRoomSimpleAvailability -> toRateAvailability(omhRoomSimpleAvailability, mrtCommissionRate, zeroMargin))
             .sorted(CommonSearchResponseConverter.RATE_COMPARATOR)
             .limit(ratePlanCount)
             .collect(Collectors.toList());
     }
 
-    private RateAvailability toRateAvailability(OmhRoomAvailability omhRoomAvailability, BigDecimal mrtCommissionRate) {
+    private RateAvailability toRateAvailability(OmhRoomAvailability omhRoomAvailability, BigDecimal mrtCommissionRate, ZeroMargin zeroMargin) {
         return RateAvailability.builder()
             .rateId(omhRoomAvailability.getRatePlanCode())
             .optionId(null)
@@ -169,12 +177,16 @@ public class SingleSearchResponseConverter {
             .benefits(commonSearchResponseConverter.toRateBenefits(omhRoomAvailability.getMealBasisCode()))
             .beds(toBeds(omhRoomAvailability))
             .cancelPolicies(commonSearchResponseConverter.toCancelPolicies(omhRoomAvailability.getCancellationPolicy()))
-            .totalPayment(commonSearchResponseConverter.toTotalPayment(omhRoomAvailability.getTotalNetAmount(), mrtCommissionRate))
+            .totalPayment(zeroMargin.isOn() ?
+                          commonSearchResponseConverter.toZeroMarginTotalPayment(omhRoomAvailability.getTotalNetAmount(), mrtCommissionRate, zeroMargin) :
+                          commonSearchResponseConverter.toTotalPayment(omhRoomAvailability.getTotalNetAmount(), mrtCommissionRate))
             .commissions(commonSearchResponseConverter.toCommissions(omhRoomAvailability.getTotalNetAmount(), mrtCommissionRate))
             .surCharges(Collections.emptyList())
             .onSiteSurCharges(Collections.emptyList())
             .monetaryPromotions(Collections.emptyList())
-            .mrtPromotions(Collections.emptyList())
+            .mrtPromotions(zeroMargin.isOn() ?
+                           commonSearchResponseConverter.toZeroMarginMrtPromotions(omhRoomAvailability.getTotalNetAmount(), mrtCommissionRate, zeroMargin) :
+                           Collections.emptyList())
             .extraBeds(0)
             .representInclusions(Collections.emptyList())
             .optionDescriptions(Collections.emptyList())

@@ -4,10 +4,12 @@ import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Hotel;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.AdditionalOrderInfo;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.GuestCount;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Order;
+import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.core.provider.hotel.HotelProvider;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse.OmhRoomAvailability;
 import com.myrealtrip.ohmyhotel.utils.OmhPriceCalculateUtils;
+import com.myrealtrip.srtcommon.support.utils.ZeroMarginUtils;
 import com.myrealtrip.unionstay.dto.hotelota.search.request.SearchRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +26,8 @@ public class OrderConverter {
 
     public Order toOrder(SearchRequest searchRequest,
                          OmhRoomAvailability omhRoomAvailability,
-                         BigDecimal mrtCommissionRate) {
+                         BigDecimal mrtCommissionRate,
+                         ZeroMargin zeroMargin) {
         Long hotelId = Long.valueOf(searchRequest.getPropertyIds().get(0));
         Hotel hotel = hotelProvider.getByHotelIds(List.of(hotelId)).get(0);
         return Order.builder()
@@ -42,8 +45,10 @@ public class OrderConverter {
             .checkOutDate(searchRequest.getCheckout())
             .salePrice(OmhPriceCalculateUtils.toSalePrice(omhRoomAvailability.getTotalNetAmount(), mrtCommissionRate))
             .depositPrice(omhRoomAvailability.getTotalNetAmount())
-            .zeroMarginApply(false)
-            .zeroMarginApplyPrice(null)
+            .zeroMarginApply(zeroMargin.isOn())
+            .zeroMarginApplyPrice(zeroMargin.isOn() ?
+                                  ZeroMarginUtils.toZeroMarginSalePrice(omhRoomAvailability.getTotalNetAmount(), zeroMargin.getZeroMarginRate()) :
+                                  null)
             .mrtCommissionRate(mrtCommissionRate)
             .guestCount(GuestCount.builder()
                             .adultCount(searchRequest.getAdultCount())
