@@ -38,7 +38,7 @@ public class SingleSearchResponseConverter {
     public SearchResponse empty() {
         return SearchResponse.builder()
             .providerCode(ProviderCode.OH_MY_HOTEL)
-            .searchId(null)
+            .searchId(ProviderCode.OH_MY_HOTEL.name())
             .properties(Collections.emptyList())
             .build();
     }
@@ -59,7 +59,7 @@ public class SingleSearchResponseConverter {
             .build();
 
         return SearchResponse.builder()
-            .searchId(null)
+            .searchId(ProviderCode.OH_MY_HOTEL.name())
             .providerCode(ProviderCode.OH_MY_HOTEL)
             .properties(List.of(propertyAvailability))
             .build();
@@ -73,7 +73,7 @@ public class SingleSearchResponseConverter {
                                            BigDecimal mrtCommissionRate,
                                            int ratePlanCount) {
         return SearchResponse.builder()
-            .searchId(null)
+            .searchId(ProviderCode.OH_MY_HOTEL.name())
             .providerCode(ProviderCode.OH_MY_HOTEL)
             .properties(toPropertyAvailabilities(hotelId, omhRoomsAvailabilityResponse, mrtCommissionRate, ratePlanCount))
             .build();

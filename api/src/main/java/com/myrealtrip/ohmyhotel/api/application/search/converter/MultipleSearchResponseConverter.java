@@ -36,7 +36,7 @@ public class MultipleSearchResponseConverter {
                                            BigDecimal mrtCommissionRate,
                                            int ratePlanCount) {
         return SearchResponse.builder()
-            .searchId(null)
+            .searchId(ProviderCode.OH_MY_HOTEL.name())
             .providerCode(ProviderCode.OH_MY_HOTEL)
             .properties(toPropertyAvailabilities(omhHotelsAvailabilityResponse, mrtCommissionRate, ratePlanCount))
             .build();

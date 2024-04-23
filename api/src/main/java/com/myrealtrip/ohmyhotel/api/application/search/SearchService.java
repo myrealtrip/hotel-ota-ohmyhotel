@@ -57,7 +57,7 @@ public class SearchService {
         if (CollectionUtils.isEmpty(searchRequest.getPropertyIds())) {
             return SearchResponse.builder()
                 .providerCode(ProviderCode.OH_MY_HOTEL)
-                .searchId(null)
+                .searchId(ProviderCode.OH_MY_HOTEL.name())
                 .properties(Collections.emptyList())
                 .build();
         }
