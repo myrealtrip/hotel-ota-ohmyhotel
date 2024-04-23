@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RateSearchId {
 
-    private static final String SEPARATOR = ":-:";
+    private static final String SEPARATOR = "::";
 
     private final String roomTypeCode;
 
