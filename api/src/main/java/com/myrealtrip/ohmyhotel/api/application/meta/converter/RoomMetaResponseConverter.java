@@ -127,9 +127,7 @@ public class RoomMetaResponseConverter {
                     .flatMap(Collection::stream)
                     .map(omhBed -> BedConfiguration.builder()
                         .size(String.valueOf(omhBed.getBedTypeSize()))
-                        .type(StringUtils.isNotBlank(omhBed.getBedTypeNameByLanguage()) ?
-                              omhBed.getBedTypeNameByLanguage() :
-                              omhBed.getBedTypeName())
+                        .type(omhBed.getBedTypeCode().getExposedName())
                         .quantity(omhBed.getBedTypeCount())
                         .build())
                     .collect(Collectors.toList())
