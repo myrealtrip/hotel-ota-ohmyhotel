@@ -7,8 +7,10 @@ import com.myrealtrip.ohmyhotel.api.application.search.converter.SearchRequestCo
 import com.myrealtrip.ohmyhotel.api.application.search.converter.SingleSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.protocol.search.RateSearchId;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Order;
+import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.core.provider.reservation.OrderProvider;
 import com.myrealtrip.ohmyhotel.core.service.CommissionRateService;
+import com.myrealtrip.ohmyhotel.core.service.ZeroMarginSearchService;
 import com.myrealtrip.ohmyhotel.enumarate.ApiLogType;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.OmhRoomsAvailabilityAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
@@ -30,6 +32,7 @@ import static java.util.Objects.isNull;
 public class OrderSearchService {
 
     private final ReservationApiLogService reservationApiLogService;
+    private final ZeroMarginSearchService zeroMarginSearchService;
     private final CommissionRateService commissionRateService;
     private final OrderProvider orderProvider;
 
@@ -60,13 +63,15 @@ public class OrderSearchService {
         }
 
         BigDecimal mrtCommissionRate = commissionRateService.getMrtCommissionRate();
-        Order order = saveOrder(searchRequest, mrtCommissionRate, orderedRoomAvailability);
+        ZeroMargin zeroMargin = zeroMarginSearchService.getZeroMargin(hotelId, true);
+        Order order = saveOrder(searchRequest, mrtCommissionRate, orderedRoomAvailability, zeroMargin);
         saveApiLog(order.getOrderId(), omhRoomsAvailabilityRequest, omhRoomsAvailabilityResponse);
         return singleSearchResponseConverter.toSearchResponse(
             hotelId,
             orderedRoomAvailability,
             mrtCommissionRate,
-            searchRequest.getRatePlanCount()
+            searchRequest.getRatePlanCount(),
+            zeroMargin
         );
     }
 
@@ -81,8 +86,8 @@ public class OrderSearchService {
         return null;
     }
 
-    private Order saveOrder(SearchRequest searchRequest, BigDecimal mrtCommissionRate, OmhRoomAvailability omhRoomAvailability) {
-        Order order = orderConverter.toOrder(searchRequest, omhRoomAvailability, mrtCommissionRate);
+    private Order saveOrder(SearchRequest searchRequest, BigDecimal mrtCommissionRate, OmhRoomAvailability omhRoomAvailability, ZeroMargin zeroMargin) {
+        Order order = orderConverter.toOrder(searchRequest, omhRoomAvailability, mrtCommissionRate, zeroMargin);
         return orderProvider.upsert(order);
     }
 

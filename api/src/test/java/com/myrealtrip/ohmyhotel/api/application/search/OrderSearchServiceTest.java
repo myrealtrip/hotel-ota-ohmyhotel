@@ -8,8 +8,10 @@ import com.myrealtrip.ohmyhotel.api.application.search.converter.SearchRequestCo
 import com.myrealtrip.ohmyhotel.api.application.search.converter.SingleSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.protocol.search.RateSearchId;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Order;
+import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.core.provider.reservation.OrderProvider;
 import com.myrealtrip.ohmyhotel.core.service.CommissionRateService;
+import com.myrealtrip.ohmyhotel.core.service.ZeroMarginSearchService;
 import com.myrealtrip.ohmyhotel.enumarate.ApiLogType;
 import com.myrealtrip.ohmyhotel.enumarate.BedTypeCode;
 import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
@@ -40,6 +42,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -61,6 +64,7 @@ class OrderSearchServiceTest {
     @Mock private OrderProvider orderProvider;
     @Mock private OmhRoomsAvailabilityAgent omhRoomsAvailabilityAgent;
     @Mock private OrderConverter orderConverter;
+    @Mock private ZeroMarginSearchService zeroMarginSearchService;
 
     @Test
     @DisplayName("한 개 이상의 호텔이 요청으로 들어오면 Exception 을 던진다.")
@@ -158,7 +162,10 @@ class OrderSearchServiceTest {
         given(commissionRateService.getMrtCommissionRate())
             .willReturn(BigDecimal.valueOf(20));
 
-        given(orderConverter.toOrder(any(), any(), any()))
+        given(zeroMarginSearchService.getZeroMargin(any(), anyBoolean()))
+            .willReturn(ZeroMargin.empty());
+
+        given(orderConverter.toOrder(any(), any(), any(), any()))
             .willReturn(Order.builder().build());
 
         given(orderProvider.upsert(any()))

@@ -7,8 +7,10 @@ import com.myrealtrip.ohmyhotel.api.application.search.converter.SearchRequestCo
 import com.myrealtrip.ohmyhotel.api.application.search.converter.SingleSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.protocol.search.RateSearchId;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Order;
+import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.core.provider.reservation.OrderProvider;
 import com.myrealtrip.ohmyhotel.core.service.CommissionRateService;
+import com.myrealtrip.ohmyhotel.core.service.ZeroMarginSearchService;
 import com.myrealtrip.ohmyhotel.enumarate.ApiLogType;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStepApi;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.OmhHotelsAvailabilityAgent;
@@ -30,6 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
@@ -37,9 +42,8 @@ import static java.util.Objects.isNull;
 @RequiredArgsConstructor
 public class SearchService {
 
-    private final ReservationApiLogService reservationApiLogService;
     private final CommissionRateService commissionRateService;
-    private final OrderProvider orderProvider;
+    private final ZeroMarginSearchService zeroMarginSearchService;
 
     private final OmhHotelsAvailabilityAgent omhHotelsAvailabilityAgent;
     private final OmhRoomsAvailabilityAgent omhRoomsAvailabilityAgent;
@@ -47,7 +51,6 @@ public class SearchService {
     private final MultipleSearchResponseConverter multipleSearchResponseConverter;
     private final SingleSearchResponseConverter singleSearchResponseConverter;
     private final SearchRequestConverter searchRequestConverter;
-    private final OrderConverter orderConverter;
 
     /**
      * 숙소의 실시간 재고/가격을 검색합니다. (검색 리스트, 상품 상세 에서 호출)
@@ -70,23 +73,30 @@ public class SearchService {
     }
 
     private SearchResponse multipleOmhSearch(SearchRequest searchRequest, BigDecimal mrtCommissionRate) {
+        List<Long> hotelIds = searchRequest.getPropertyIds().stream()
+            .map(Long::valueOf)
+            .collect(Collectors.toList());
+        Map<Long, ZeroMargin> hotelIdToZeroMargin = zeroMarginSearchService.getZeroMargins(hotelIds, true);
         OmhHotelsAvailabilityRequest omhHotelsAvailabilityRequest = searchRequestConverter.toOmhHotelsAvailabilityRequest(searchRequest);
         OmhHotelsAvailabilityResponse omhHotelsAvailabilityResponse =  omhHotelsAvailabilityAgent.getHotelsAvailability(omhHotelsAvailabilityRequest);
         return multipleSearchResponseConverter.toSearchResponse(
             omhHotelsAvailabilityResponse,
             mrtCommissionRate,
-            searchRequest.getRatePlanCount()
+            searchRequest.getRatePlanCount(),
+            hotelIdToZeroMargin
         );
     }
 
     private SearchResponse singleOmhSearch(SearchRequest searchRequest, BigDecimal mrtCommissionRate) {
+        ZeroMargin zeroMargin = zeroMarginSearchService.getZeroMargin(Long.valueOf(searchRequest.getPropertyIds().get(0)), true);
         OmhRoomsAvailabilityRequest omhRoomsAvailabilityRequest = searchRequestConverter.toOmhRoomsAvailabilityRequest(searchRequest);
         OmhRoomsAvailabilityResponse omhRoomsAvailabilityResponse = omhRoomsAvailabilityAgent.getRoomsAvailability(omhRoomsAvailabilityRequest);
         return singleSearchResponseConverter.toSearchResponse(
             Long.valueOf(searchRequest.getPropertyIds().get(0)),
             omhRoomsAvailabilityResponse,
             mrtCommissionRate,
-            searchRequest.getRatePlanCount()
+            searchRequest.getRatePlanCount(),
+            zeroMargin
         );
     }
 }
