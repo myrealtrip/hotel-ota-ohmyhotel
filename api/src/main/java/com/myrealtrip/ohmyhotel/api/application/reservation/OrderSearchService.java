@@ -1,10 +1,10 @@
-package com.myrealtrip.ohmyhotel.api.application.search;
+package com.myrealtrip.ohmyhotel.api.application.reservation;
 
 
 import com.myrealtrip.ohmyhotel.api.application.common.ReservationApiLogService;
-import com.myrealtrip.ohmyhotel.api.application.search.converter.OrderConverter;
-import com.myrealtrip.ohmyhotel.api.application.search.converter.SearchRequestConverter;
-import com.myrealtrip.ohmyhotel.api.application.search.converter.SingleSearchResponseConverter;
+import com.myrealtrip.ohmyhotel.api.application.reservation.converter.OrderConverter;
+import com.myrealtrip.ohmyhotel.api.application.common.converter.SearchRequestConverter;
+import com.myrealtrip.ohmyhotel.api.application.common.converter.SingleSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.protocol.search.RateSearchId;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Order;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
@@ -71,7 +71,8 @@ public class OrderSearchService {
             orderedRoomAvailability,
             mrtCommissionRate,
             searchRequest.getRatePlanCount(),
-            zeroMargin
+            zeroMargin,
+            String.valueOf(order.getOrderId())
         );
     }
 
@@ -94,7 +95,7 @@ public class OrderSearchService {
     private void saveApiLog(Long orderId,
                             OmhRoomsAvailabilityRequest omhRoomsAvailabilityRequest,
                             OmhRoomsAvailabilityResponse omhRoomsAvailabilityResponse) {
-        reservationApiLogService.upsertRoomsAvailabilityLog(orderId, ApiLogType.REQUEST, ObjectMapperUtils.writeAsString(omhRoomsAvailabilityRequest));
-        reservationApiLogService.upsertRoomsAvailabilityLog(orderId, ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhRoomsAvailabilityResponse));
+        reservationApiLogService.saveRoomsAvailabilityLog(orderId, ApiLogType.REQUEST, ObjectMapperUtils.writeAsString(omhRoomsAvailabilityRequest));
+        reservationApiLogService.saveRoomsAvailabilityLog(orderId, ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhRoomsAvailabilityResponse));
     }
 }

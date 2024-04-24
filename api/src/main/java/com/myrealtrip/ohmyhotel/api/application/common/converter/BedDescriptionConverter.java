@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.api.application.common;
+package com.myrealtrip.ohmyhotel.api.application.common.converter;
 
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhBedGroup;
 import org.springframework.stereotype.Component;

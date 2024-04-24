@@ -1,11 +1,10 @@
-package com.myrealtrip.ohmyhotel.api.application.search.converter;
+package com.myrealtrip.ohmyhotel.api.application.common.converter;
 
-import com.myrealtrip.ohmyhotel.api.application.common.BedDescriptionConverter;
-import com.myrealtrip.ohmyhotel.api.application.search.converter.CommonSearchResponseConverter;
+import com.myrealtrip.ohmyhotel.api.application.common.converter.BedDescriptionConverter;
+import com.myrealtrip.ohmyhotel.api.application.common.converter.CommonSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.protocol.search.RateSearchId;
 import com.myrealtrip.ohmyhotel.constants.AttributeConstants;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhBedGroup;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse.OmhRoomAvailability;
 import com.myrealtrip.unionstay.common.constant.ProviderCode;
@@ -16,7 +15,6 @@ import com.myrealtrip.unionstay.dto.hotelota.search.response.RateAvailability;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.RoomAvailability;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.RoomBenefit;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.SearchResponse;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
@@ -51,7 +49,8 @@ public class SingleSearchResponseConverter {
                                            OmhRoomAvailability omhRoomAvailability,
                                            BigDecimal mrtCommissionRate,
                                            int ratePlanCount,
-                                           ZeroMargin zeroMargin) {
+                                           ZeroMargin zeroMargin,
+                                           String searchId) {
         PropertyAvailability propertyAvailability = PropertyAvailability.builder()
             .propertyId(String.valueOf(hotelId))
             .providerType(ProviderType.GDS)
@@ -61,7 +60,7 @@ public class SingleSearchResponseConverter {
             .build();
 
         return SearchResponse.builder()
-            .searchId(ProviderCode.OH_MY_HOTEL.name())
+            .searchId(searchId)
             .providerCode(ProviderCode.OH_MY_HOTEL)
             .properties(List.of(propertyAvailability))
             .build();

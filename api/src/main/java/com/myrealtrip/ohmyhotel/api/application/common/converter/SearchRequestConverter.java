@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.api.application.search.converter;
+package com.myrealtrip.ohmyhotel.api.application.common.converter;
 
 import com.myrealtrip.ohmyhotel.enumarate.Language;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;

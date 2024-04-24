@@ -20,4 +20,9 @@ public class ReservationProvider {
         ReservationEntity entity = reservationMapper.toEntity(reservation);
         reservationRepository.save(entity);
     }
+
+    @Transactional
+    public Reservation getByMrtReservationNo(String mrtReservationNo) {
+        return reservationMapper.toDto(reservationRepository.findByMrtReservationNo(mrtReservationNo));
+    }
 }

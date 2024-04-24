@@ -12,19 +12,19 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Getter
-public enum PreCheckStatus {
+public enum OmhPreCheckStatus {
 
     AVAILABLE("available"),
     AMOUNT_CHANGED("amount_changed"),
     SOLD_OUT("sold_out");
 
-    private static final Map<String, PreCheckStatus> LABEL_TO_PRE_CHECK_STATUS = Arrays.stream(PreCheckStatus.values())
-        .collect(Collectors.toMap(PreCheckStatus::getLabel, Function.identity()));
+    private static final Map<String, OmhPreCheckStatus> LABEL_TO_PRE_CHECK_STATUS = Arrays.stream(OmhPreCheckStatus.values())
+        .collect(Collectors.toMap(OmhPreCheckStatus::getLabel, Function.identity()));
 
     private final String label;
 
     @JsonCreator
-    public static PreCheckStatus get(String label) {
+    public static OmhPreCheckStatus get(String label) {
         return LABEL_TO_PRE_CHECK_STATUS.get(label);
     }
 

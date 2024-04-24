@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.api.application.search.converter;
+package com.myrealtrip.ohmyhotel.api.application.common.converter;
 
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;

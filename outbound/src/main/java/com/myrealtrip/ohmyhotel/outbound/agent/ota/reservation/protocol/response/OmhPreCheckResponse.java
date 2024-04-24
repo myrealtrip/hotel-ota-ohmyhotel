@@ -1,7 +1,7 @@
 package com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.myrealtrip.ohmyhotel.enumarate.PreCheckStatus;
+import com.myrealtrip.ohmyhotel.enumarate.OmhPreCheckStatus;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCancelPolicy;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCommonResponse;
@@ -23,7 +23,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhPreCheckResponse extends OmhCommonResponse {
 
-    private PreCheckStatus status;
+    private OmhPreCheckStatus status;
 
     private OmhRoomOccupancy occupancy;
 

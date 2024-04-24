@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class OmhPreCheckAgent {
 
-    private static final String URI = "/channel/ota/v2.0/reservation/precheck";
+    public static final String URI = "/channel/ota/v2.0/reservation/precheck";
     private static final String PRE_CHECK = "Pre Check";
 
     private final WebClient webClient;

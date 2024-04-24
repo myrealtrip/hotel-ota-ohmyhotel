@@ -1,26 +1,17 @@
 package com.myrealtrip.ohmyhotel.api.application.search;
 
-import com.myrealtrip.ohmyhotel.api.application.common.ReservationApiLogService;
 import com.myrealtrip.ohmyhotel.api.application.search.converter.MultipleSearchResponseConverter;
-import com.myrealtrip.ohmyhotel.api.application.search.converter.OrderConverter;
-import com.myrealtrip.ohmyhotel.api.application.search.converter.SearchRequestConverter;
-import com.myrealtrip.ohmyhotel.api.application.search.converter.SingleSearchResponseConverter;
-import com.myrealtrip.ohmyhotel.api.protocol.search.RateSearchId;
-import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Order;
+import com.myrealtrip.ohmyhotel.api.application.common.converter.SearchRequestConverter;
+import com.myrealtrip.ohmyhotel.api.application.common.converter.SingleSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
-import com.myrealtrip.ohmyhotel.core.provider.reservation.OrderProvider;
 import com.myrealtrip.ohmyhotel.core.service.CommissionRateService;
 import com.myrealtrip.ohmyhotel.core.service.ZeroMarginSearchService;
-import com.myrealtrip.ohmyhotel.enumarate.ApiLogType;
-import com.myrealtrip.ohmyhotel.enumarate.ReservationStepApi;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.OmhHotelsAvailabilityAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.OmhRoomsAvailabilityAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhHotelsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse.OmhRoomAvailability;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhHotelsAvailabilityRequest;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomsAvailabilityRequest;
-import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import com.myrealtrip.unionstay.common.constant.ProviderCode;
 import com.myrealtrip.unionstay.dto.hotelota.search.request.SearchRequest;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.SearchResponse;
@@ -30,13 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static java.util.Objects.isNull;
 
 @Service
 @RequiredArgsConstructor
