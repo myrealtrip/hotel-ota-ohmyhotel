@@ -1,7 +1,6 @@
 package com.myrealtrip.ohmyhotel.api.application.meta.converter;
 
-import com.myrealtrip.ohmyhotel.api.application.common.BedDescriptionConverter;
-import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Photo;
+import com.myrealtrip.ohmyhotel.api.application.common.converter.BedDescriptionConverter;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhBedGroup;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomFacility;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomInfoResponse;
@@ -11,8 +10,6 @@ import com.myrealtrip.unionstay.common.constant.ProviderType;
 import com.myrealtrip.unionstay.common.constant.RoomStatus;
 import com.myrealtrip.unionstay.common.constant.RoomVisualCategory;
 import com.myrealtrip.unionstay.common.constant.VisualType;
-import com.myrealtrip.unionstay.common.message.property.UpsertPropertyMessage;
-import com.myrealtrip.unionstay.common.message.property.UpsertPropertyMessage.Image;
 import com.myrealtrip.unionstay.dto.hotelota.meta.room.RoomMetaAttribute;
 import com.myrealtrip.unionstay.dto.hotelota.meta.room.RoomMetaBed;
 import com.myrealtrip.unionstay.dto.hotelota.meta.room.RoomMetaBed.BedConfiguration;
@@ -21,7 +18,6 @@ import com.myrealtrip.unionstay.dto.hotelota.meta.room.RoomMetaImage;
 import com.myrealtrip.unionstay.dto.hotelota.meta.room.RoomMetaResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.api.application.search.converter;
+package com.myrealtrip.ohmyhotel.api.application.reservation.converter;
 
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Hotel;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.AdditionalOrderInfo;
