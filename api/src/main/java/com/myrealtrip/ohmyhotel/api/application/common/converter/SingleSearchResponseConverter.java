@@ -49,7 +49,8 @@ public class SingleSearchResponseConverter {
                                            OmhRoomAvailability omhRoomAvailability,
                                            BigDecimal mrtCommissionRate,
                                            int ratePlanCount,
-                                           ZeroMargin zeroMargin) {
+                                           ZeroMargin zeroMargin,
+                                           String searchId) {
         PropertyAvailability propertyAvailability = PropertyAvailability.builder()
             .propertyId(String.valueOf(hotelId))
             .providerType(ProviderType.GDS)
@@ -59,7 +60,7 @@ public class SingleSearchResponseConverter {
             .build();
 
         return SearchResponse.builder()
-            .searchId(ProviderCode.OH_MY_HOTEL.name())
+            .searchId(searchId)
             .providerCode(ProviderCode.OH_MY_HOTEL)
             .properties(List.of(propertyAvailability))
             .build();

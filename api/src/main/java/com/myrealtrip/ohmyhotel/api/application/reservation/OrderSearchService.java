@@ -71,7 +71,8 @@ public class OrderSearchService {
             orderedRoomAvailability,
             mrtCommissionRate,
             searchRequest.getRatePlanCount(),
-            zeroMargin
+            zeroMargin,
+            String.valueOf(order.getOrderId())
         );
     }
 
@@ -94,7 +95,7 @@ public class OrderSearchService {
     private void saveApiLog(Long orderId,
                             OmhRoomsAvailabilityRequest omhRoomsAvailabilityRequest,
                             OmhRoomsAvailabilityResponse omhRoomsAvailabilityResponse) {
-        reservationApiLogService.upsertRoomsAvailabilityLog(orderId, ApiLogType.REQUEST, ObjectMapperUtils.writeAsString(omhRoomsAvailabilityRequest));
-        reservationApiLogService.upsertRoomsAvailabilityLog(orderId, ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhRoomsAvailabilityResponse));
+        reservationApiLogService.saveRoomsAvailabilityLog(orderId, ApiLogType.REQUEST, ObjectMapperUtils.writeAsString(omhRoomsAvailabilityRequest));
+        reservationApiLogService.saveRoomsAvailabilityLog(orderId, ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhRoomsAvailabilityResponse));
     }
 }

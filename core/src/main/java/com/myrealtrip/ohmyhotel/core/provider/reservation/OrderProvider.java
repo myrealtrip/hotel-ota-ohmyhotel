@@ -20,4 +20,9 @@ public class OrderProvider {
         OrderEntity entity = orderMapper.toEntity(order);
         return orderMapper.toDto(orderRepository.save(entity));
     }
+
+    @Transactional
+    public Order getByOrderId(Long orderId) {
+        return orderMapper.toDto(orderRepository.findByOrderId(orderId));
+    }
 }
