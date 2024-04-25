@@ -7,6 +7,7 @@ import com.myrealtrip.ohmyhotel.core.domain.reservation.converter.JpaGuestDetail
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.AdditionalOrderInfo;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.GuestCount;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.GuestDetail;
+import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.OrderFormInfo;
 import com.myrealtrip.ohmyhotel.enumarate.OmhBookingStatus;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
 import lombok.AccessLevel;
@@ -14,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -36,6 +38,8 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "reservation")
 public class ReservationEntity extends BaseEntity {
+
+    private static final String LOG_SEPARATOR = ":-:";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -143,4 +147,44 @@ public class ReservationEntity extends BaseEntity {
 
     @Column(name = "cancel_reason_type")
     private String cancelReasonType;
+
+    public void confirmFail(String bookingErrorCode) {
+        changeStatus(ReservationStatus.RESERVE_CONFIRM_FAIL);
+        this.bookingErrorCode = bookingErrorCode;
+        appendLog("예약실패");
+    }
+
+    public void confirm() {
+        changeStatus(ReservationStatus.RESERVE_CONFIRM);
+        appendLog("예약확정");
+        this.confirmedAt = LocalDateTime.now();
+    }
+
+    public void confirmPending() {
+        changeStatus(ReservationStatus.RESERVE_CONFIRM_PENDING);
+        appendLog("예약 Pending");
+    }
+
+    public void updateOrderFormInfo(OrderFormInfo orderFormInfo) {
+        this.reservationUser = orderFormInfo.getReservationUser();
+        this.checkInUser = orderFormInfo.getCheckInUser();
+        this.specialRequest = orderFormInfo.getSpecialRequest();
+        appendLog("예약 확정 요청 consume");
+    }
+
+    public void changeStatus(ReservationStatus reservationStatus) {
+        if (!this.reservationStatus.canChangeTo(reservationStatus)) {
+            throw new IllegalStateException(String.format("상태전이가 불가능합니다. before: %s, after: %s", this.reservationStatus, reservationStatus));
+        }
+        this.reservationStatus = reservationStatus;
+    }
+
+    public void appendLog(String appendLog) {
+        LocalDateTime now = LocalDateTime.now();
+        if (StringUtils.isBlank(this.logs)) {
+            this.logs = now + " " + appendLog;
+            return;
+        }
+        this.logs = this.logs + LOG_SEPARATOR + now + " " + appendLog;
+    }
 }

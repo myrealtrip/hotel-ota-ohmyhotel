@@ -1,11 +1,13 @@
 package com.myrealtrip.ohmyhotel.core.provider.reservation;
 
+import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.OrderFormInfo;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Reservation;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.entity.ReservationEntity;
 import com.myrealtrip.ohmyhotel.core.infrastructure.reservation.ReservationRepository;
 import com.myrealtrip.ohmyhotel.core.provider.reservation.mapper.ReservationMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
@@ -24,5 +26,38 @@ public class ReservationProvider {
     @Transactional
     public Reservation getByMrtReservationNo(String mrtReservationNo) {
         return reservationMapper.toDto(reservationRepository.findByMrtReservationNo(mrtReservationNo));
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateOrderFormInfo(Long reservationId, OrderFormInfo orderFormInfo) {
+        ReservationEntity entity = findByReservationId(reservationId);
+        entity.updateOrderFormInfo(orderFormInfo);
+        reservationRepository.save(entity);
+    }
+
+    @Transactional
+    public void confirm(Long reservationId) {
+        ReservationEntity entity = findByReservationId(reservationId);
+        entity.confirm();
+        reservationRepository.save(entity);
+    }
+
+    @Transactional
+    public void confirmPending(Long reservationId) {
+        ReservationEntity entity = findByReservationId(reservationId);
+        entity.confirmPending();
+        reservationRepository.save(entity);
+    }
+
+    @Transactional
+    public void confirmFail(Long reservationId, String bookintErrorCode) {
+        ReservationEntity entity = findByReservationId(reservationId);
+        entity.confirmFail(bookintErrorCode);
+        reservationRepository.save(entity);
+    }
+
+    private ReservationEntity findByReservationId(Long reservationId) {
+        return reservationRepository.findById(reservationId)
+            .orElseThrow(IllegalArgumentException::new);
     }
 }
