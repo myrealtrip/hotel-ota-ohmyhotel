@@ -48,7 +48,7 @@ public class ReserveConfirmConsumeService {
      */
     @Transactional
     public void consumeReserveConfirm(BookingOrderMessage message) {
-        Reservation reservation = reservationProvider.getByMrtReservationNo(message.getMrtReservationNo());
+        Reservation reservation = reservationProvider.getByMrtReservationNoWithLock(message.getMrtReservationNo());
         if (!reservation.getReservationStatus().canChangeTo(ReservationStatus.RESERVE_CONFIRM)) {
             log.error("{} 예약확정 상태전이 불가. 현재 상태: {}", reservation.getMrtReservationNo(), reservation.getReservationStatus());
             return;

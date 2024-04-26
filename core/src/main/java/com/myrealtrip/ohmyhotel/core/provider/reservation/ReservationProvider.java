@@ -24,11 +24,16 @@ public class ReservationProvider {
     }
 
     @Transactional
+    public Reservation getByMrtReservationNoWithLock(String mrtReservationNo) {
+        return reservationMapper.toDto(reservationRepository.findByMrtReservationNoWithLock(mrtReservationNo));
+    }
+
+    @Transactional
     public Reservation getByMrtReservationNo(String mrtReservationNo) {
         return reservationMapper.toDto(reservationRepository.findByMrtReservationNo(mrtReservationNo));
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public Reservation updateOrderFormInfo(Long reservationId, OrderFormInfo orderFormInfo) {
         ReservationEntity entity = findByReservationId(reservationId);
         entity.updateOrderFormInfo(orderFormInfo);
