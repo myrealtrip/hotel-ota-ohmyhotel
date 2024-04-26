@@ -50,7 +50,7 @@ public class ReserveConfirmConsumeService {
     public void consumeReserveConfirm(BookingOrderMessage message) {
         Reservation reservation = reservationProvider.getByMrtReservationNoWithLock(message.getMrtReservationNo());
         if (!reservation.getReservationStatus().canChangeTo(ReservationStatus.RESERVE_CONFIRM)) {
-            log.error("{} 예약확정 상태전이 불가. 현재 상태: {}", reservation.getMrtReservationNo(), reservation.getReservationStatus());
+            log.error("{} - 예약확정 상태전이 불가. 현재 상태: {}", reservation.getMrtReservationNo(), reservation.getReservationStatus());
             return;
         }
         if (reservation.getReservationStatus() == ReservationStatus.RESERVE_CONFIRM_PENDING) {
@@ -69,7 +69,7 @@ public class ReserveConfirmConsumeService {
             return;
         } catch (Throwable t) {
             log.error("{} - " + ReservationSlackEvent.RESERVE_CONFIRM_RESPONSE_CHECK_FAIL.getNote(), reservation.getMrtReservationNo(), t);
-            reservationSlackSender.sendToSrt(ReservationSlackEvent.RESERVE_CONFIRM_RESPONSE_CHECK_FAIL, reservation.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
+            reservationSlackSender.sendToSrtWithMention(ReservationSlackEvent.RESERVE_CONFIRM_RESPONSE_CHECK_FAIL, reservation.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
             reservationProvider.confirmPending(reservation.getReservationId(), null, null);
             return;
         }
@@ -106,7 +106,7 @@ public class ReserveConfirmConsumeService {
         }
         if (omhBookingDetailResponse.getStatus() == OmhBookingStatus.PENDING) {
             reservationProvider.confirmPending(reservation.getReservationId(), omhBookCode, hotelConfirmNo);
-            reservationSlackSender.sendToSrt(ReservationSlackEvent.RESERVE_CONFIRM_PENDING, reservation.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
+            reservationSlackSender.sendToSrtWithMention(ReservationSlackEvent.RESERVE_CONFIRM_PENDING, reservation.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
             return;
         }
         if (omhBookingDetailResponse.getStatus() == OmhBookingStatus.UNAVAILABLE ||
@@ -122,20 +122,20 @@ public class ReserveConfirmConsumeService {
             log.error("{} - " + ReservationSlackEvent.RESERVE_CONFIRM_FAIL.getNote(), reservation.getMrtReservationNo(), t);
         }
         reservationProvider.confirmFail(reservation.getReservationId(), BookingErrorCode.INTERNAL_ERROR.name());
-        reservationSlackSender.sendToSrt(ReservationSlackEvent.RESERVE_CONFIRM_FAIL, reservation.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
+        reservationSlackSender.sendToSrtWithMention(ReservationSlackEvent.RESERVE_CONFIRM_FAIL, reservation.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
     }
 
     private void handleBookDetailFail(Reservation reservation, BookingOrderMessage message, Throwable t) {
         log.error("{} - " + ReservationSlackEvent.RESERVE_CONFIRM_FAIL.getNote(), reservation.getMrtReservationNo(), t);
         reservationProvider.confirmPending(reservation.getReservationId(), null, null);
-        reservationSlackSender.sendToSrt(ReservationSlackEvent.OMH_BOOK_DETAIL_API_FAIL, reservation.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
+        reservationSlackSender.sendToSrtWithMention(ReservationSlackEvent.OMH_BOOK_DETAIL_API_FAIL, reservation.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
     }
 
     private void saveBookingDetailApiLog(String mrtReservationNo, ApiLogType logType, String logStr) {
         try {
             reservationApiLogService.saveBookingDetailApiLog(mrtReservationNo, logType, logStr);
         } catch (Throwable t) {
-            log.error("{} booking detail api log save fail", mrtReservationNo);
+            log.error("{} - booking detail api log save fail", mrtReservationNo);
         }
     }
 
@@ -143,7 +143,7 @@ public class ReserveConfirmConsumeService {
         try {
             reservationApiLogService.saveCreateBookingApiLog(mrtReservationNo, logType, logStr);
         } catch (Throwable t) {
-            log.error("{} create booking api log save fail", mrtReservationNo);
+            log.error("{} - create booking api log save fail", mrtReservationNo);
         }
     }
 }
