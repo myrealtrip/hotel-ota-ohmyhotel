@@ -38,7 +38,7 @@ public class OmhStaticHotelInfoListAgent {
         try {
             return getHotelInfoMono(request).block();
         } catch (OmhApiException e) {
-            log.error(AgentConstants.LOG_FORMAT, STATIC_HOTEL_INFO, ObjectMapperUtils.writeAsString(request), ObjectMapperUtils.writeAsString(e.getOmhCommonResponse()));
+            log.error(AgentConstants.LOG_FORMAT, STATIC_HOTEL_INFO, ObjectMapperUtils.writeAsString(request), e.getResponse());
             throw e;
         } catch (Throwable e) {
             log.error(AgentConstants.LOG_FORMAT, STATIC_HOTEL_INFO, ObjectMapperUtils.writeAsString(request), "");

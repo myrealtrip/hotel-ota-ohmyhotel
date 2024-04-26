@@ -8,6 +8,7 @@ import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.AdditionalOrderInfo;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.GuestCount;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.GuestDetail;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.OrderFormInfo;
+import com.myrealtrip.ohmyhotel.enumarate.CanceledBy;
 import com.myrealtrip.ohmyhotel.enumarate.OmhBookingStatus;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
 import lombok.AccessLevel;
@@ -57,10 +58,6 @@ public class ReservationEntity extends BaseEntity {
 
     @Column(name = "hotel_confirm_no")
     private String hotelConfirmNo;
-
-    @Column(name = "omh_book_status")
-    @Enumerated(value = EnumType.STRING)
-    private OmhBookingStatus omhBookStatus;
 
     @Column(name = "reservation_status")
     @Enumerated(value = EnumType.STRING)
@@ -140,7 +137,8 @@ public class ReservationEntity extends BaseEntity {
     private LocalDateTime canceledAt;
 
     @Column(name = "canceled_by")
-    private String canceledBy;
+    @Enumerated(value = EnumType.STRING)
+    private CanceledBy canceledBy;
 
     @Column(name = "cancel_reason")
     private String cancelReason;
@@ -154,15 +152,19 @@ public class ReservationEntity extends BaseEntity {
         appendLog("예약실패");
     }
 
-    public void confirm() {
+    public void confirm(String omhBookCode, String hotelConfirmNo) {
         changeStatus(ReservationStatus.RESERVE_CONFIRM);
         appendLog("예약확정");
         this.confirmedAt = LocalDateTime.now();
+        this.omhBookCode = omhBookCode;
+        this.hotelConfirmNo = hotelConfirmNo;
     }
 
-    public void confirmPending() {
+    public void confirmPending(String omhBookCode, String hotelConfirmNo) {
         changeStatus(ReservationStatus.RESERVE_CONFIRM_PENDING);
         appendLog("예약 Pending");
+        this.omhBookCode = omhBookCode;
+        this.hotelConfirmNo = hotelConfirmNo;
     }
 
     public void updateOrderFormInfo(OrderFormInfo orderFormInfo) {

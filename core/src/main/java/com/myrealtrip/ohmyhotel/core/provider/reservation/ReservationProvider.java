@@ -29,23 +29,23 @@ public class ReservationProvider {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void updateOrderFormInfo(Long reservationId, OrderFormInfo orderFormInfo) {
+    public Reservation updateOrderFormInfo(Long reservationId, OrderFormInfo orderFormInfo) {
         ReservationEntity entity = findByReservationId(reservationId);
         entity.updateOrderFormInfo(orderFormInfo);
+        return reservationMapper.toDto(reservationRepository.save(entity));
+    }
+
+    @Transactional
+    public void confirm(Long reservationId, String omhBookCode, String hotelConfirmNo) {
+        ReservationEntity entity = findByReservationId(reservationId);
+        entity.confirm(omhBookCode, hotelConfirmNo);
         reservationRepository.save(entity);
     }
 
     @Transactional
-    public void confirm(Long reservationId) {
+    public void confirmPending(Long reservationId, String omhBookCode, String hotelConfirmNo) {
         ReservationEntity entity = findByReservationId(reservationId);
-        entity.confirm();
-        reservationRepository.save(entity);
-    }
-
-    @Transactional
-    public void confirmPending(Long reservationId) {
-        ReservationEntity entity = findByReservationId(reservationId);
-        entity.confirmPending();
+        entity.confirmPending(omhBookCode, hotelConfirmNo);
         reservationRepository.save(entity);
     }
 

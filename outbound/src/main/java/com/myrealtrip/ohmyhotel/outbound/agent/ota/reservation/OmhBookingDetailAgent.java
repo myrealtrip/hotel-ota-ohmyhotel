@@ -24,7 +24,7 @@ import java.time.LocalDate;
 @Slf4j
 public class OmhBookingDetailAgent {
 
-    private static final String URI = "/channel/ota/v2.0/reservation/book/{channelBookingCode}";
+    public static final String URI = "/channel/ota/v2.0/reservation/book/{channelBookingCode}";
     private static final String BOOKING_DETAIL = "Booking Detail";
 
     private final WebClient webClient;
@@ -44,7 +44,7 @@ public class OmhBookingDetailAgent {
         try {
             return bookingDetailMono(mrtReservationNo).block();
         } catch (OmhApiException e) {
-            log.error(AgentConstants.LOG_FORMAT, BOOKING_DETAIL, request, ObjectMapperUtils.writeAsString(e.getOmhCommonResponse()));
+            log.error(AgentConstants.LOG_FORMAT, BOOKING_DETAIL, request, e.getResponse());
             throw e;
         } catch (Throwable e) {
             log.error(AgentConstants.LOG_FORMAT, BOOKING_DETAIL, request, "");

@@ -40,7 +40,7 @@ public class OmhRoomInfoAgent {
         try {
             return getRomInfoMono(request).block();
         } catch(OmhApiException e) {
-            log.error(AgentConstants.LOG_FORMAT, ROOM_INFO, ObjectMapperUtils.writeAsString(request), ObjectMapperUtils.writeAsString(e.getOmhCommonResponse()));
+            log.error(AgentConstants.LOG_FORMAT, ROOM_INFO, ObjectMapperUtils.writeAsString(request), e.getResponse());
             throw e;
         } catch(Throwable e) {
             log.error(AgentConstants.LOG_FORMAT, ROOM_INFO, ObjectMapperUtils.writeAsString(request), "");

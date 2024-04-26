@@ -40,7 +40,7 @@ public class OmhStaticHotelBulkListAgent {
         try {
             return getBulkHotelsMono(lastUpdatedDate, hotelCode).block();
         } catch (OmhApiException e) {
-            log.error(AgentConstants.LOG_FORMAT, STATIC_HOTEL_BULK_LIST, String.format(requestFormat, lastUpdatedDate, hotelCode), ObjectMapperUtils.writeAsString(e.getOmhCommonResponse()));
+            log.error(AgentConstants.LOG_FORMAT, STATIC_HOTEL_BULK_LIST, String.format(requestFormat, lastUpdatedDate, hotelCode), e.getResponse());
             throw e;
         } catch (Throwable e) {
             log.error(AgentConstants.LOG_FORMAT, STATIC_HOTEL_BULK_LIST, String.format(requestFormat, lastUpdatedDate, hotelCode), "");

@@ -39,7 +39,7 @@ public class OmhCancelBookingAgent {
         try {
             return cancelBookingMono(mrtReservationNo).block();
         } catch (OmhApiException e) {
-            log.error(AgentConstants.LOG_FORMAT, CANCEL_BOOKING, request, ObjectMapperUtils.writeAsString(e.getOmhCommonResponse()));
+            log.error(AgentConstants.LOG_FORMAT, CANCEL_BOOKING, request, e.getResponse());
             throw e;
         } catch (Throwable e) {
             log.error(AgentConstants.LOG_FORMAT, CANCEL_BOOKING, request, "");

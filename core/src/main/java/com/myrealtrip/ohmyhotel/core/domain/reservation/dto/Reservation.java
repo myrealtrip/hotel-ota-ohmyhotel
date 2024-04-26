@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.core.domain.reservation.dto;
 
+import com.myrealtrip.ohmyhotel.enumarate.CanceledBy;
 import com.myrealtrip.ohmyhotel.enumarate.OmhBookingStatus;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
 import lombok.AccessLevel;
@@ -33,8 +34,6 @@ public class Reservation {
     private String omhBookCode;
 
     private String hotelConfirmNo;
-
-    private OmhBookingStatus omhBookStatus;
 
     private ReservationStatus reservationStatus;
 
@@ -84,7 +83,7 @@ public class Reservation {
 
     private LocalDateTime canceledAt;
 
-    private String canceledBy;
+    private CanceledBy canceledBy;
 
     private String cancelReason;
 
