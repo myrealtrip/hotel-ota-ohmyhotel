@@ -149,12 +149,12 @@ public class ReservationEntity extends BaseEntity {
     public void confirmFail(String bookingErrorCode) {
         changeStatus(ReservationStatus.RESERVE_CONFIRM_FAIL);
         this.bookingErrorCode = bookingErrorCode;
-        appendLog("예약실패");
+        appendLog("예약확정 실패");
     }
 
     public void confirm(String omhBookCode, String hotelConfirmNo) {
         changeStatus(ReservationStatus.RESERVE_CONFIRM);
-        appendLog("예약확정");
+        appendLog("예약확정 성공");
         this.confirmedAt = LocalDateTime.now();
         this.omhBookCode = omhBookCode;
         this.hotelConfirmNo = hotelConfirmNo;
@@ -162,7 +162,7 @@ public class ReservationEntity extends BaseEntity {
 
     public void confirmPending(String omhBookCode, String hotelConfirmNo) {
         changeStatus(ReservationStatus.RESERVE_CONFIRM_PENDING);
-        appendLog("예약 Pending");
+        appendLog("예약 확정 보류");
         this.omhBookCode = omhBookCode;
         this.hotelConfirmNo = hotelConfirmNo;
     }
@@ -171,7 +171,6 @@ public class ReservationEntity extends BaseEntity {
         this.reservationUser = orderFormInfo.getReservationUser();
         this.checkInUser = orderFormInfo.getCheckInUser();
         this.specialRequest = orderFormInfo.getSpecialRequest();
-        appendLog("예약 확정 요청 consume");
     }
 
     public void changeStatus(ReservationStatus reservationStatus) {
