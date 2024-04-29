@@ -59,6 +59,7 @@ public class OrderConverter {
                                 .cancelPolicy(omhRoomAvailability.getCancellationPolicy())
                                 .bedGroups(omhRoomAvailability.getBedGroups())
                                 .mealBasisCode(omhRoomAvailability.getMealBasisCode())
+                                .nightlyAmounts(omhRoomAvailability.getNightly())
                                 .build())
             .build();
     }
