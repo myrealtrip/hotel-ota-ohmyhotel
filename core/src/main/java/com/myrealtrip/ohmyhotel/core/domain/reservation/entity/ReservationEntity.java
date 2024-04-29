@@ -201,4 +201,8 @@ public class ReservationEntity extends BaseEntity {
     public void addConfirmPendingRetryCount() {
         this.confirmPendingRetryCount++;
     }
+
+    public void forceStatusUpdate(ReservationStatus status) {
+        this.reservationStatus = status;
+    }
 }

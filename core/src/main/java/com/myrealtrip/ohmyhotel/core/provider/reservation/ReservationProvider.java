@@ -79,6 +79,13 @@ public class ReservationProvider {
         reservationRepository.save(entity);
     }
 
+    @Transactional
+    public void forceStatusUpdate(String mrtReservationNo, ReservationStatus status) {
+        ReservationEntity entity = reservationRepository.findByMrtReservationNo(mrtReservationNo);
+        entity.forceStatusUpdate(status);
+        reservationRepository.save(entity);
+    }
+
     private ReservationEntity findByReservationId(Long reservationId) {
         return reservationRepository.findById(reservationId)
             .orElseThrow(IllegalArgumentException::new);
