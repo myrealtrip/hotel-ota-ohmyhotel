@@ -17,6 +17,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import static java.util.Objects.isNull;
+
 @Getter
 @ToString
 @EqualsAndHashCode
@@ -73,7 +75,9 @@ public class Reservation {
 
     private String specialRequest;
 
-    private BigDecimal cancelPenaltyAmount;
+    private BigDecimal cancelPenaltySalePrice;
+
+    private BigDecimal cancelPenaltyDepositPrice;
 
     private String bookingErrorCode;
 
@@ -88,4 +92,22 @@ public class Reservation {
     private String cancelReason;
 
     private String cancelReasonType;
+
+    public BigDecimal getCancelRefundAmount() {
+        if (isNull(cancelPenaltySalePrice)) {
+            return null;
+        }
+        return salePrice.subtract(cancelPenaltySalePrice);
+    }
+
+    public BigDecimal getMrtCommission() {
+        return salePrice.subtract(depositPrice);
+    }
+
+    public BigDecimal getMrtCancelCommission() {
+        if (isNull(cancelPenaltySalePrice)) {
+            return null;
+        }
+        return cancelPenaltySalePrice.subtract(cancelPenaltyDepositPrice);
+    }
 }

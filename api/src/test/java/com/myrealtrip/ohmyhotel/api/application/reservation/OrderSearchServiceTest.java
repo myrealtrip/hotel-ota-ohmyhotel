@@ -1,8 +1,8 @@
 package com.myrealtrip.ohmyhotel.api.application.reservation;
 
-import com.myrealtrip.ohmyhotel.api.application.common.converter.BedDescriptionConverter;
-import com.myrealtrip.ohmyhotel.core.service.ReservationApiLogService;
-import com.myrealtrip.ohmyhotel.api.application.common.converter.CommonSearchResponseConverter;
+import com.myrealtrip.ohmyhotel.core.service.BedDescriptionConverter;
+import com.myrealtrip.ohmyhotel.core.service.reservation.ReservationApiLogService;
+import com.myrealtrip.ohmyhotel.core.service.CommonSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.OrderConverter;
 import com.myrealtrip.ohmyhotel.api.application.common.converter.SearchRequestConverter;
 import com.myrealtrip.ohmyhotel.api.application.common.converter.SingleSearchResponseConverter;

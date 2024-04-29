@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.api.application.common.converter;
+package com.myrealtrip.ohmyhotel.core.service;
 
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
@@ -56,25 +56,28 @@ public class CommonSearchResponseConverter {
         return List.of(rateBenefit);
     }
 
-    public List<CancelPolicy> toCancelPolicies(OmhCancelPolicy omhCancelPolicy) {
+    public List<CancelPolicy> toCancelPolicies(OmhCancelPolicy omhCancelPolicy, BigDecimal mrtCommissionRate) {
         if (CollectionUtils.isEmpty(omhCancelPolicy.getPolicies())) {
             return Collections.emptyList();
         }
         PenaltyBasis penaltyBasis = omhCancelPolicy.getPenaltyBasis();
         ZoneId zoneId = ZoneId.of(omhCancelPolicy.getTimeZone());
         return omhCancelPolicy.getPolicies().stream()
-            .map(omhCancelPolicyDetail -> toCancelPolicy(omhCancelPolicyDetail, penaltyBasis, zoneId))
+            .map(omhCancelPolicyDetail -> toCancelPolicy(omhCancelPolicyDetail, penaltyBasis, zoneId, mrtCommissionRate))
             .collect(Collectors.toList());
     }
 
-    private CancelPolicy toCancelPolicy(OmhCancelPolicyDetail omhCancelPolicyDetail, PenaltyBasis penaltyBasis, ZoneId zone) {
+    private CancelPolicy toCancelPolicy(OmhCancelPolicyDetail omhCancelPolicyDetail, PenaltyBasis penaltyBasis, ZoneId zone, BigDecimal mrtCommissionRate) {
         CancelPolicyType cancelPolicyType;
+        double value;
         if (omhCancelPolicyDetail.getRateOrAmount() == RateOrAmount.RATE) {
             cancelPolicyType = penaltyBasis == PenaltyBasis.FIRST_NIGHT ?
                                CancelPolicyType.FIRST_NIGHT_PERCENT :
                                CancelPolicyType.PERCENT;
+            value = omhCancelPolicyDetail.getPenaltyValue().doubleValue();
         } else if (omhCancelPolicyDetail.getRateOrAmount() == RateOrAmount.AMOUNT){
             cancelPolicyType = CancelPolicyType.AMOUNT;
+            value = OmhPriceCalculateUtils.toSalePrice(omhCancelPolicyDetail.getPenaltyValue(), mrtCommissionRate).doubleValue();
         } else {
             throw new IllegalStateException("cannot mapping CancelPolicyType");
         }
@@ -82,7 +85,7 @@ public class CommonSearchResponseConverter {
             .start(omhCancelPolicyDetail.getFromDateTime().atZone(zone).toOffsetDateTime())
             .end(omhCancelPolicyDetail.getToDateTime().atZone(zone).toOffsetDateTime())
             .type(cancelPolicyType)
-            .value(omhCancelPolicyDetail.getPenaltyValue().doubleValue())
+            .value(value)
             .build();
     }
 

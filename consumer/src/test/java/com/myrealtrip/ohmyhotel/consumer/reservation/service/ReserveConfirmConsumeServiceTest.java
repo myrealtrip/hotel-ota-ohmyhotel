@@ -6,7 +6,7 @@ import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.AdditionalOrderInfo;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.GuestCount;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Reservation;
 import com.myrealtrip.ohmyhotel.core.provider.reservation.ReservationProvider;
-import com.myrealtrip.ohmyhotel.core.service.ReservationApiLogService;
+import com.myrealtrip.ohmyhotel.core.service.reservation.ReservationApiLogService;
 import com.myrealtrip.ohmyhotel.enumarate.OmhBookingStatus;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -40,7 +39,6 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;

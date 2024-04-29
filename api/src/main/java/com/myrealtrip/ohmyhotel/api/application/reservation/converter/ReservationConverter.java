@@ -26,7 +26,6 @@ public class ReservationConverter {
             .mrtReservationNo(mrtReservationNo)
             .omhBookCode(null)
             .hotelConfirmNo(null)
-            .omhBookStatus(null)
             .reservationStatus(preCheckStatus == PreCheckStatus.AVAILABLE ?
                                ReservationStatus.PRECHECK_SUCCESS :
                                ReservationStatus.PRECHECK_FAIL)

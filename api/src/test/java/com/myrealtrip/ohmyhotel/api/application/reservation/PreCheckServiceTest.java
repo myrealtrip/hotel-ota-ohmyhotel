@@ -1,6 +1,6 @@
 package com.myrealtrip.ohmyhotel.api.application.reservation;
 
-import com.myrealtrip.ohmyhotel.core.service.ReservationApiLogService;
+import com.myrealtrip.ohmyhotel.core.service.reservation.ReservationApiLogService;
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.PreCheckRequestConverter;
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.PreCheckResponseConverter;
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.ReservationConverter;

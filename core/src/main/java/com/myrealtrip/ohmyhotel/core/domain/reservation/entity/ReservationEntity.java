@@ -121,8 +121,11 @@ public class ReservationEntity extends BaseEntity {
     @Column(name = "specialRequest")
     private String specialRequest;
 
-    @Column(name = "cancel_penalty_amount")
-    private BigDecimal cancelPenaltyAmount;
+    @Column(name = "cancel_penalty_sale_price")
+    private BigDecimal cancelPenaltySalePrice;
+
+    @Column(name = "cancel_penalty_deposit_price")
+    private BigDecimal cancelPenaltyDepositPrice;
 
     @Column(name = "booking_error_code")
     private String bookingErrorCode;

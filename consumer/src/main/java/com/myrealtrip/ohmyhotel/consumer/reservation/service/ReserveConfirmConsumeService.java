@@ -4,7 +4,7 @@ import com.myrealtrip.ohmyhotel.consumer.reservation.converter.BookingOrderMessa
 import com.myrealtrip.ohmyhotel.consumer.reservation.converter.OmhCreateBookingRequestConverter;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Reservation;
 import com.myrealtrip.ohmyhotel.core.provider.reservation.ReservationProvider;
-import com.myrealtrip.ohmyhotel.core.service.ReservationApiLogService;
+import com.myrealtrip.ohmyhotel.core.service.reservation.ReservationApiLogService;
 import com.myrealtrip.ohmyhotel.enumarate.ApiLogType;
 import com.myrealtrip.ohmyhotel.enumarate.OmhBookingStatus;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;

@@ -1,6 +1,8 @@
 package com.myrealtrip.ohmyhotel.outbound.producer;
 
 import com.myrealtrip.ohmyhotel.configuration.kafka.KafkaTopics;
+import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
+import com.myrealtrip.unionstay.common.message.booking.UpsertBookingDetailMessage;
 import com.myrealtrip.unionstay.common.message.property.UpdatePropertyMrtDiscountTypesMessage;
 import com.myrealtrip.unionstay.common.message.property.UpsertPropertyMessage;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +25,9 @@ public class CommonProducer {
 
     public void publishMrtDiscountTypesUpdate(UpdatePropertyMrtDiscountTypesMessage message) {
         kafkaTemplate.send(topics.getUnionstayPropertyMrtDiscountTypesUpdate(), writeAsString(message));
+    }
+
+    public void publishUpsertBookingDetail(UpsertBookingDetailMessage message) {
+        kafkaTemplate.send(topics.getUnionstayBookingDetailUpsert(), message.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
     }
 }

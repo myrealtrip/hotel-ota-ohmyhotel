@@ -5,6 +5,12 @@ import java.math.RoundingMode;
 
 public class OmhPriceCalculateUtils {
 
+    /**
+     * 입금가를 판매가로 변환한다.
+     * @param depositPrice
+     * @param mrtCommissionRate
+     * @return
+     */
     public static BigDecimal toSalePrice(BigDecimal depositPrice, BigDecimal mrtCommissionRate) {
         return depositPrice.add(toMrtCommission(depositPrice, mrtCommissionRate));
     }

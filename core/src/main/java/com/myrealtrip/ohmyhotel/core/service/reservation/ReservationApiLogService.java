@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.core.service;
+package com.myrealtrip.ohmyhotel.core.service.reservation;
 
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.ReservationApiLog;
 import com.myrealtrip.ohmyhotel.core.provider.reservation.ReservationApiLogProvider;

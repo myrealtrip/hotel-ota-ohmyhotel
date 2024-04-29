@@ -1,6 +1,6 @@
 package com.myrealtrip.ohmyhotel.api.application.meta.converter;
 
-import com.myrealtrip.ohmyhotel.api.application.common.converter.BedDescriptionConverter;
+import com.myrealtrip.ohmyhotel.core.service.BedDescriptionConverter;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhBedGroup;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomFacility;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomInfoResponse;
