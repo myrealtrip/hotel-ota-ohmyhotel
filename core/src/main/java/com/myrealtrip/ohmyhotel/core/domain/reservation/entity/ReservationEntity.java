@@ -149,7 +149,7 @@ public class ReservationEntity extends BaseEntity {
     @Column(name = "cancel_reason_type")
     private String cancelReasonType;
 
-    @Column(name = "omh_cancel_confim_no")
+    @Column(name = "omh_cancel_confirm_no")
     private String omhCancelConfirmNo;
 
     @Column(name = "confirm_pending_retry_count")
