@@ -47,13 +47,16 @@ public class ReservationConverter {
             .reservationUser(null)
             .checkInUser(null)
             .specialRequest(null)
-            .cancelPenaltyAmount(null)
+            .cancelPenaltySalePrice(null)
+            .cancelPenaltyDepositPrice(null)
             .bookingErrorCode(null)
             .logs(null)
             .confirmedAt(null)
             .canceledAt(null)
             .canceledBy(null)
             .cancelReason(null)
-            .cancelReasonType(null);
+            .cancelReasonType(null)
+            .omhCancelConfirmNo(null)
+            .confirmPendingRetryCount(0);
     }
 }
