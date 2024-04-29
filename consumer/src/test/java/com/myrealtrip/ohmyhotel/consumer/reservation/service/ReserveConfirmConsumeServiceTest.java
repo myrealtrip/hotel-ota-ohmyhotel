@@ -7,14 +7,12 @@ import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.GuestCount;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Reservation;
 import com.myrealtrip.ohmyhotel.core.provider.reservation.ReservationProvider;
 import com.myrealtrip.ohmyhotel.core.service.reservation.ReservationApiLogService;
-import com.myrealtrip.ohmyhotel.enumarate.OmhBookingStatus;
+import com.myrealtrip.ohmyhotel.core.service.reservation.ReserveConfirmCheckService;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.exception.OmhApiException;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhBookingDetailAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhCreateBookingAgent;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhBookingDetailResponse;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhBookingDetailResponse.OmhBookingCodes;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhCreateBookingResponse;
 import com.myrealtrip.ohmyhotel.outbound.slack.sender.reservation.ReservationSlackEvent;
 import com.myrealtrip.ohmyhotel.outbound.slack.sender.reservation.ReservationSlackSender;
@@ -55,10 +53,10 @@ class ReserveConfirmConsumeServiceTest {
     private ReserveConfirmConsumeService reserveConfirmConsumeService;
 
     @Mock private ReservationProvider reservationProvider;
-    @Mock private OmhBookingDetailAgent omhBookingDetailAgent;
     @Mock private OmhCreateBookingAgent omhCreateBookingAgent;
     @Mock private ReservationApiLogService reservationApiLogService;
     @Mock private ReservationSlackSender reservationSlackSender;
+    @Mock private ReserveConfirmCheckService reserveConfirmCheckService;
 
     @Spy private BookingOrderMessageConverter bookingOrderMessageConverter;
     @Spy private OmhCreateBookingRequestConverter omhCreateBookingRequestConverter;
@@ -77,155 +75,34 @@ class ReserveConfirmConsumeServiceTest {
 
         // then
         verify(omhCreateBookingAgent, never()).crateBooking(any());
-        verify(omhBookingDetailAgent, never()).bookingDetail(any());
+        verify(reserveConfirmCheckService, never()).checkOmhBookDetailAndUpdateReservation(any());
     }
 
-    @Nested
-    @DisplayName("현재 예약이 RESERVE_PENDING 상태라면 오마이호텔 예약상세조회 API 를 조회한다.")
-    class RESERVE_PENDING {
+    @Test
+    @DisplayName("현재 예약이 RESERVE_PENDING 상태라면 오마이호텔 예약상세조회 API 를 조회하여 상태값을 체크한다.")
+    void case_2() {
+        // given
+        BookingOrderMessage message = createMessage();
+        Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM_PENDING);
 
-        @Test
-        @DisplayName("예약상세조회 결과 UNAVAILABLE 상태라면 RESERVE_CONFIRM_FAIL 처리하고 슬랙 알림을 보낸다.")
-        void case_2() {
-            // given
-            BookingOrderMessage message = createMessage();
-            Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM_PENDING);
+        given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
+            .willReturn(reservation);
 
-            given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
-                .willReturn(reservation);
+        // when
+        reserveConfirmConsumeService.consume(message);
 
-            given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-                .willReturn(createOmhBookingDetailResponse(OmhBookingStatus.UNAVAILABLE));
-
-            // when
-            reserveConfirmConsumeService.consume(message);
-
-            // then
-            verify(reservationProvider, times(1)).confirmFail(reservation.getReservationId(), BookingErrorCode.INTERNAL_ERROR.name());
-            verify(reservationSlackSender, times(1)).sendToSrtWithMention(ReservationSlackEvent.RESERVE_CONFIRM_FAIL, MRT_RESERVATION_NO, ObjectMapperUtils.writeAsString(message));
-        }
-
-        @Test
-        @DisplayName("예약상세조회 결과 CONFIRMED 상태라면 RESERVE_CONFIRM 처리한다.")
-        void case_3() {
-            // given
-            BookingOrderMessage message = createMessage();
-            Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM_PENDING);
-
-            given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
-                .willReturn(reservation);
-
-            OmhBookingDetailResponse omhBookingDetailResponse = createOmhBookingDetailResponse(OmhBookingStatus.CONFIRMED);
-            given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-                .willReturn(omhBookingDetailResponse);
-
-            // when
-            reserveConfirmConsumeService.consume(message);
-
-            // then
-            verify(reservationProvider, times(1))
-                .confirm(reservation.getReservationId(), omhBookingDetailResponse.getBookingCodes().getOhMyBookingCode(), omhBookingDetailResponse.getBookingCodes().getHotelConfirmationNo());
-        }
-
-        @Test
-        @DisplayName("예약상세조회 결과 PENDING 상태라면  RESERVE_CONFIRM_PENDING 처리하고 슬랙 알림을 보낸다.")
-        void case_4() {
-            // given
-            BookingOrderMessage message = createMessage();
-            Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM_PENDING);
-
-            given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
-                .willReturn(reservation);
-
-            OmhBookingDetailResponse omhBookingDetailResponse = createOmhBookingDetailResponse(OmhBookingStatus.PENDING);
-            given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-                .willReturn(omhBookingDetailResponse);
-
-            // when
-            reserveConfirmConsumeService.consume(message);
-
-            // then
-            verify(reservationProvider, times(1))
-                .confirmPending(reservation.getReservationId(), omhBookingDetailResponse.getBookingCodes().getOhMyBookingCode(), omhBookingDetailResponse.getBookingCodes().getHotelConfirmationNo());
-            verify(reservationSlackSender, times(1)).sendToSrtWithMention(ReservationSlackEvent.RESERVE_CONFIRM_PENDING, MRT_RESERVATION_NO, ObjectMapperUtils.writeAsString(message));
-        }
-
-        @Test
-        @DisplayName("예약상세조회 결과 CANCELLED 상태라면  RESERVE_CONFIRM_FAIL 처리하고 슬랙 알림을 보낸다.")
-        void case_5() {
-            // given
-            BookingOrderMessage message = createMessage();
-            Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM_PENDING);
-
-            given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
-                .willReturn(reservation);
-
-            OmhBookingDetailResponse omhBookingDetailResponse = createOmhBookingDetailResponse(OmhBookingStatus.CANCELLED);
-            given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-                .willReturn(omhBookingDetailResponse);
-
-            // when
-            reserveConfirmConsumeService.consume(message);
-
-            // then
-            verify(reservationProvider, times(1))
-                .confirmFail(reservation.getReservationId(), BookingErrorCode.INTERNAL_ERROR.name());
-            verify(reservationSlackSender, times(1)).sendToSrtWithMention(ReservationSlackEvent.RESERVE_CONFIRM_FAIL, MRT_RESERVATION_NO, ObjectMapperUtils.writeAsString(message));
-        }
-
-        @Test
-        @DisplayName("예약상세조회 API 가 실패했다면 RESERVE_CONFIRM_PENDING 처리하고 슬랙 알림을 보낸다.")
-        void case_6() {
-            // given
-            BookingOrderMessage message = createMessage();
-            Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM_PENDING);
-
-            given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
-                .willReturn(reservation);
-
-            given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-                .willThrow(OmhApiException.class);
-
-            // when
-            reserveConfirmConsumeService.consume(message);
-
-            // then
-            verify(reservationProvider, times(1))
-                .confirmPending(reservation.getReservationId(), null, null);
-            verify(reservationSlackSender, times(1)).sendToSrtWithMention(ReservationSlackEvent.OMH_BOOK_DETAIL_API_FAIL, MRT_RESERVATION_NO, ObjectMapperUtils.writeAsString(message));
-        }
-
-        @Test
-        @DisplayName("예약상세조회 API 응답을 받지 못했다면 RESERVE_CONFIRM_PENDING 처리하고 슬랙 알림을 보낸다.")
-        void case_6_2() {
-            // given
-            BookingOrderMessage message = createMessage();
-            Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM_PENDING);
-
-            given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
-                .willReturn(reservation);
-
-            given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-                .willThrow(ReadTimeoutException.class);
-
-            // when
-            reserveConfirmConsumeService.consume(message);
-
-            // then
-            verify(reservationProvider, times(1))
-                .confirmPending(reservation.getReservationId(), null, null);
-            verify(reservationSlackSender, times(1)).sendToSrtWithMention(ReservationSlackEvent.OMH_BOOK_DETAIL_API_FAIL, MRT_RESERVATION_NO, ObjectMapperUtils.writeAsString(message));
-        }
+        // then
+        verify(reserveConfirmCheckService, times(1)).checkOmhBookDetailAndUpdateReservation(reservation);
     }
+
 
     @Nested
     @DisplayName("현재 예약이 PRECHECK_SUCCESS 상태라면 오마이호텔 예약확정 API 를 호출한다.")
     class PRECHECK_SUCCESS {
 
         @Test
-        @DisplayName("예약확정 API 가 성공했다면 오마이호텔 예약상세조회 API 를 호출한다. " +
-                     "예약상세조회 결과 UNAVAILABLE 상태라면 RESERVE_CONFIRM_FAIL 처리하고 슬랙 알림을 보낸다.")
-        void case_7() {
+        @DisplayName("예약확정 API 가 성공했다면 오마이호텔 오마이호텔 예약상세조회 API 를 조회하여 상태값을 체크한다.")
+        void case_3() {
             // given
             BookingOrderMessage message = createMessage();
             Reservation reservation = createReservation(ReservationStatus.PRECHECK_SUCCESS);
@@ -239,175 +116,16 @@ class ReserveConfirmConsumeServiceTest {
             given(omhCreateBookingAgent.crateBooking(any()))
                 .willReturn(createOmhCreateBookingResponse());
 
-            given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-                .willReturn(createOmhBookingDetailResponse(OmhBookingStatus.UNAVAILABLE));
-
             // when
             reserveConfirmConsumeService.consume(message);
 
             // then
-            verify(reservationProvider, times(1)).confirmFail(reservation.getReservationId(), BookingErrorCode.INTERNAL_ERROR.name());
-            verify(reservationSlackSender, times(1)).sendToSrtWithMention(ReservationSlackEvent.RESERVE_CONFIRM_FAIL, MRT_RESERVATION_NO, ObjectMapperUtils.writeAsString(message));
-        }
-
-        @Test
-        @DisplayName("예약확정 API 가 성공했다면 오마이호텔 예약상세조회 API 를 호출한다. " +
-                     "예약상세조회 결과 CONFIRMED 상태라면 RESERVE_CONFIRM 처리한다.")
-        void case_8() {
-            // given
-            BookingOrderMessage message = createMessage();
-            Reservation reservation = createReservation(ReservationStatus.PRECHECK_SUCCESS);
-
-            given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
-                .willReturn(reservation);
-
-            given(reservationProvider.updateOrderFormInfo(eq(reservation.getReservationId()), any()))
-                .willReturn(reservation);
-
-            given(omhCreateBookingAgent.crateBooking(any()))
-                .willReturn(createOmhCreateBookingResponse());
-
-            OmhBookingDetailResponse omhBookingDetailResponse = createOmhBookingDetailResponse(OmhBookingStatus.CONFIRMED);
-            given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-                .willReturn(omhBookingDetailResponse);
-
-            // when
-            reserveConfirmConsumeService.consume(message);
-
-            // then
-            verify(reservationProvider, times(1))
-                .confirm(reservation.getReservationId(), omhBookingDetailResponse.getBookingCodes().getOhMyBookingCode(), omhBookingDetailResponse.getBookingCodes().getHotelConfirmationNo());
-        }
-
-        @Test
-        @DisplayName("예약확정 API 가 성공했다면 오마이호텔 예약상세조회 API 를 호출한다. " +
-                     "예약상세조회 결과 PENDING 상태라면 RESERVE_CONFIRM_PENDING 처리하고 슬랙 알림을 보낸다.")
-        void case_9() {
-            // given
-            BookingOrderMessage message = createMessage();
-            Reservation reservation = createReservation(ReservationStatus.PRECHECK_SUCCESS);
-
-            given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
-                .willReturn(reservation);
-
-            given(reservationProvider.updateOrderFormInfo(eq(reservation.getReservationId()), any()))
-                .willReturn(reservation);
-
-            given(omhCreateBookingAgent.crateBooking(any()))
-                .willReturn(createOmhCreateBookingResponse());
-
-            OmhBookingDetailResponse omhBookingDetailResponse = createOmhBookingDetailResponse(OmhBookingStatus.PENDING);
-            given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-                .willReturn(omhBookingDetailResponse);
-
-            // when
-            reserveConfirmConsumeService.consume(message);
-
-            // then
-            verify(reservationProvider, times(1))
-                .confirmPending(reservation.getReservationId(), omhBookingDetailResponse.getBookingCodes().getOhMyBookingCode(), omhBookingDetailResponse.getBookingCodes().getHotelConfirmationNo());
-            verify(reservationSlackSender, times(1)).sendToSrtWithMention(ReservationSlackEvent.RESERVE_CONFIRM_PENDING, MRT_RESERVATION_NO, ObjectMapperUtils.writeAsString(message));
-        }
-
-        @Test
-        @DisplayName("예약확정 API 가 성공했다면 오마이호텔 예약상세조회 API 를 호출한다. " +
-                     "예약상세조회 결과 CANCELLED 상태라면  RESERVE_CONFIRM_FAIL 처리하고 슬랙 알림을 보낸다.")
-        void case_10() {
-            // given
-            BookingOrderMessage message = createMessage();
-            Reservation reservation = createReservation(ReservationStatus.PRECHECK_SUCCESS);
-
-            given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
-                .willReturn(reservation);
-
-            given(reservationProvider.updateOrderFormInfo(eq(reservation.getReservationId()), any()))
-                .willReturn(reservation);
-
-            given(omhCreateBookingAgent.crateBooking(any()))
-                .willReturn(createOmhCreateBookingResponse());
-
-            OmhBookingDetailResponse omhBookingDetailResponse = createOmhBookingDetailResponse(OmhBookingStatus.CANCELLED);
-            given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-                .willReturn(omhBookingDetailResponse);
-
-            // when
-            reserveConfirmConsumeService.consume(message);
-
-            // then
-            verify(reservationProvider, times(1))
-                .confirmFail(reservation.getReservationId(), BookingErrorCode.INTERNAL_ERROR.name());
-            verify(reservationSlackSender, times(1)).sendToSrtWithMention(ReservationSlackEvent.RESERVE_CONFIRM_FAIL, MRT_RESERVATION_NO, ObjectMapperUtils.writeAsString(message));
-        }
-
-        @Test
-        @DisplayName("예약확정 API 가 성공했다면 오마이호텔 예약상세조회 API 를 호출한다. " +
-                     "예약상세조회 API 가 실패했다면 RESERVE_CONFIRM_PENDING 처리하고 슬랙 알림을 보낸다.")
-        void case_11() {
-            // given
-            BookingOrderMessage message = createMessage();
-            Reservation reservation = createReservation(ReservationStatus.PRECHECK_SUCCESS);
-
-            given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
-                .willReturn(reservation);
-
-            given(reservationProvider.updateOrderFormInfo(eq(reservation.getReservationId()), any()))
-                .willReturn(reservation);
-
-            given(omhCreateBookingAgent.crateBooking(any()))
-                .willReturn(createOmhCreateBookingResponse());
-
-            OmhBookingDetailResponse omhBookingDetailResponse = createOmhBookingDetailResponse(OmhBookingStatus.CANCELLED);
-            given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-                .willReturn(omhBookingDetailResponse);
-
-            given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-                .willThrow(OmhApiException.class);
-
-            // when
-            reserveConfirmConsumeService.consume(message);
-
-            // then
-            verify(reservationProvider, times(1))
-                .confirmPending(reservation.getReservationId(), null, null);
-            verify(reservationSlackSender, times(1)).sendToSrtWithMention(ReservationSlackEvent.OMH_BOOK_DETAIL_API_FAIL, MRT_RESERVATION_NO, ObjectMapperUtils.writeAsString(message));
-        }
-
-        @Test
-        @DisplayName("예약확정 API 가 성공했다면 오마이호텔 예약상세조회 API 를 호출한다. " +
-                     "예약상세조회 API 응답을 받지 못했다면 RESERVE_CONFIRM_PENDING 처리하고 슬랙 알림을 보낸다.")
-        void case_11_2() {
-            // given
-            BookingOrderMessage message = createMessage();
-            Reservation reservation = createReservation(ReservationStatus.PRECHECK_SUCCESS);
-
-            given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
-                .willReturn(reservation);
-
-            given(reservationProvider.updateOrderFormInfo(eq(reservation.getReservationId()), any()))
-                .willReturn(reservation);
-
-            given(omhCreateBookingAgent.crateBooking(any()))
-                .willReturn(createOmhCreateBookingResponse());
-
-            OmhBookingDetailResponse omhBookingDetailResponse = createOmhBookingDetailResponse(OmhBookingStatus.CANCELLED);
-            given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-                .willReturn(omhBookingDetailResponse);
-
-            given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-                .willThrow(ReadTimeoutException.class);
-
-            // when
-            reserveConfirmConsumeService.consume(message);
-
-            // then
-            verify(reservationProvider, times(1))
-                .confirmPending(reservation.getReservationId(), null, null);
-            verify(reservationSlackSender, times(1)).sendToSrtWithMention(ReservationSlackEvent.OMH_BOOK_DETAIL_API_FAIL, MRT_RESERVATION_NO, ObjectMapperUtils.writeAsString(message));
+            verify(reserveConfirmCheckService, times(1)).checkOmhBookDetailAndUpdateReservation(reservation);
         }
 
         @Test
         @DisplayName("예약확정 API 가 실패했다면 RESERVE_CONFIRM_FAIL 처리하고 슬랙 알림을 보낸다.")
-        void case_12() {
+        void case_4() {
             // given
             BookingOrderMessage message = createMessage();
             Reservation reservation = createReservation(ReservationStatus.PRECHECK_SUCCESS);
@@ -454,20 +172,11 @@ class ReserveConfirmConsumeServiceTest {
                 .confirmPending(reservation.getReservationId(), null, null);
             verify(reservationSlackSender, times(1)).sendToSrtWithMention(ReservationSlackEvent.RESERVE_CONFIRM_RESPONSE_CHECK_FAIL, MRT_RESERVATION_NO, ObjectMapperUtils.writeAsString(message));
         }
+
     }
 
     private OmhCreateBookingResponse createOmhCreateBookingResponse() {
         return OmhCreateBookingResponse.builder().build();
-    }
-
-    private OmhBookingDetailResponse createOmhBookingDetailResponse(OmhBookingStatus status) {
-        return OmhBookingDetailResponse.builder()
-            .status(status)
-            .bookingCodes(OmhBookingCodes.builder()
-                              .ohMyBookingCode("ohMyBookingCode")
-                              .hotelConfirmationNo("hotelConfirmationNo")
-                              .build())
-            .build();
     }
 
     private BookingOrderMessage createMessage() {

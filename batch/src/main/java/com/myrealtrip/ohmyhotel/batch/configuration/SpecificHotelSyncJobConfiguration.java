@@ -73,7 +73,7 @@ public class SpecificHotelSyncJobConfiguration {
             .distinct()
             .map(Long::valueOf)
             .collect(Collectors.toList());
-        allHotelCodeStorage.saveAll(hotelIds);
+        allHotelCodeStorage.addAll(hotelIds);
         return new HotelCodeStorageReader(allHotelCodeStorage, CHUNK_SIZE);
     }
 

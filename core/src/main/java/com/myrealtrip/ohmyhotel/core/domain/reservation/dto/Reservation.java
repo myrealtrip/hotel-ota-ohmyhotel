@@ -93,6 +93,10 @@ public class Reservation {
 
     private String cancelReasonType;
 
+    private String omhCancelConfirmNo;
+
+    private int confirmPendingRetryCount;
+
     public BigDecimal getCancelRefundAmount() {
         if (isNull(cancelPenaltySalePrice)) {
             return null;

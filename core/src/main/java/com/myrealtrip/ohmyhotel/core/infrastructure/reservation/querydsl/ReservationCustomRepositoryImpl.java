@@ -1,11 +1,13 @@
 package com.myrealtrip.ohmyhotel.core.infrastructure.reservation.querydsl;
 
 import com.myrealtrip.ohmyhotel.core.domain.reservation.entity.ReservationEntity;
+import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.LockModeType;
+import java.util.List;
 import java.util.Optional;
 
 import static com.myrealtrip.ohmyhotel.core.domain.reservation.entity.QReservationEntity.reservationEntity;
@@ -31,5 +33,16 @@ public class ReservationCustomRepositoryImpl implements ReservationCustomReposit
             .setHint("javax.persistence.query.timeout", 15000)
             .fetchOne();
 
+    }
+
+    @Override
+    public List<ReservationEntity> findByReservationIdGreaterThanAndStatus(Long reservationId, ReservationStatus status, int limit) {
+        return jpaQueryFactory.selectFrom(reservationEntity)
+            .where(reservationEntity.reservationId.gt(reservationId),
+                   reservationEntity.reservationStatus.eq(status),
+                   reservationEntity.deletedAt.isNull())
+            .orderBy(reservationEntity.reservationId.asc())
+            .limit(limit)
+            .fetch();
     }
 }

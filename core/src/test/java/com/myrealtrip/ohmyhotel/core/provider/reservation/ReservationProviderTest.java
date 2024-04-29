@@ -71,7 +71,6 @@ class ReservationProviderTest {
                              .contact("contact")
                              .build())
             .specialRequest("specialRequest")
-            .cancelPenaltyAmount(BigDecimal.valueOf(100))
             .bookingErrorCode("bookingErrorCode")
             .logs("logs")
             .confirmedAt(LocalDateTime.now())

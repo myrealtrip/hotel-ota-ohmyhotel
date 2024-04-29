@@ -149,6 +149,12 @@ public class ReservationEntity extends BaseEntity {
     @Column(name = "cancel_reason_type")
     private String cancelReasonType;
 
+    @Column(name = "omh_cancel_confim_no")
+    private String omhCancelConfirmNo;
+
+    @Column(name = "confirm_pending_retry_count")
+    private int confirmPendingRetryCount;
+
     public void confirmFail(String bookingErrorCode) {
         changeStatus(ReservationStatus.RESERVE_CONFIRM_FAIL);
         this.bookingErrorCode = bookingErrorCode;
@@ -190,5 +196,9 @@ public class ReservationEntity extends BaseEntity {
             return;
         }
         this.logs = this.logs + LOG_SEPARATOR + now + " " + appendLog;
+    }
+
+    public void addConfirmPendingRetryCount() {
+        this.confirmPendingRetryCount++;
     }
 }

@@ -5,6 +5,7 @@ import com.myrealtrip.ohmyhotel.consumer.reservation.converter.OmhCreateBookingR
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Reservation;
 import com.myrealtrip.ohmyhotel.core.provider.reservation.ReservationProvider;
 import com.myrealtrip.ohmyhotel.core.service.reservation.ReservationApiLogService;
+import com.myrealtrip.ohmyhotel.core.service.reservation.ReserveConfirmCheckService;
 import com.myrealtrip.ohmyhotel.enumarate.ApiLogType;
 import com.myrealtrip.ohmyhotel.enumarate.OmhBookingStatus;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
@@ -33,12 +34,12 @@ import static java.util.Objects.isNull;
 public class ReserveConfirmConsumeService {
 
     private final ReservationProvider reservationProvider;
-    private final OmhBookingDetailAgent omhBookingDetailAgent;
     private final OmhCreateBookingAgent omhCreateBookingAgent;
     private final ReservationApiLogService reservationApiLogService;
     private final ReservationSlackSender reservationSlackSender;
     private final BookingOrderMessageConverter bookingOrderMessageConverter;
     private final OmhCreateBookingRequestConverter omhCreateBookingRequestConverter;
+    private final ReserveConfirmCheckService reserveConfirmCheckService;
 
     /**
      * 예약 확정 메세지를 컨슘한다.
@@ -54,7 +55,7 @@ public class ReserveConfirmConsumeService {
             return;
         }
         if (reservation.getReservationStatus() == ReservationStatus.RESERVE_CONFIRM_PENDING) {
-            checkOmhBookDetailAndUpdateReservation(reservation, message);
+            reserveConfirmCheckService.checkOmhBookDetailAndUpdateReservation(reservation);
             return;
         }
         reservation = reservationProvider.updateOrderFormInfo(reservation.getReservationId(), bookingOrderMessageConverter.toOrderFormInfo(message));
@@ -74,69 +75,13 @@ public class ReserveConfirmConsumeService {
             return;
         }
         saveCreateBookingApiLog(reservation.getMrtReservationNo(), ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhCreateBookingResponse));
-        checkOmhBookDetailAndUpdateReservation(reservation, message);
-    }
-
-    /**
-     * 오마이호텔 예약상세 API 를 호출하여 현재 에약 상태를 확인하고 DB 에 업데이트한다.
-     */
-    private void checkOmhBookDetailAndUpdateReservation(Reservation reservation, BookingOrderMessage message) {
-        saveBookingDetailApiLog(reservation.getMrtReservationNo(), ApiLogType.REQUEST, StringUtils.EMPTY);
-        OmhBookingDetailResponse omhBookingDetailResponse;
-        try {
-            omhBookingDetailResponse = omhBookingDetailAgent.bookingDetail(reservation.getMrtReservationNo());
-        } catch (OmhApiException omhApiException) {
-            saveBookingDetailApiLog(reservation.getMrtReservationNo(), ApiLogType.RESPONSE, omhApiException.getResponse());
-            handleBookDetailFail(reservation, message, omhApiException);
-            return;
-        } catch (Throwable t) {
-            handleBookDetailFail(reservation, message, t);
-            return;
-        }
-        saveBookingDetailApiLog(reservation.getMrtReservationNo(), ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhBookingDetailResponse));
-        updateReservationByOmhBookingDetailResponse(reservation, omhBookingDetailResponse, message);
-    }
-
-    private void updateReservationByOmhBookingDetailResponse(Reservation reservation, OmhBookingDetailResponse omhBookingDetailResponse, BookingOrderMessage message) {
-        String omhBookCode = omhBookingDetailResponse.getBookingCodes().getOhMyBookingCode();
-        String hotelConfirmNo = omhBookingDetailResponse.getBookingCodes().getHotelConfirmationNo();
-        if (omhBookingDetailResponse.getStatus() == OmhBookingStatus.CONFIRMED) {
-            reservationProvider.confirm(reservation.getReservationId(), omhBookCode, hotelConfirmNo);
-            return;
-        }
-        if (omhBookingDetailResponse.getStatus() == OmhBookingStatus.PENDING) {
-            reservationProvider.confirmPending(reservation.getReservationId(), omhBookCode, hotelConfirmNo);
-            reservationSlackSender.sendToSrtWithMention(ReservationSlackEvent.RESERVE_CONFIRM_PENDING, reservation.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
-            return;
-        }
-        if (omhBookingDetailResponse.getStatus() == OmhBookingStatus.UNAVAILABLE ||
-            omhBookingDetailResponse.getStatus() == OmhBookingStatus.CANCELLED) {
-            handleConfirmFail(reservation, message, null);
-        }
+        reserveConfirmCheckService.checkOmhBookDetailAndUpdateReservation(reservation);
     }
 
     private void handleConfirmFail(Reservation reservation, BookingOrderMessage message, Throwable t) {
-        if (isNull(t)) {
-            log.error("{} - " + ReservationSlackEvent.RESERVE_CONFIRM_FAIL.getNote(), reservation.getMrtReservationNo());
-        } else {
-            log.error("{} - " + ReservationSlackEvent.RESERVE_CONFIRM_FAIL.getNote(), reservation.getMrtReservationNo(), t);
-        }
+        log.error("{} - " + ReservationSlackEvent.RESERVE_CONFIRM_FAIL.getNote(), reservation.getMrtReservationNo(), t);
         reservationProvider.confirmFail(reservation.getReservationId(), BookingErrorCode.INTERNAL_ERROR.name());
         reservationSlackSender.sendToSrtWithMention(ReservationSlackEvent.RESERVE_CONFIRM_FAIL, reservation.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
-    }
-
-    private void handleBookDetailFail(Reservation reservation, BookingOrderMessage message, Throwable t) {
-        log.error("{} - " + ReservationSlackEvent.OMH_BOOK_DETAIL_API_FAIL.getNote(), reservation.getMrtReservationNo(), t);
-        reservationProvider.confirmPending(reservation.getReservationId(), null, null);
-        reservationSlackSender.sendToSrtWithMention(ReservationSlackEvent.OMH_BOOK_DETAIL_API_FAIL, reservation.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
-    }
-
-    private void saveBookingDetailApiLog(String mrtReservationNo, ApiLogType logType, String logStr) {
-        try {
-            reservationApiLogService.saveBookingDetailApiLog(mrtReservationNo, logType, logStr);
-        } catch (Throwable t) {
-            log.error("{} - booking detail api log save fail", mrtReservationNo);
-        }
     }
 
     private void saveCreateBookingApiLog(String mrtReservationNo, ApiLogType logType, String logStr) {

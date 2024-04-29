@@ -46,7 +46,7 @@ public class HotelInfoWriter implements ItemWriter<Long> {
 
         hotelProvider.upsert(hotels);
         chunkUpdatedHotelCodeStorage.clear();
-        chunkUpdatedHotelCodeStorage.saveAll((List<Long>) hotelCodes);
+        chunkUpdatedHotelCodeStorage.addAll((List<Long>) hotelCodes);
     }
 
     private List<OmhHotelInfoAggr> getOmhHotelInfoAggrs(List<Long> hotelCodes) {
