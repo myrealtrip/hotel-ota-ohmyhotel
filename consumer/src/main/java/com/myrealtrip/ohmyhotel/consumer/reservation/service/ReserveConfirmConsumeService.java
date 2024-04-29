@@ -47,7 +47,7 @@ public class ReserveConfirmConsumeService {
      * @param message
      */
     @Transactional
-    public void consumeReserveConfirm(BookingOrderMessage message) {
+    public void consume(BookingOrderMessage message) {
         Reservation reservation = reservationProvider.getByMrtReservationNoWithLock(message.getMrtReservationNo());
         if (!reservation.getReservationStatus().canChangeTo(ReservationStatus.RESERVE_CONFIRM)) {
             log.error("{} - 예약확정 상태전이 불가. 현재 상태: {}", reservation.getMrtReservationNo(), reservation.getReservationStatus());
@@ -126,7 +126,7 @@ public class ReserveConfirmConsumeService {
     }
 
     private void handleBookDetailFail(Reservation reservation, BookingOrderMessage message, Throwable t) {
-        log.error("{} - " + ReservationSlackEvent.RESERVE_CONFIRM_FAIL.getNote(), reservation.getMrtReservationNo(), t);
+        log.error("{} - " + ReservationSlackEvent.OMH_BOOK_DETAIL_API_FAIL.getNote(), reservation.getMrtReservationNo(), t);
         reservationProvider.confirmPending(reservation.getReservationId(), null, null);
         reservationSlackSender.sendToSrtWithMention(ReservationSlackEvent.OMH_BOOK_DETAIL_API_FAIL, reservation.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
     }

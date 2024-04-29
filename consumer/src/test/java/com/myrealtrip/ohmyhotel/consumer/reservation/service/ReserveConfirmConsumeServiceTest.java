@@ -73,7 +73,7 @@ class ReserveConfirmConsumeServiceTest {
             .willReturn(reservation);
 
         // when
-        reserveConfirmConsumeService.consumeReserveConfirm(createMessage());
+        reserveConfirmConsumeService.consume(createMessage());
 
         // then
         verify(omhCreateBookingAgent, never()).crateBooking(any());
@@ -98,7 +98,7 @@ class ReserveConfirmConsumeServiceTest {
                 .willReturn(createOmhBookingDetailResponse(OmhBookingStatus.UNAVAILABLE));
 
             // when
-            reserveConfirmConsumeService.consumeReserveConfirm(message);
+            reserveConfirmConsumeService.consume(message);
 
             // then
             verify(reservationProvider, times(1)).confirmFail(reservation.getReservationId(), BookingErrorCode.INTERNAL_ERROR.name());
@@ -120,7 +120,7 @@ class ReserveConfirmConsumeServiceTest {
                 .willReturn(omhBookingDetailResponse);
 
             // when
-            reserveConfirmConsumeService.consumeReserveConfirm(message);
+            reserveConfirmConsumeService.consume(message);
 
             // then
             verify(reservationProvider, times(1))
@@ -142,7 +142,7 @@ class ReserveConfirmConsumeServiceTest {
                 .willReturn(omhBookingDetailResponse);
 
             // when
-            reserveConfirmConsumeService.consumeReserveConfirm(message);
+            reserveConfirmConsumeService.consume(message);
 
             // then
             verify(reservationProvider, times(1))
@@ -165,7 +165,7 @@ class ReserveConfirmConsumeServiceTest {
                 .willReturn(omhBookingDetailResponse);
 
             // when
-            reserveConfirmConsumeService.consumeReserveConfirm(message);
+            reserveConfirmConsumeService.consume(message);
 
             // then
             verify(reservationProvider, times(1))
@@ -187,7 +187,7 @@ class ReserveConfirmConsumeServiceTest {
                 .willThrow(OmhApiException.class);
 
             // when
-            reserveConfirmConsumeService.consumeReserveConfirm(message);
+            reserveConfirmConsumeService.consume(message);
 
             // then
             verify(reservationProvider, times(1))
@@ -209,7 +209,7 @@ class ReserveConfirmConsumeServiceTest {
                 .willThrow(ReadTimeoutException.class);
 
             // when
-            reserveConfirmConsumeService.consumeReserveConfirm(message);
+            reserveConfirmConsumeService.consume(message);
 
             // then
             verify(reservationProvider, times(1))
@@ -243,7 +243,7 @@ class ReserveConfirmConsumeServiceTest {
                 .willReturn(createOmhBookingDetailResponse(OmhBookingStatus.UNAVAILABLE));
 
             // when
-            reserveConfirmConsumeService.consumeReserveConfirm(message);
+            reserveConfirmConsumeService.consume(message);
 
             // then
             verify(reservationProvider, times(1)).confirmFail(reservation.getReservationId(), BookingErrorCode.INTERNAL_ERROR.name());
@@ -272,7 +272,7 @@ class ReserveConfirmConsumeServiceTest {
                 .willReturn(omhBookingDetailResponse);
 
             // when
-            reserveConfirmConsumeService.consumeReserveConfirm(message);
+            reserveConfirmConsumeService.consume(message);
 
             // then
             verify(reservationProvider, times(1))
@@ -301,7 +301,7 @@ class ReserveConfirmConsumeServiceTest {
                 .willReturn(omhBookingDetailResponse);
 
             // when
-            reserveConfirmConsumeService.consumeReserveConfirm(message);
+            reserveConfirmConsumeService.consume(message);
 
             // then
             verify(reservationProvider, times(1))
@@ -331,7 +331,7 @@ class ReserveConfirmConsumeServiceTest {
                 .willReturn(omhBookingDetailResponse);
 
             // when
-            reserveConfirmConsumeService.consumeReserveConfirm(message);
+            reserveConfirmConsumeService.consume(message);
 
             // then
             verify(reservationProvider, times(1))
@@ -364,7 +364,7 @@ class ReserveConfirmConsumeServiceTest {
                 .willThrow(OmhApiException.class);
 
             // when
-            reserveConfirmConsumeService.consumeReserveConfirm(message);
+            reserveConfirmConsumeService.consume(message);
 
             // then
             verify(reservationProvider, times(1))
@@ -397,7 +397,7 @@ class ReserveConfirmConsumeServiceTest {
                 .willThrow(ReadTimeoutException.class);
 
             // when
-            reserveConfirmConsumeService.consumeReserveConfirm(message);
+            reserveConfirmConsumeService.consume(message);
 
             // then
             verify(reservationProvider, times(1))
@@ -422,7 +422,7 @@ class ReserveConfirmConsumeServiceTest {
                 .willThrow(OmhApiException.class);
 
             // when
-            reserveConfirmConsumeService.consumeReserveConfirm(message);
+            reserveConfirmConsumeService.consume(message);
 
             // then
             verify(reservationProvider, times(1))
@@ -447,7 +447,7 @@ class ReserveConfirmConsumeServiceTest {
                 .willThrow(ReadTimeoutException.class);
 
             // when
-            reserveConfirmConsumeService.consumeReserveConfirm(message);
+            reserveConfirmConsumeService.consume(message);
 
             // then
             verify(reservationProvider, times(1))
