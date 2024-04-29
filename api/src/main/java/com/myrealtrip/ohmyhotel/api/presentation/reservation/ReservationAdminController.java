@@ -30,8 +30,8 @@ public class ReservationAdminController {
     }
 
     @Operation(summary = "예약결과 메세지 재발행 API", description = "booking-detail-upsert 메세지를 재발행한다.")
-    @GetMapping(value = "/admin/reservation/re-publish")
-    public Resource<Void> sendReservation(@RequestParam String mrtReservationNo) {
+    @GetMapping(value = "/admin/reservation/{mrtReservationNo}/re-publish")
+    public Resource<Void> sendReservation(@PathVariable("mrtReservationNo") String mrtReservationNo) {
         bookingMessageKafkaSendService.sendByMrtReservationNo(mrtReservationNo, null, 0);
         return Resource.<Void>builder()
             .data(null)
