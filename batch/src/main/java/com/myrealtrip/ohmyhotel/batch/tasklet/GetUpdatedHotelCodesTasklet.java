@@ -37,7 +37,7 @@ public class GetUpdatedHotelCodesTasklet implements Tasklet {
             List<Long> hotelCodes = response.getHotels().stream()
                 .map(OmhBulkHotel::getHotelCode)
                 .collect(Collectors.toList());
-            allHotelCodeStorage.saveAll(hotelCodes);
+            allHotelCodeStorage.addAll(hotelCodes);
             lastHotelCode = hotelCodes.get(hotelCodes.size() - 1);
         }
         log.info("total updated hotel size: {}", allHotelCodeStorage.getHotelCodes().size());

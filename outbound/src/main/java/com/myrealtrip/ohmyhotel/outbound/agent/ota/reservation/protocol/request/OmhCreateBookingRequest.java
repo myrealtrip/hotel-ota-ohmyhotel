@@ -7,6 +7,7 @@ import com.myrealtrip.ohmyhotel.enumarate.Language;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.OmhRoomGuestDetail;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -64,6 +65,7 @@ public class OmhCreateBookingRequest {
 
     @Builder
     @Getter
+    @EqualsAndHashCode
     public static class OmhRoomGuestInfo {
 
         private Integer roomNo;

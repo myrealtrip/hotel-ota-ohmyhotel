@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.myrealtrip.ohmyhotel.enumarate.Gender;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@EqualsAndHashCode
 public class OmhRoomGuestDetail {
 
     private String lastName;
@@ -26,4 +28,6 @@ public class OmhRoomGuestDetail {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate birthday;
+
+    private Integer age;
 }

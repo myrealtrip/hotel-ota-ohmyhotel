@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-@ConditionalOnProperty(name = "spring.batch.job.names", havingValue = AllHotelMrtDiscountTypesKafkaSendJobConfig.ALL_HOTEL_MRT_DISCOUNT_TYPES_KAFKA_SEND_JOB)
-public class AllHotelMrtDiscountTypesKafkaSendJobConfig {
+@ConditionalOnProperty(name = "spring.batch.job.names", havingValue = AllHotelMrtDiscountTypesKafkaSendJobConfiguration.ALL_HOTEL_MRT_DISCOUNT_TYPES_KAFKA_SEND_JOB)
+public class AllHotelMrtDiscountTypesKafkaSendJobConfiguration {
 
     public static final String ALL_HOTEL_MRT_DISCOUNT_TYPES_KAFKA_SEND_JOB = "ALL_HOTEL_MRT_DISCOUNT_TYPES_KAFKA_SEND_JOB";
     private static final int CHUNK_SIZE = 100;

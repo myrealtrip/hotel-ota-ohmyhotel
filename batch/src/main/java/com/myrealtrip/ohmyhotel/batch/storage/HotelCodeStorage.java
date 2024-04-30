@@ -10,7 +10,7 @@ public class HotelCodeStorage {
 
     private final Set<Long> hotelCodes = new HashSet<>();
 
-    public void saveAll(List<Long> hotelCodes) {
+    public void addAll(List<Long> hotelCodes) {
         this.hotelCodes.addAll(hotelCodes);
     }
 

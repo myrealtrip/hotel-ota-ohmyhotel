@@ -1,6 +1,6 @@
 package com.myrealtrip.ohmyhotel.api.application.reservation;
 
-import com.myrealtrip.ohmyhotel.api.application.common.ReservationApiLogService;
+import com.myrealtrip.ohmyhotel.core.service.reservation.ReservationApiLogService;
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.PreCheckRequestConverter;
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.PreCheckResponseConverter;
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.ReservationConverter;
@@ -19,7 +19,6 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response
 import com.myrealtrip.unionstay.common.constant.booking.PreCheckStatus;
 import com.myrealtrip.unionstay.dto.hotelota.precheck.request.PreCheckRequest;
 import com.myrealtrip.unionstay.dto.hotelota.precheck.response.PreCheckResponse;
-import com.myrealtrip.unionstay.dto.hotelota.search.response.SearchResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +34,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -81,8 +79,8 @@ class PreCheckServiceTest {
 
         // then
         // API 로그 저장여부 검증
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
 
         // 예약 데이터 검증
         ArgumentCaptor<Reservation> reservationArgumentCaptor = ArgumentCaptor.forClass(Reservation.class);
@@ -117,8 +115,8 @@ class PreCheckServiceTest {
 
         // then
         // API 로그 저장여부 검증
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
 
         // 예약 데이터 검증
         ArgumentCaptor<Reservation> reservationArgumentCaptor = ArgumentCaptor.forClass(Reservation.class);
@@ -156,8 +154,8 @@ class PreCheckServiceTest {
 
         // then
         // API 로그 저장여부 검증
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
 
         // 예약 데이터 검증
         ArgumentCaptor<Reservation> reservationArgumentCaptor = ArgumentCaptor.forClass(Reservation.class);
@@ -201,8 +199,8 @@ class PreCheckServiceTest {
 
         // then
         // API 로그 저장여부 검증
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
 
         // 예약 데이터 검증
         ArgumentCaptor<Reservation> reservationArgumentCaptor = ArgumentCaptor.forClass(Reservation.class);

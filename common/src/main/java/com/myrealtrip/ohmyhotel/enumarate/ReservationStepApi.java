@@ -4,14 +4,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
-@RequiredArgsConstructor
 public enum ReservationStepApi {
 
-    ROOMS_AVAILABILITY("주문서 진입시 호출"), 
-    PRE_CHECK("결제 진행시 호출"),
-    CREATE_BOOKING("결제 완료 후 호출"), 
-    BOOKING_DETAIL("예약 확정/취소 후 호출"), 
-    CANCEL_BOOKING("예약 취소시 호출"); 
+    ROOMS_AVAILABILITY,
+    PRE_CHECK,
+    CREATE_BOOKING,
+    BOOKING_DETAIL_FOR_CONFIRM_CHECK,
+    BOOKING_DETAIL_FOR_REFUND_PRICE,
+    BOOKING_DETAIL_FOR_CANCEL_CHECK,
+    CANCEL_BOOKING,
 
-    private final String description;
 }

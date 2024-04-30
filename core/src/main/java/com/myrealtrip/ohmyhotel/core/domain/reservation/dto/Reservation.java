@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.core.domain.reservation.dto;
 
+import com.myrealtrip.ohmyhotel.enumarate.CanceledBy;
 import com.myrealtrip.ohmyhotel.enumarate.OmhBookingStatus;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
 import lombok.AccessLevel;
@@ -15,6 +16,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+
+import static java.util.Objects.isNull;
 
 @Getter
 @ToString
@@ -33,8 +36,6 @@ public class Reservation {
     private String omhBookCode;
 
     private String hotelConfirmNo;
-
-    private OmhBookingStatus omhBookStatus;
 
     private ReservationStatus reservationStatus;
 
@@ -74,7 +75,9 @@ public class Reservation {
 
     private String specialRequest;
 
-    private BigDecimal cancelPenaltyAmount;
+    private BigDecimal cancelPenaltySalePrice;
+
+    private BigDecimal cancelPenaltyDepositPrice;
 
     private String bookingErrorCode;
 
@@ -84,9 +87,31 @@ public class Reservation {
 
     private LocalDateTime canceledAt;
 
-    private String canceledBy;
+    private CanceledBy canceledBy;
 
     private String cancelReason;
 
     private String cancelReasonType;
+
+    private String omhCancelConfirmNo;
+
+    private int confirmPendingRetryCount;
+
+    public BigDecimal getCancelRefundAmount() {
+        if (isNull(cancelPenaltySalePrice)) {
+            return null;
+        }
+        return salePrice.subtract(cancelPenaltySalePrice);
+    }
+
+    public BigDecimal getMrtCommission() {
+        return salePrice.subtract(depositPrice);
+    }
+
+    public BigDecimal getMrtCancelCommission() {
+        if (isNull(cancelPenaltySalePrice)) {
+            return null;
+        }
+        return cancelPenaltySalePrice.subtract(cancelPenaltyDepositPrice);
+    }
 }

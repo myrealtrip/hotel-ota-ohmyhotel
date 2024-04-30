@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class OmhCreateBookingAgent {
 
-    private static final String URI = "/channel/ota/v2.0/reservation/book";
+    public static final String URI = "/channel/ota/v2.0/reservation/book";
     private static final String CREATE_BOOKING = "Create Booking";
 
     private final WebClient webClient;
@@ -40,7 +40,7 @@ public class OmhCreateBookingAgent {
         try {
             return createBookingMono(request).block();
         } catch (OmhApiException e) {
-            log.error(AgentConstants.LOG_FORMAT, CREATE_BOOKING, ObjectMapperUtils.writeAsString(request), ObjectMapperUtils.writeAsString(e.getOmhCommonResponse()));
+            log.error(AgentConstants.LOG_FORMAT, CREATE_BOOKING, ObjectMapperUtils.writeAsString(request), e.getResponse());
             throw e;
         } catch (Throwable e) {
             log.error(AgentConstants.LOG_FORMAT, CREATE_BOOKING, ObjectMapperUtils.writeAsString(request), "");

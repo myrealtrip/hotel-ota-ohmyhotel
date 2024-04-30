@@ -1,6 +1,6 @@
 package com.myrealtrip.ohmyhotel.api.application.reservation;
 
-import com.myrealtrip.ohmyhotel.api.application.common.ReservationApiLogService;
+import com.myrealtrip.ohmyhotel.core.service.reservation.ReservationApiLogService;
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.PreCheckRequestConverter;
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.PreCheckResponseConverter;
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.ReservationConverter;
@@ -10,8 +10,6 @@ import com.myrealtrip.ohmyhotel.core.provider.reservation.OrderProvider;
 import com.myrealtrip.ohmyhotel.core.provider.reservation.ReservationProvider;
 import com.myrealtrip.ohmyhotel.enumarate.ApiLogType;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomsAvailabilityRequest;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhPreCheckAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.request.OmhPreCheckRequest;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhPreCheckResponse;
@@ -64,8 +62,8 @@ public class PreCheckService {
     private void saveApiLog(String mrtReservationNo,
                             OmhPreCheckRequest omhPreCheckRequest,
                             OmhPreCheckResponse omhPreCheckResponse) {
-        reservationApiLogService.savePreCheckApiLog(mrtReservationNo, ApiLogType.REQUEST, ObjectMapperUtils.writeAsString(omhPreCheckRequest));
-        reservationApiLogService.savePreCheckApiLog(mrtReservationNo, ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhPreCheckResponse));
+        reservationApiLogService.savePreCheckLog(mrtReservationNo, ApiLogType.REQUEST, ObjectMapperUtils.writeAsString(omhPreCheckRequest));
+        reservationApiLogService.savePreCheckLog(mrtReservationNo, ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhPreCheckResponse));
     }
 
     private void createReservation(Order order, String mrtReservationNo, PreCheckStatus preCheckStatus) {

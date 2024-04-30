@@ -5,6 +5,7 @@ import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.AdditionalOrderInfo;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.GuestCount;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.GuestDetail;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Reservation;
+import com.myrealtrip.ohmyhotel.enumarate.CanceledBy;
 import com.myrealtrip.ohmyhotel.enumarate.OmhBookingStatus;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
 import org.junit.jupiter.api.Disabled;
@@ -37,7 +38,6 @@ class ReservationProviderTest {
             .mrtReservationNo("mrtReservationNo")
             .omhBookCode("omhBookCode")
             .hotelConfirmNo("hotelConfirmNo")
-            .omhBookStatus(OmhBookingStatus.CANCELLED)
             .reservationStatus(ReservationStatus.CANCEL_SUCCESS)
             .hotelId(1L)
             .hotelName("hotelName")
@@ -71,12 +71,11 @@ class ReservationProviderTest {
                              .contact("contact")
                              .build())
             .specialRequest("specialRequest")
-            .cancelPenaltyAmount(BigDecimal.valueOf(100))
             .bookingErrorCode("bookingErrorCode")
             .logs("logs")
             .confirmedAt(LocalDateTime.now())
             .canceledAt(LocalDateTime.now())
-            .canceledBy("canceledBy")
+            .canceledBy(CanceledBy.TRAVELER)
             .cancelReason("cancelReason")
             .cancelReasonType("cancelReasonType")
             .build();

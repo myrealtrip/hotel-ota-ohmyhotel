@@ -33,7 +33,7 @@ public class InformationNotExistHotelWriter implements ItemWriter<Hotel> {
 
         hotelProvider.updateStatusByHotelIds(informationNotExistHotelIds, HotelStatus.INACTIVE);
         chunkUpdatedHotelCodeStorage.clear();
-        chunkUpdatedHotelCodeStorage.saveAll(informationNotExistHotelIds);
+        chunkUpdatedHotelCodeStorage.addAll(informationNotExistHotelIds);
     }
 
     private List<Long> filterInformationNotExistHotelIds(List<Long> hotelIds) {

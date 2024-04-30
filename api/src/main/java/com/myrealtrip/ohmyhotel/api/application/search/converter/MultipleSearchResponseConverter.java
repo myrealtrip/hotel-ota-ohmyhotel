@@ -1,6 +1,6 @@
 package com.myrealtrip.ohmyhotel.api.application.search.converter;
 
-import com.myrealtrip.ohmyhotel.api.application.common.converter.CommonSearchResponseConverter;
+import com.myrealtrip.ohmyhotel.core.service.CommonSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.protocol.search.RateSearchId;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhHotelsAvailabilityResponse;
@@ -128,7 +128,7 @@ public class MultipleSearchResponseConverter {
             .saleScenario(null)
             .benefits(commonSearchResponseConverter.toRateBenefits(omhRoomSimpleAvailability.getMealBasisCode()))
             .beds(toBeds(omhRoomSimpleAvailability))
-            .cancelPolicies(commonSearchResponseConverter.toCancelPolicies(omhRoomSimpleAvailability.getCancellationPolicy()))
+            .cancelPolicies(commonSearchResponseConverter.toCancelPolicies(omhRoomSimpleAvailability.getCancellationPolicy(), mrtCommissionRate))
             .totalPayment(zeroMargin.isOn() ?
                           commonSearchResponseConverter.toZeroMarginTotalPayment(omhRoomSimpleAvailability.getTotalNetAmount(), mrtCommissionRate, zeroMargin) :
                           commonSearchResponseConverter.toTotalPayment(omhRoomSimpleAvailability.getTotalNetAmount(), mrtCommissionRate))

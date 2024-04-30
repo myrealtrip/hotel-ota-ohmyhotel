@@ -12,7 +12,6 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhNightlyAmount;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.OmhRoomGuestDetail;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -67,11 +66,17 @@ public class OmhBookingDetailResponse extends OmhCommonResponse {
 
     private List<OmhBookingDetailRoomGuestInfo> rooms;
 
+    private OmhBookingDetailAmount amount;
+
+    private OmhBookingDetailCancelPolicy cancellationPolicy;
+
     private List<OmhBookingDetailRequest> requests;
 
     private String payableBy;
 
     private String emergencyContact;
+
+
 
     @SuperBuilder
     @Getter
@@ -130,7 +135,7 @@ public class OmhBookingDetailResponse extends OmhCommonResponse {
 
         private RateType rateType;
 
-        private OmhNightlyAmount nightly;
+        private List<OmhNightlyAmount> nightly;
     }
 
     @SuperBuilder
@@ -146,7 +151,7 @@ public class OmhBookingDetailResponse extends OmhCommonResponse {
 
         private PenaltyBasis penaltyBasis;
 
-        private List<OmhBookingCancelPolicyDetail> policies;
+        private List<OmhBookingCancelPolicyValue> policies;
     }
 
     @SuperBuilder
@@ -154,7 +159,7 @@ public class OmhBookingDetailResponse extends OmhCommonResponse {
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class OmhBookingCancelPolicyDetail {
+    public static class OmhBookingCancelPolicyValue {
 
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime fromDateTime;

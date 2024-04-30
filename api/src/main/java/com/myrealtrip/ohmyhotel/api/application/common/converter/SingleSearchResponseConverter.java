@@ -1,10 +1,10 @@
 package com.myrealtrip.ohmyhotel.api.application.common.converter;
 
-import com.myrealtrip.ohmyhotel.api.application.common.converter.BedDescriptionConverter;
-import com.myrealtrip.ohmyhotel.api.application.common.converter.CommonSearchResponseConverter;
+import com.myrealtrip.ohmyhotel.core.service.BedDescriptionConverter;
 import com.myrealtrip.ohmyhotel.api.protocol.search.RateSearchId;
 import com.myrealtrip.ohmyhotel.constants.AttributeConstants;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
+import com.myrealtrip.ohmyhotel.core.service.CommonSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse.OmhRoomAvailability;
 import com.myrealtrip.unionstay.common.constant.ProviderCode;
@@ -175,7 +175,7 @@ public class SingleSearchResponseConverter {
             .saleScenario(null)
             .benefits(commonSearchResponseConverter.toRateBenefits(omhRoomAvailability.getMealBasisCode()))
             .beds(toBeds(omhRoomAvailability))
-            .cancelPolicies(commonSearchResponseConverter.toCancelPolicies(omhRoomAvailability.getCancellationPolicy()))
+            .cancelPolicies(commonSearchResponseConverter.toCancelPolicies(omhRoomAvailability.getCancellationPolicy(), mrtCommissionRate))
             .totalPayment(zeroMargin.isOn() ?
                           commonSearchResponseConverter.toZeroMarginTotalPayment(omhRoomAvailability.getTotalNetAmount(), mrtCommissionRate, zeroMargin) :
                           commonSearchResponseConverter.toTotalPayment(omhRoomAvailability.getTotalNetAmount(), mrtCommissionRate))

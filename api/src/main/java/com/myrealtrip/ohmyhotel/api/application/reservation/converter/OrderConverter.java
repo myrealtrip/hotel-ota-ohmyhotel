@@ -6,7 +6,6 @@ import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.GuestCount;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Order;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.core.provider.hotel.HotelProvider;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse.OmhRoomAvailability;
 import com.myrealtrip.ohmyhotel.utils.OmhPriceCalculateUtils;
 import com.myrealtrip.srtcommon.support.utils.ZeroMarginUtils;
@@ -57,6 +56,10 @@ public class OrderConverter {
                             .build())
             .additionalInfo(AdditionalOrderInfo.builder()
                                 .rateType(omhRoomAvailability.getRateType())
+                                .cancelPolicy(omhRoomAvailability.getCancellationPolicy())
+                                .bedGroups(omhRoomAvailability.getBedGroups())
+                                .mealBasisCode(omhRoomAvailability.getMealBasisCode())
+                                .nightlyAmounts(omhRoomAvailability.getNightly())
                                 .build())
             .build();
     }
