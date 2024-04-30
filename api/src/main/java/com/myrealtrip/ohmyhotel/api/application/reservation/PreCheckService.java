@@ -62,8 +62,8 @@ public class PreCheckService {
     private void saveApiLog(String mrtReservationNo,
                             OmhPreCheckRequest omhPreCheckRequest,
                             OmhPreCheckResponse omhPreCheckResponse) {
-        reservationApiLogService.savePreCheckApiLog(mrtReservationNo, ApiLogType.REQUEST, ObjectMapperUtils.writeAsString(omhPreCheckRequest));
-        reservationApiLogService.savePreCheckApiLog(mrtReservationNo, ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhPreCheckResponse));
+        reservationApiLogService.savePreCheckLog(mrtReservationNo, ApiLogType.REQUEST, ObjectMapperUtils.writeAsString(omhPreCheckRequest));
+        reservationApiLogService.savePreCheckLog(mrtReservationNo, ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhPreCheckResponse));
     }
 
     private void createReservation(Order order, String mrtReservationNo, PreCheckStatus preCheckStatus) {

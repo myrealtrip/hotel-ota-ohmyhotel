@@ -49,6 +49,7 @@ public class UpsertBookingDetailMessageConverter {
 
     private final BedDescriptionConverter bedDescriptionConverter;
     private final CommonSearchResponseConverter commonSearchResponseConverter;
+    private final BookingStatusConverter bookingStatusConverter;
 
     public UpsertBookingDetailMessage toMessage(Reservation reservation, int retryCount) {
         return UpsertBookingDetailMessage.builder()
@@ -56,7 +57,7 @@ public class UpsertBookingDetailMessageConverter {
             .providerCode(ProviderCode.OH_MY_HOTEL)
             .providerBookingId(String.valueOf(reservation.getReservationId()))
             .mrtReservationNo(reservation.getMrtReservationNo())
-            .bookingStatus(toBookingStatus(reservation.getReservationStatus()))
+            .bookingStatus(bookingStatusConverter.toBookingStatus(reservation.getReservationStatus()))
             .bookingErrorCode(EnumUtils.getEnum(BookingErrorCode.class, reservation.getBookingErrorCode()))
             .retryCount(retryCount)
             .rooms(List.of(toRoom(reservation)))
@@ -70,7 +71,7 @@ public class UpsertBookingDetailMessageConverter {
             .providerPropertyId(String.valueOf(reservation.getHotelId()))
             .providerRoomId(reservation.getRoomTypeCode())
             .providerRateId(reservation.getRatePlanCode())
-            .roomBookingStatus(toRoomBookingStatus(reservation.getReservationStatus()))
+            .roomBookingStatus(bookingStatusConverter.toRoomBookingStatus(reservation.getReservationStatus()))
             .bookingErrorCode(EnumUtils.getEnum(BookingErrorCode.class, reservation.getBookingErrorCode()))
             .checkin(reservation.getCheckInDate())
             .checkout(reservation.getCheckOutDate())
@@ -92,35 +93,6 @@ public class UpsertBookingDetailMessageConverter {
             .voucher(toVoucher(reservation))
             .monetaryPromotions(Collections.emptyList())
             .build();
-    }
-
-    private BookingStatus toBookingStatus(ReservationStatus reservationStatus) {
-        if (reservationStatus == ReservationStatus.RESERVE_CONFIRM) {
-                return BookingStatus.CONFIRM_SUCCESS;
-        }
-        if (reservationStatus == ReservationStatus.RESERVE_CONFIRM_FAIL) {
-            return BookingStatus.CONFIRM_FAILED_MRT;
-        }
-        if (reservationStatus == ReservationStatus.CANCEL_SUCCESS) {
-            return BookingStatus.ALL_CANCEL_SUCCESS;
-        }
-        if (reservationStatus == ReservationStatus.CANCEL_FAIL) {
-            return BookingStatus.ALL_CANCEL_FAILED;
-        }
-        throw new IllegalStateException("예약상태 매핑 실패");
-    }
-
-    private RoomBookingStatus toRoomBookingStatus(ReservationStatus reservationStatus) {
-        if (reservationStatus == ReservationStatus.RESERVE_CONFIRM) {
-            return RoomBookingStatus.BOOKED;
-        }
-        if (reservationStatus == ReservationStatus.CANCEL_SUCCESS) {
-            return RoomBookingStatus.CANCEL_SUCCESS;
-        }
-        if (reservationStatus == ReservationStatus.CANCEL_FAIL) {
-            return RoomBookingStatus.CANCEL_FAILED_MRT;
-        }
-        return null;
     }
 
     private RoomBookingBed toBed(Reservation reservation) {

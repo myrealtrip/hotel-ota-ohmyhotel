@@ -5,9 +5,8 @@ import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
 import com.myrealtrip.ohmyhotel.enumarate.PenaltyBasis;
 import com.myrealtrip.ohmyhotel.enumarate.PromotionType;
 import com.myrealtrip.ohmyhotel.enumarate.RateOrAmount;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhHotelsAvailabilityResponse.OmhRoomSimpleAvailability;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCancelPolicy;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCancelPolicy.OmhCancelPolicyDetail;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCancelPolicy.OmhCancelPolicyValue;
 import com.myrealtrip.ohmyhotel.utils.OmhPriceCalculateUtils;
 import com.myrealtrip.srtcommon.support.utils.NumericUtils;
 import com.myrealtrip.srtcommon.support.utils.ZeroMarginUtils;
@@ -63,27 +62,27 @@ public class CommonSearchResponseConverter {
         PenaltyBasis penaltyBasis = omhCancelPolicy.getPenaltyBasis();
         ZoneId zoneId = ZoneId.of(omhCancelPolicy.getTimeZone());
         return omhCancelPolicy.getPolicies().stream()
-            .map(omhCancelPolicyDetail -> toCancelPolicy(omhCancelPolicyDetail, penaltyBasis, zoneId, mrtCommissionRate))
+            .map(omhCancelPolicyValue -> toCancelPolicy(omhCancelPolicyValue, penaltyBasis, zoneId, mrtCommissionRate))
             .collect(Collectors.toList());
     }
 
-    private CancelPolicy toCancelPolicy(OmhCancelPolicyDetail omhCancelPolicyDetail, PenaltyBasis penaltyBasis, ZoneId zone, BigDecimal mrtCommissionRate) {
+    private CancelPolicy toCancelPolicy(OmhCancelPolicyValue omhCancelPolicyValue, PenaltyBasis penaltyBasis, ZoneId zone, BigDecimal mrtCommissionRate) {
         CancelPolicyType cancelPolicyType;
         double value;
-        if (omhCancelPolicyDetail.getRateOrAmount() == RateOrAmount.RATE) {
+        if (omhCancelPolicyValue.getRateOrAmount() == RateOrAmount.RATE) {
             cancelPolicyType = penaltyBasis == PenaltyBasis.FIRST_NIGHT ?
                                CancelPolicyType.FIRST_NIGHT_PERCENT :
                                CancelPolicyType.PERCENT;
-            value = omhCancelPolicyDetail.getPenaltyValue().doubleValue();
-        } else if (omhCancelPolicyDetail.getRateOrAmount() == RateOrAmount.AMOUNT){
+            value = omhCancelPolicyValue.getPenaltyValue().doubleValue();
+        } else if (omhCancelPolicyValue.getRateOrAmount() == RateOrAmount.AMOUNT){
             cancelPolicyType = CancelPolicyType.AMOUNT;
-            value = OmhPriceCalculateUtils.toSalePrice(omhCancelPolicyDetail.getPenaltyValue(), mrtCommissionRate).doubleValue();
+            value = OmhPriceCalculateUtils.toSalePrice(omhCancelPolicyValue.getPenaltyValue(), mrtCommissionRate).doubleValue();
         } else {
             throw new IllegalStateException("cannot mapping CancelPolicyType");
         }
         return OffsetCancelPolicy.builder()
-            .start(omhCancelPolicyDetail.getFromDateTime().atZone(zone).toOffsetDateTime())
-            .end(omhCancelPolicyDetail.getToDateTime().atZone(zone).toOffsetDateTime())
+            .start(omhCancelPolicyValue.getFromDateTime().atZone(zone).toOffsetDateTime())
+            .end(omhCancelPolicyValue.getToDateTime().atZone(zone).toOffsetDateTime())
             .type(cancelPolicyType)
             .value(value)
             .build();

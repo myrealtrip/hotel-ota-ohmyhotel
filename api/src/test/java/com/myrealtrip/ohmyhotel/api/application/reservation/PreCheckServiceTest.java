@@ -79,8 +79,8 @@ class PreCheckServiceTest {
 
         // then
         // API 로그 저장여부 검증
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
 
         // 예약 데이터 검증
         ArgumentCaptor<Reservation> reservationArgumentCaptor = ArgumentCaptor.forClass(Reservation.class);
@@ -115,8 +115,8 @@ class PreCheckServiceTest {
 
         // then
         // API 로그 저장여부 검증
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
 
         // 예약 데이터 검증
         ArgumentCaptor<Reservation> reservationArgumentCaptor = ArgumentCaptor.forClass(Reservation.class);
@@ -154,8 +154,8 @@ class PreCheckServiceTest {
 
         // then
         // API 로그 저장여부 검증
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
 
         // 예약 데이터 검증
         ArgumentCaptor<Reservation> reservationArgumentCaptor = ArgumentCaptor.forClass(Reservation.class);
@@ -199,8 +199,8 @@ class PreCheckServiceTest {
 
         // then
         // API 로그 저장여부 검증
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
-        verify(reservationApiLogService, times(1)).savePreCheckApiLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.REQUEST), any());
+        verify(reservationApiLogService, times(1)).savePreCheckLog(eq(preCheckRequest.getMrtOrderNumber()), eq(ApiLogType.RESPONSE), any());
 
         // 예약 데이터 검증
         ArgumentCaptor<Reservation> reservationArgumentCaptor = ArgumentCaptor.forClass(Reservation.class);

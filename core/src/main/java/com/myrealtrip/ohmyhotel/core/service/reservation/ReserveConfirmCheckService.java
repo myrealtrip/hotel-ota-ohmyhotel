@@ -11,14 +11,11 @@ import com.myrealtrip.ohmyhotel.outbound.slack.sender.reservation.ReservationSla
 import com.myrealtrip.ohmyhotel.outbound.slack.sender.reservation.ReservationSlackSender;
 import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import com.myrealtrip.unionstay.common.constant.booking.BookingErrorCode;
-import com.myrealtrip.unionstay.common.message.booking.BookingOrderMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static java.util.Objects.isNull;
 
 @Service
 @RequiredArgsConstructor
@@ -83,7 +80,7 @@ public class ReserveConfirmCheckService {
 
     private void saveBookingDetailApiLog(String mrtReservationNo, ApiLogType logType, String logStr) {
         try {
-            reservationApiLogService.saveBookingDetailApiLog(mrtReservationNo, logType, logStr);
+            reservationApiLogService.saveBookingDetailForConfirmCheckLog(mrtReservationNo, logType, logStr);
         } catch (Throwable t) {
             log.error("{} - booking detail api log save fail", mrtReservationNo);
         }

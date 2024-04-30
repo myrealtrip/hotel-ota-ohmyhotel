@@ -9,6 +9,7 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhBookingDetailA
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhCreateBookingAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhPreCheckAgent;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,12 +21,17 @@ public class ReservationApiLogService {
     private final ReservationApiLogProvider reservationApiLogProvider;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void saveBookingDetailApiLog(String mrtReservationNo, ApiLogType logType, String log) {
-        save(mrtReservationNo, ReservationStepApi.CREATE_BOOKING, OmhBookingDetailAgent.URI, logType, log);
+    public void saveBookingDetailForRefundPriceLog(String mrtReservationNo, ApiLogType logType, String log) {
+        save(mrtReservationNo, ReservationStepApi.BOOKING_DETAIL_FOR_REFUND_PRICE, getBookingDetailApiUrl(mrtReservationNo), logType, log);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void saveCreateBookingApiLog(String mrtReservationNo, ApiLogType logType, String log) {
+    public void saveBookingDetailForConfirmCheckLog(String mrtReservationNo, ApiLogType logType, String log) {
+        save(mrtReservationNo, ReservationStepApi.BOOKING_DETAIL_FOR_CONFIRM_CHECK, getBookingDetailApiUrl(mrtReservationNo), logType, log);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveCreateBookingLog(String mrtReservationNo, ApiLogType logType, String log) {
         save(mrtReservationNo, ReservationStepApi.CREATE_BOOKING, OmhCreateBookingAgent.URI, logType, log);
     }
 
@@ -35,7 +41,7 @@ public class ReservationApiLogService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void savePreCheckApiLog(String mrtReservationNo, ApiLogType logType, String log) {
+    public void savePreCheckLog(String mrtReservationNo, ApiLogType logType, String log) {
         save(mrtReservationNo, ReservationStepApi.PRE_CHECK, OmhPreCheckAgent.URI, logType, log);
     }
 
@@ -48,5 +54,9 @@ public class ReservationApiLogService {
             .log(log)
             .build();
         reservationApiLogProvider.upsert(reservationApiLog);
+    }
+
+    private String getBookingDetailApiUrl(String mrtReservationNo) {
+        return StringUtils.replace(OmhBookingDetailAgent.URI, "{channelBookingCode}", mrtReservationNo);
     }
 }

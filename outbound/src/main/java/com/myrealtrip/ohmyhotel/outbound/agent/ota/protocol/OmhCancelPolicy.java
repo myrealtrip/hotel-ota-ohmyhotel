@@ -27,14 +27,14 @@ public class OmhCancelPolicy {
 
     private PenaltyBasis penaltyBasis;
 
-    private List<OmhCancelPolicyDetail> policies;
+    private List<OmhCancelPolicyValue> policies;
 
     @SuperBuilder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class OmhCancelPolicyDetail {
+    public static class OmhCancelPolicyValue {
 
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private LocalDateTime fromDateTime;

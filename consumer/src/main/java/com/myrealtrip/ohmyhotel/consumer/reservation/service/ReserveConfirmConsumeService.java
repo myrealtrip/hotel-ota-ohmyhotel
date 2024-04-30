@@ -7,13 +7,10 @@ import com.myrealtrip.ohmyhotel.core.provider.reservation.ReservationProvider;
 import com.myrealtrip.ohmyhotel.core.service.reservation.ReservationApiLogService;
 import com.myrealtrip.ohmyhotel.core.service.reservation.ReserveConfirmCheckService;
 import com.myrealtrip.ohmyhotel.enumarate.ApiLogType;
-import com.myrealtrip.ohmyhotel.enumarate.OmhBookingStatus;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.exception.OmhApiException;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhBookingDetailAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhCreateBookingAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.request.OmhCreateBookingRequest;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhBookingDetailResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhCreateBookingResponse;
 import com.myrealtrip.ohmyhotel.outbound.slack.sender.reservation.ReservationSlackEvent;
 import com.myrealtrip.ohmyhotel.outbound.slack.sender.reservation.ReservationSlackSender;
@@ -22,11 +19,8 @@ import com.myrealtrip.unionstay.common.constant.booking.BookingErrorCode;
 import com.myrealtrip.unionstay.common.message.booking.BookingOrderMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static java.util.Objects.isNull;
 
 @Service
 @RequiredArgsConstructor
@@ -86,7 +80,7 @@ public class ReserveConfirmConsumeService {
 
     private void saveCreateBookingApiLog(String mrtReservationNo, ApiLogType logType, String logStr) {
         try {
-            reservationApiLogService.saveCreateBookingApiLog(mrtReservationNo, logType, logStr);
+            reservationApiLogService.saveCreateBookingLog(mrtReservationNo, logType, logStr);
         } catch (Throwable t) {
             log.error("{} - create booking api log save fail", mrtReservationNo);
         }
