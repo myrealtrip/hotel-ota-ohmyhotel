@@ -6,6 +6,7 @@ import com.myrealtrip.ohmyhotel.enumarate.ApiLogType;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStepApi;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.OmhRoomsAvailabilityAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhBookingDetailAgent;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhCancelBookingAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhCreateBookingAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhPreCheckAgent;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ReservationApiLogService {
 
     private final ReservationApiLogProvider reservationApiLogProvider;
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveCancelBookingLog(String mrtReservationNo, ApiLogType logType, String log) {
+        save(mrtReservationNo, ReservationStepApi.CANCEL_BOOKING, getCancelBookingApiUrl(mrtReservationNo), logType, log);
+    }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void saveBookingDetailForRefundPriceLog(String mrtReservationNo, ApiLogType logType, String log) {
@@ -58,5 +64,9 @@ public class ReservationApiLogService {
 
     private String getBookingDetailApiUrl(String mrtReservationNo) {
         return StringUtils.replace(OmhBookingDetailAgent.URI, "{channelBookingCode}", mrtReservationNo);
+    }
+
+    private String getCancelBookingApiUrl(String mrtReservationNo) {
+        return StringUtils.replace(OmhCancelBookingAgent.URI, "{channelBookingCode}", mrtReservationNo);
     }
 }

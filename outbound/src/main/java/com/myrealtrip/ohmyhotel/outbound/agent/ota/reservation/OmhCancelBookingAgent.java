@@ -19,7 +19,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class OmhCancelBookingAgent {
 
-    private static final String URI = "/channel/ota/v2.0/reservation/book/{channelBookingCode}/cancel";
+    public static final String URI = "/channel/ota/v2.0/reservation/book/{channelBookingCode}/cancel";
     private static final String CANCEL_BOOKING = "Cancel Booking";
 
     private final WebClient webClient;

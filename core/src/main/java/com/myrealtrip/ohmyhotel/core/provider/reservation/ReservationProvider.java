@@ -5,11 +5,13 @@ import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Reservation;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.entity.ReservationEntity;
 import com.myrealtrip.ohmyhotel.core.infrastructure.reservation.ReservationRepository;
 import com.myrealtrip.ohmyhotel.core.provider.reservation.mapper.ReservationMapper;
+import com.myrealtrip.ohmyhotel.enumarate.CanceledBy;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,6 +85,31 @@ public class ReservationProvider {
     public void forceStatusUpdate(String mrtReservationNo, ReservationStatus status) {
         ReservationEntity entity = reservationRepository.findByMrtReservationNo(mrtReservationNo);
         entity.forceStatusUpdate(status);
+        reservationRepository.save(entity);
+    }
+
+    @Transactional
+    public void cancelSuccess(Long reservationId,
+                              CanceledBy canceledBy,
+                              String cancelReason,
+                              String cancelReasonType,
+                              String omhCancelConfirmNo,
+                              BigDecimal cancelPenaltyDepositPrice,
+                              BigDecimal cancelPenaltySalePrice) {
+        ReservationEntity entity = findByReservationId(reservationId);
+        entity.cancelSuccess(canceledBy, cancelReason, cancelReasonType, omhCancelConfirmNo, cancelPenaltyDepositPrice, cancelPenaltySalePrice);
+        reservationRepository.save(entity);
+    }
+
+    @Transactional
+    public void cancelFail(Long reservationId,
+                           CanceledBy canceledBy,
+                           String cancelReason,
+                           String cancelReasonType,
+                           String errorMessage,
+                           String bookingErrorCode) {
+        ReservationEntity entity = findByReservationId(reservationId);
+        entity.cancelFail(canceledBy, cancelReason, cancelReasonType, errorMessage, bookingErrorCode);
         reservationRepository.save(entity);
     }
 
