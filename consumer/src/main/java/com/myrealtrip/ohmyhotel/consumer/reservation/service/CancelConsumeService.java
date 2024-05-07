@@ -78,7 +78,7 @@ public class CancelConsumeService {
 
     private void saveCancelBookingApiLog(String mrtReservationNo, ApiLogType logType, String logStr) {
         try {
-            reservationApiLogService.saveCreateBookingLog(mrtReservationNo, logType, logStr);
+            reservationApiLogService.saveCancelBookingLog(mrtReservationNo, logType, logStr);
         } catch (Throwable t) {
             log.error("{} - cancel booking api log save fail", mrtReservationNo);
         }
