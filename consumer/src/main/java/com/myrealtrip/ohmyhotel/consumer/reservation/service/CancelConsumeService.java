@@ -99,7 +99,7 @@ public class CancelConsumeService {
     public void handleCancelSuccess(Reservation reservation, BookingOrderMessage message, OmhCancelBookingResponse omhCancelBookingResponse) {
         BigDecimal cancelPenaltyDepositPrice;
         BigDecimal cancelPenaltySalePrice;
-        if (!profile.contains("stage") || !profile.contains("prod")) {
+        if (!profile.contains("stage") && !profile.contains("prod")) {
             // 개발 환경에서는 오마이호텔 cancelPenaltyAmount 가 null 로 반환되므로 요청들어온 환불가격 그대로 사용한다.
             cancelPenaltySalePrice = reservation.getSalePrice().subtract(message.getCancelRefundAmountChecked());
             cancelPenaltyDepositPrice = OmhPriceCalculateUtils.reverseToDepositPrice(cancelPenaltySalePrice, reservation.getMrtCommissionRate());
