@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -39,6 +40,7 @@ import java.time.LocalTime;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "reservation")
+@Audited
 public class ReservationEntity extends BaseEntity {
 
     private static final String LOG_SEPARATOR = ":-:";
