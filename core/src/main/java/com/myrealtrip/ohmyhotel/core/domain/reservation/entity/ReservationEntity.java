@@ -11,6 +11,7 @@ import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.OrderFormInfo;
 import com.myrealtrip.ohmyhotel.enumarate.CanceledBy;
 import com.myrealtrip.ohmyhotel.enumarate.OmhBookingStatus;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
+import com.myrealtrip.ohmyhotel.utils.OmhPriceCalculateUtils;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -155,6 +156,37 @@ public class ReservationEntity extends BaseEntity {
     @Column(name = "confirm_pending_retry_count")
     private int confirmPendingRetryCount;
 
+    public void cancelFail(CanceledBy canceledBy,
+                           String cancelReason,
+                           String cancelReasonType,
+                           String errorMessage,
+                           String bookingErrorCode) {
+        changeStatus(ReservationStatus.CANCEL_FAIL);
+        appendLog("예약취소실패 - " + errorMessage);
+        this.canceledBy = canceledBy;
+        this.cancelReason = cancelReason;
+        this.cancelReasonType = cancelReasonType;
+        this.bookingErrorCode = bookingErrorCode;
+    }
+
+    public void cancelSuccess(CanceledBy canceledBy,
+                              String cancelReason,
+                              String cancelReasonType,
+                              String omhCancelConfirmNo,
+                              BigDecimal cancelPenaltyDepositPrice,
+                              BigDecimal cancelPenaltySalePrice) {
+        changeStatus(ReservationStatus.CANCEL_SUCCESS);
+        appendLog("예약취소 성공");
+        this.canceledBy = canceledBy;
+        this.cancelReason = cancelReason;
+        this.cancelReasonType = cancelReasonType;
+        this.omhCancelConfirmNo = omhCancelConfirmNo;
+        this.cancelPenaltyDepositPrice = cancelPenaltyDepositPrice;
+        this.cancelPenaltySalePrice = cancelPenaltySalePrice;
+        updateCanceledAt();
+
+    }
+
     public void confirmFail(String bookingErrorCode) {
         changeStatus(ReservationStatus.RESERVE_CONFIRM_FAIL);
         this.bookingErrorCode = bookingErrorCode;
@@ -167,6 +199,7 @@ public class ReservationEntity extends BaseEntity {
         this.confirmedAt = LocalDateTime.now();
         this.omhBookCode = omhBookCode;
         this.hotelConfirmNo = hotelConfirmNo;
+        updateConfirmedAt();
     }
 
     public void confirmPending(String omhBookCode, String hotelConfirmNo) {
@@ -204,5 +237,13 @@ public class ReservationEntity extends BaseEntity {
 
     public void forceStatusUpdate(ReservationStatus status) {
         this.reservationStatus = status;
+    }
+
+    private void updateConfirmedAt() {
+        this.confirmedAt = LocalDateTime.now();
+    }
+
+    private void updateCanceledAt() {
+        this.canceledAt = LocalDateTime.now();
     }
 }

@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.consumer.reservation;
 
+import com.myrealtrip.ohmyhotel.consumer.reservation.service.CancelConsumeService;
 import com.myrealtrip.ohmyhotel.consumer.reservation.service.ReserveConfirmConsumeService;
 import com.myrealtrip.ohmyhotel.core.service.reservation.BookingMessageKafkaSendService;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
@@ -28,8 +29,9 @@ import static com.myrealtrip.ohmyhotel.consumer.ConsumerConstants.GROUP_ID;
 public class BookingConsumer {
 
     private final ReserveConfirmConsumeService reserveConfirmConsumeService;
-    private final BookingMessageKafkaSendService messageKafkaSendService;
+    private final BookingMessageKafkaSendService bookingMessageKafkaSendService;
     private final ReservationSlackSender reservationSlackSender;
+    private final CancelConsumeService cancelConsumeService;
 
     @KafkaListener(topics = "#{'${myrealtrip.kafka.common.topics.unionstay-booking-order}'}", groupId = GROUP_ID, containerFactory = "manualAckKafkaListenerContainerFactory")
     public void listenBookingOrder(@Payload String payload, Acknowledgment acknowledgment) {
@@ -56,7 +58,7 @@ public class BookingConsumer {
         try {
             BookingDetailDeadLetterMessage message = ObjectMapperUtils.readString(payload, BookingDetailDeadLetterMessage.class);
             log.info("BookingDetailDeadLetterMessage 메세지 : {}", message.toString());
-            messageKafkaSendService.sendByMrtReservationNo(message.getMrtReservationNo(), null, message.getRetryCount() + 1);
+            bookingMessageKafkaSendService.sendByMrtReservationNo(message.getMrtReservationNo(), null, message.getRetryCount() + 1);
         } catch (Exception e) {
             log.error("예약 데드레터 처리 실패", e);
         } finally {
@@ -73,9 +75,11 @@ public class BookingConsumer {
         switch (message.getBookingStatus()) {
             case CONFIRM_ACCEPTED: // 예약 생성 이벤트
                 reserveConfirmConsumeService.consume(message);
-                messageKafkaSendService.sendByMrtReservationNo(message.getMrtReservationNo(), List.of(ReservationStatus.RESERVE_CONFIRM, ReservationStatus.RESERVE_CONFIRM_FAIL), 0);
+                bookingMessageKafkaSendService.sendByMrtReservationNo(message.getMrtReservationNo(), List.of(ReservationStatus.RESERVE_CONFIRM, ReservationStatus.RESERVE_CONFIRM_FAIL), 0);
                 return;
-            case ALL_CANCEL_ACCEPTED: // 예약 취소 이벤트
+            case ALL_CANCEL_ACCEPTED: // 예약 취소 이벤트\
+                cancelConsumeService.consume(message);
+                bookingMessageKafkaSendService.sendByMrtReservationNo(message.getMrtReservationNo(), List.of(ReservationStatus.CANCEL_SUCCESS, ReservationStatus.CANCEL_FAIL), 0);
                 return;
             default:
                 log.warn("이곳에서 처리할 수 있는 메시지가 아닙니다. 메시지 수신 추가 구현이 필요합니다.");

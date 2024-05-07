@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReserveConfirmPendingRetryWriter implements ItemWriter<Reservation> {
 
-    private static final int MAX_RETRY_COUNT = 3;
+    private static final int MAX_RETRY_COUNT = 10;
 
     private final ReservationProvider reservationProvider;
     private final ReserveConfirmCheckService reserveConfirmCheckService;

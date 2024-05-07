@@ -28,4 +28,11 @@ public class OmhPriceCalculateUtils {
             .multiply(mrtCommissionRate)
             .divide(BigDecimal.valueOf(100), 0, RoundingMode.HALF_UP);
     }
+
+    /**
+     * 판매가를 입금가로 역산한다.
+     */
+    public static BigDecimal reverseToDepositPrice(BigDecimal price, BigDecimal commissionRate) {
+        return price.divide(commissionRate.multiply(BigDecimal.valueOf(0.01)).add(BigDecimal.ONE), 0, RoundingMode.DOWN);
+    }
 }

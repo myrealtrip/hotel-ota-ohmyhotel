@@ -13,12 +13,7 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhBookingDetailResponse.OmhBookingCodes;
 import com.myrealtrip.ohmyhotel.outbound.slack.sender.reservation.ReservationSlackEvent;
 import com.myrealtrip.ohmyhotel.outbound.slack.sender.reservation.ReservationSlackSender;
-import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import com.myrealtrip.unionstay.common.constant.booking.BookingErrorCode;
-import com.myrealtrip.unionstay.common.message.booking.BookingOrderMessage;
-import com.myrealtrip.unionstay.dto.hotelota.booking.request.CustomerDetail;
-import com.myrealtrip.unionstay.dto.hotelota.booking.request.GuestDetail;
-import com.myrealtrip.unionstay.dto.hotelota.booking.request.RoomBooking;
 import io.netty.handler.timeout.ReadTimeoutException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,9 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -138,7 +131,7 @@ class ReserveConfirmCheckServiceTest {
         // then
         verify(reservationProvider, times(1))
             .confirmPending(reservation.getReservationId(), null, null);
-        verify(reservationSlackSender, times(1)).sendToSrtWithMention(ReservationSlackEvent.OMH_BOOK_DETAIL_API_FAIL, MRT_RESERVATION_NO, null);
+        verify(reservationSlackSender, times(1)).sendToSrtWithMention(ReservationSlackEvent.BOOK_DETAIL_API_FAIL, MRT_RESERVATION_NO, null);
     }
 
     @Test
@@ -156,7 +149,7 @@ class ReserveConfirmCheckServiceTest {
         // then
         verify(reservationProvider, times(1))
             .confirmPending(reservation.getReservationId(), null, null);
-        verify(reservationSlackSender, times(1)).sendToSrtWithMention(ReservationSlackEvent.OMH_BOOK_DETAIL_API_FAIL, MRT_RESERVATION_NO, null);
+        verify(reservationSlackSender, times(1)).sendToSrtWithMention(ReservationSlackEvent.BOOK_DETAIL_API_FAIL, MRT_RESERVATION_NO, null);
     }
 
     private OmhBookingDetailResponse createOmhBookingDetailResponse(OmhBookingStatus status) {

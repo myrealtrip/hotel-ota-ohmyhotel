@@ -73,9 +73,9 @@ public class ReserveConfirmCheckService {
     }
 
     private void handleBookDetailFail(Reservation reservation, Throwable t) {
-        log.error("{} - " + ReservationSlackEvent.OMH_BOOK_DETAIL_API_FAIL.getNote(), reservation.getMrtReservationNo(), t);
+        log.error("{} - " + ReservationSlackEvent.BOOK_DETAIL_API_FAIL.getNote(), reservation.getMrtReservationNo(), t);
         reservationProvider.confirmPending(reservation.getReservationId(), null, null);
-        reservationSlackSender.sendToSrtWithMention(ReservationSlackEvent.OMH_BOOK_DETAIL_API_FAIL, reservation.getMrtReservationNo(), null);
+        reservationSlackSender.sendToSrtWithMention(ReservationSlackEvent.BOOK_DETAIL_API_FAIL, reservation.getMrtReservationNo(), null);
     }
 
     private void saveBookingDetailApiLog(String mrtReservationNo, ApiLogType logType, String logStr) {

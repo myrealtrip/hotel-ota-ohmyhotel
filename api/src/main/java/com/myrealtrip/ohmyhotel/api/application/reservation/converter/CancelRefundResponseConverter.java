@@ -2,12 +2,10 @@ package com.myrealtrip.ohmyhotel.api.application.reservation.converter;
 
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Reservation;
 import com.myrealtrip.ohmyhotel.core.service.reservation.BookingStatusConverter;
-import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
 import com.myrealtrip.ohmyhotel.utils.OmhPriceCalculateUtils;
 import com.myrealtrip.srtcommon.support.currency.CurrencyCode;
 import com.myrealtrip.unionstay.common.constant.ProviderCode;
 import com.myrealtrip.unionstay.common.constant.ProviderType;
-import com.myrealtrip.unionstay.common.constant.booking.BookingStatus;
 import com.myrealtrip.unionstay.dto.hotelota.booking.response.ItineraryCancelRefundResponse;
 import com.myrealtrip.unionstay.dto.hotelota.booking.response.ItineraryRoomCancelRefund;
 import lombok.RequiredArgsConstructor;

@@ -92,6 +92,8 @@ myrealtrip:
   api:
     unionstay:
       base-url: http://api-unionstay-int.dev-myrealtrip.net
+    settle:
+      base-url: http://api-settle-v2.dev-myrealtrip.net
 ---
 spring:
   config:
@@ -101,6 +103,8 @@ myrealtrip:
   api:
     unionstay:
       base-url: http://api-unionstay-int.dev-myrealtrip.net
+    settle:
+      base-url: http://api-settle-v2.dev-myrealtrip.net
 ---
 spring:
   config:
@@ -110,6 +114,8 @@ myrealtrip:
   api:
     unionstay:
       base-url: http://api-unionstay-int.dev01-myrealtrip.net
+    settle:
+      base-url: http://api-settle-v2.dev01-myrealtrip.net
 ---
 spring:
   config:
@@ -119,6 +125,8 @@ myrealtrip:
   api:
     unionstay:
       base-url: http://api-unionstay-int.dev02-myrealtrip.net
+    settle:
+      base-url: http://api-settle-v2.dev02-myrealtrip.net
 ---
 spring:
   config:
@@ -128,6 +136,8 @@ myrealtrip:
   api:
     unionstay:
       base-url: http://api-unionstay-int.test-myrealtrip.net
+    settle:
+      base-url: http://api-settle-v2.test-myrealtrip.net
 ---
 spring:
   config:
@@ -137,6 +147,8 @@ myrealtrip:
   api:
     unionstay:
       base-url: http://api-unionstay-int.test01-myrealtrip.net
+    settle:
+      base-url: http://api-settle-v2.test01-myrealtrip.net
 ---
 spring:
   config:
@@ -146,6 +158,8 @@ myrealtrip:
   api:
     unionstay:
       base-url: http://api-unionstay-int.test02-myrealtrip.net
+    settle:
+      base-url: http://api-settle-v2.test02-myrealtrip.net
 ---
 
 spring:
@@ -163,6 +177,8 @@ myrealtrip:
   api:
     unionstay:
       base-url: http://api-unionstay-int.stage-myrealtrip.net
+    settle:
+      base-url: http://api-settle-v2.stage-myrealtrip.net
 ---
 spring:
   config:
@@ -179,3 +195,5 @@ myrealtrip:
   api:
     unionstay:
       base-url: http://api-unionstay-int.myrealtrip.net
+    settle:
+      base-url: http://api-settle-v2.myrealtrip.net

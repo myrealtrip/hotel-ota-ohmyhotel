@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.LockModeType;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,9 +37,21 @@ public class ReservationCustomRepositoryImpl implements ReservationCustomReposit
     }
 
     @Override
-    public List<ReservationEntity> findByReservationIdGreaterThanAndStatus(Long reservationId, ReservationStatus status, int limit) {
+    public List<ReservationEntity> findByReservationIdGtAndStatus(Long reservationId, ReservationStatus status, int limit) {
         return jpaQueryFactory.selectFrom(reservationEntity)
             .where(reservationEntity.reservationId.gt(reservationId),
+                   reservationEntity.reservationStatus.eq(status),
+                   reservationEntity.deletedAt.isNull())
+            .orderBy(reservationEntity.reservationId.asc())
+            .limit(limit)
+            .fetch();
+    }
+
+    @Override
+    public List<ReservationEntity> findByReservationIdGtAndCheckInDateGoeAndStatus(Long reservationId, LocalDate checkInDate, ReservationStatus status, int limit) {
+        return jpaQueryFactory.selectFrom(reservationEntity)
+            .where(reservationEntity.reservationId.gt(reservationId),
+                   reservationEntity.checkInDate.goe(checkInDate),
                    reservationEntity.reservationStatus.eq(status),
                    reservationEntity.deletedAt.isNull())
             .orderBy(reservationEntity.reservationId.asc())
