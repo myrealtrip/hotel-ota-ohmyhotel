@@ -2,7 +2,7 @@ package com.myrealtrip.ohmyhotel.batch.configuration;
 
 import com.myrealtrip.ohmyhotel.batch.UniqueRunIdIncrementer;
 import com.myrealtrip.ohmyhotel.batch.listener.ReserveConfirmPendingRetryListener;
-import com.myrealtrip.ohmyhotel.batch.reader.ReservationReader;
+import com.myrealtrip.ohmyhotel.batch.reader.ReservationByStatusReader;
 import com.myrealtrip.ohmyhotel.batch.storage.MrtReservationNoStorage;
 import com.myrealtrip.ohmyhotel.batch.writer.ReserveConfirmPendingRetryWriter;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Reservation;
@@ -65,7 +65,7 @@ public class ReserveConfirmPendingRetryJobConfiguration {
     @Bean
     @StepScope
     public ItemReader<Reservation> confirmPendingReservationReader(ReservationProvider reservationProvider) {
-        return new ReservationReader(reservationProvider, ReservationStatus.RESERVE_CONFIRM_PENDING, CHUNK_SIZE);
+        return new ReservationByStatusReader(reservationProvider, ReservationStatus.RESERVE_CONFIRM_PENDING, CHUNK_SIZE);
     }
 
     @Bean

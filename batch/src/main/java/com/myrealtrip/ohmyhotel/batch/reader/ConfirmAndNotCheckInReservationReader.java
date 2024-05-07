@@ -7,19 +7,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.batch.item.database.AbstractPagingItemReader;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.time.LocalDate;
 
+/**
+ * 확정상태 이면서 아직 체크인 하지 않은 에약건을 읽어온다.
+ */
 @Slf4j
-public class ReservationReader extends AbstractPagingItemReader<Reservation> {
+public class ConfirmAndNotCheckInReservationReader extends AbstractPagingItemReader<Reservation> {
 
+    private final LocalDate now = LocalDate.now();
     private final ReservationProvider reservationProvider;
-    private final ReservationStatus status;
     private Long lastSelectId = 0L;
 
-    public ReservationReader(ReservationProvider reservationProvider, ReservationStatus status, int pageSize) {
+    public ConfirmAndNotCheckInReservationReader(ReservationProvider reservationProvider,
+                                                 int pageSize) {
         this.reservationProvider = reservationProvider;
-        this.status = status;
         super.setPageSize(pageSize);
     }
 
@@ -27,7 +29,7 @@ public class ReservationReader extends AbstractPagingItemReader<Reservation> {
     protected void doReadPage() {
         log.info("page {}, read", super.getPage());
 
-        super.results = reservationProvider.getByReservationIdGreaterThanAndStatus(lastSelectId, status, getPageSize());
+        super.results = reservationProvider.getByReservationIdGtAndCheckInDateGoeAndStatus(lastSelectId, now, ReservationStatus.RESERVE_CONFIRM, getPageSize());
         if (CollectionUtils.isNotEmpty(super.results)) {
             lastSelectId = super.results.get(super.results.size() - 1).getReservationId();
         }

@@ -20,6 +20,8 @@ public enum ReservationSlackEvent {
     BOOK_DETAIL_API_FAIL("[오마이호텔] 예약 상세 조회 실패", "확정 여부 체크를 위해 호출한 오마이호텔 에약상세 조회 API 가 실패하였습니다. 최종 처리 결과를 알 수 없어 Pending 상태로 변경합니다. Pending 상태의 예약은 배치를 통해 재시도 됩니다."),
 
     CANCEL_FAIL("[오마이호텔] 예약 취소 실패", "에약 취소에 실패했습니다. 확인이 필요합니다."),
+
+    HOTEL_CANCEL_CHECK("[오마이호텔] 예약현황 불일치 집계", "마리트 hotel-ota-ohmyhotel db 에서는 확정 상태이지만 오마이호텔 에서는 취소상태인 예약을 집계합니다.");
     ;
 
     private final String eventName;

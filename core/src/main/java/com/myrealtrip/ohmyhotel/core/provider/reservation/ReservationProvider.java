@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,8 +68,8 @@ public class ReservationProvider {
     }
 
     @Transactional
-    public List<Reservation> getByReservationIdGreaterThanAndStatus(Long reservationId, ReservationStatus status, int limit) {
-        return reservationRepository.findByReservationIdGreaterThanAndStatus(reservationId, status, limit)
+    public List<Reservation> getByReservationIdGtAndStatus(Long reservationId, ReservationStatus status, int limit) {
+        return reservationRepository.findByReservationIdGtAndStatus(reservationId, status, limit)
             .stream()
             .map(reservationMapper::toDto)
             .collect(Collectors.toList());
@@ -111,6 +112,14 @@ public class ReservationProvider {
         ReservationEntity entity = findByReservationId(reservationId);
         entity.cancelFail(canceledBy, cancelReason, cancelReasonType, errorMessage, bookingErrorCode);
         reservationRepository.save(entity);
+    }
+
+    @Transactional
+    public List<Reservation> getByReservationIdGtAndCheckInDateGoeAndStatus(Long reservationId, LocalDate checkInDate, ReservationStatus status, int limit) {
+        return reservationRepository.findByReservationIdGtAndCheckInDateGoeAndStatus(reservationId, checkInDate, status, limit)
+            .stream()
+            .map(reservationMapper::toDto)
+            .collect(Collectors.toList());
     }
 
     private ReservationEntity findByReservationId(Long reservationId) {
