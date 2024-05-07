@@ -29,6 +29,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 /**
  * 호텔에서 먼저 취소된 예약건이 있는지 체크한다.
+ * 별도의 처리는 하지 않고 슬랙알림만 보낸다.
  */
 @Slf4j
 @Configuration
