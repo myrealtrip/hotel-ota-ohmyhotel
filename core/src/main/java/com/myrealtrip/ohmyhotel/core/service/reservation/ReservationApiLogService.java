@@ -37,6 +37,12 @@ public class ReservationApiLogService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void saveBookingDetailForCancelCheckLog(String mrtReservationNo, ApiLogType logType, String log) {
+        save(mrtReservationNo, ReservationStepApi.BOOKING_DETAIL_FOR_CANCEL_CHECK, getBookingDetailApiUrl(mrtReservationNo), logType, log);
+    }
+
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void saveCreateBookingLog(String mrtReservationNo, ApiLogType logType, String log) {
         save(mrtReservationNo, ReservationStepApi.CREATE_BOOKING, OmhCreateBookingAgent.URI, logType, log);
     }

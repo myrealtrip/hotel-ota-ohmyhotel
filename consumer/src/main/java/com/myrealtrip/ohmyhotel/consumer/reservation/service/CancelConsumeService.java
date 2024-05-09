@@ -5,10 +5,12 @@ import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Reservation;
 import com.myrealtrip.ohmyhotel.core.provider.reservation.ReservationProvider;
 import com.myrealtrip.ohmyhotel.core.service.reservation.ReservationApiLogService;
 import com.myrealtrip.ohmyhotel.enumarate.ApiLogType;
+import com.myrealtrip.ohmyhotel.enumarate.OmhBookingStatus;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.exception.OmhApiException;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhBookingDetailAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhCancelBookingAgent;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhBookingDetailResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhCancelBookingResponse;
 import com.myrealtrip.ohmyhotel.outbound.slack.sender.reservation.ReservationSlackEvent;
 import com.myrealtrip.ohmyhotel.outbound.slack.sender.reservation.ReservationSlackSender;
@@ -32,6 +34,7 @@ import static java.util.Objects.nonNull;
 public class CancelConsumeService {
 
     private final OmhCancelBookingAgent omhCancelBookingAgent;
+    private final OmhBookingDetailAgent omhBookingDetailAgent;
     private final ReservationProvider reservationProvider;
     private final ReservationApiLogService reservationApiLogService;
     private final BookingOrderMessageConverter bookingOrderMessageConverter;
@@ -39,12 +42,14 @@ public class CancelConsumeService {
     private final String profile;
 
     public CancelConsumeService(OmhCancelBookingAgent omhCancelBookingAgent,
+                                OmhBookingDetailAgent omhBookingDetailAgent,
                                 ReservationProvider reservationProvider,
                                 ReservationApiLogService reservationApiLogService,
                                 BookingOrderMessageConverter bookingOrderMessageConverter,
                                 ReservationSlackSender reservationSlackSender,
                                 @Value("${spring.config.activate.on-profile}") String profile) {
         this.omhCancelBookingAgent = omhCancelBookingAgent;
+        this.omhBookingDetailAgent = omhBookingDetailAgent;
         this.reservationProvider = reservationProvider;
         this.reservationApiLogService = reservationApiLogService;
         this.bookingOrderMessageConverter = bookingOrderMessageConverter;
@@ -59,7 +64,23 @@ public class CancelConsumeService {
             log.error("{} - 예약확정 상태전이 불가. 현재 상태: {}", reservation.getMrtReservationNo(), reservation.getReservationStatus());
             return;
         }
-        // TODO 예약상세 API 조회하여 이미 취소되어 있는지 여부 확인 -> 오마이호텔 이메일 답변 오면 작업
+        // 예약상세 API 조회하여 이미 취소되어 있는지 여부 확인
+        OmhBookingDetailResponse omhBookingDetailResponse = omhBookingDetail(reservation);
+        if (omhBookingDetailResponse.getStatus() == OmhBookingStatus.CANCELLED) {
+            handleCancelSuccess(reservation, message, null, omhBookingDetailResponse.getAmount().getTotalNetAmount());
+            return;
+        }
+        omhBookingCancel(reservation, message);
+    }
+
+    private OmhBookingDetailResponse omhBookingDetail(Reservation reservation) {
+        OmhBookingDetailResponse omhBookingDetailResponse = omhBookingDetailAgent.bookingDetail(reservation.getMrtReservationNo());
+        saveBookingDetailApiLog(reservation.getMrtReservationNo(), ApiLogType.REQUEST, StringUtils.EMPTY);
+        saveBookingDetailApiLog(reservation.getMrtReservationNo(), ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhBookingDetailResponse));
+        return omhBookingDetailResponse;
+    }
+
+    private void omhBookingCancel(Reservation reservation, BookingOrderMessage message) {
         saveCancelBookingApiLog(reservation.getMrtReservationNo(), ApiLogType.REQUEST, StringUtils.EMPTY);
         OmhCancelBookingResponse omhCancelBookingResponse;
         try {
@@ -73,15 +94,7 @@ public class CancelConsumeService {
             return;
         }
         saveCancelBookingApiLog(reservation.getMrtReservationNo(), ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhCancelBookingResponse));
-        handleCancelSuccess(reservation, message, omhCancelBookingResponse);
-    }
-
-    private void saveCancelBookingApiLog(String mrtReservationNo, ApiLogType logType, String logStr) {
-        try {
-            reservationApiLogService.saveCancelBookingLog(mrtReservationNo, logType, logStr);
-        } catch (Throwable t) {
-            log.error("{} - cancel booking api log save fail", mrtReservationNo);
-        }
+        handleCancelSuccess(reservation, message, omhCancelBookingResponse.getCancelConfirmNo(), omhCancelBookingResponse.getCancelPenaltyAmount());
     }
 
     public void handleCancelFail(Reservation reservation, BookingOrderMessage message, Throwable t) {
@@ -96,7 +109,7 @@ public class CancelConsumeService {
         reservationSlackSender.sendToSrtWithMention(ReservationSlackEvent.CANCEL_FAIL, reservation.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
     }
 
-    public void handleCancelSuccess(Reservation reservation, BookingOrderMessage message, OmhCancelBookingResponse omhCancelBookingResponse) {
+    public void handleCancelSuccess(Reservation reservation, BookingOrderMessage message, String cancelConfirmNo, BigDecimal omhCancelPenaltyDepositPrice) {
         BigDecimal cancelPenaltyDepositPrice;
         BigDecimal cancelPenaltySalePrice;
         if (!profile.contains("stage") && !profile.contains("prod")) {
@@ -104,8 +117,8 @@ public class CancelConsumeService {
             cancelPenaltySalePrice = reservation.getSalePrice().subtract(message.getCancelRefundAmountChecked());
             cancelPenaltyDepositPrice = OmhPriceCalculateUtils.reverseToDepositPrice(cancelPenaltySalePrice, reservation.getMrtCommissionRate());
         } else {
-            cancelPenaltyDepositPrice = nonNull(omhCancelBookingResponse.getCancelPenaltyAmount()) ?
-                                        omhCancelBookingResponse.getCancelPenaltyAmount() :
+            cancelPenaltyDepositPrice = nonNull(omhCancelPenaltyDepositPrice) ?
+                                        omhCancelPenaltyDepositPrice :
                                         BigDecimal.ZERO;
             cancelPenaltySalePrice = OmhPriceCalculateUtils.toSalePrice(cancelPenaltyDepositPrice, reservation.getMrtCommissionRate());
         }
@@ -114,9 +127,25 @@ public class CancelConsumeService {
             bookingOrderMessageConverter.toCanceledBy(message),
             message.getCancelReason(),
             message.getCancelReasonType(),
-            omhCancelBookingResponse.getCancelConfirmNo(),
+            cancelConfirmNo,
             cancelPenaltyDepositPrice,
             cancelPenaltySalePrice
         );
+    }
+
+    private void saveBookingDetailApiLog(String mrtReservationNo, ApiLogType logType, String logStr) {
+        try {
+            reservationApiLogService.saveBookingDetailForCancelCheckLog(mrtReservationNo, logType, logStr);
+        } catch (Throwable t) {
+            log.error("{} - booking detail api log save fail", mrtReservationNo);
+        }
+    }
+
+    private void saveCancelBookingApiLog(String mrtReservationNo, ApiLogType logType, String logStr) {
+        try {
+            reservationApiLogService.saveCancelBookingLog(mrtReservationNo, logType, logStr);
+        } catch (Throwable t) {
+            log.error("{} - cancel booking api log save fail", mrtReservationNo);
+        }
     }
 }
