@@ -40,8 +40,6 @@ public class CancelRefundResponseConverter {
                                            .mrtCancelCommissionAmount(mrtCancelCommission)
                                            .currency(CurrencyCode.KRW)
                                            .build()))
-            .providerCode(ProviderCode.STAYNET)
-            .providerType(ProviderType.MRT)
             .bookingErrorCode(null)
             .build();
     }

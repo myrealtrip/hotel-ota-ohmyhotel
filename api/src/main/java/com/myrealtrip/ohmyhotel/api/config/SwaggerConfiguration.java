@@ -13,7 +13,7 @@ public class SwaggerConfiguration {
     public OpenAPI openAPI() {
         return new OpenAPI()
             .info(new Info()
-                      .title("staynet external api")
+                      .title("ohmyhotel api")
                       .description(""))
             .specVersion(SpecVersion.V30);
     }
