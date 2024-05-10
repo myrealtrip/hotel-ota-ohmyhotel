@@ -35,8 +35,11 @@ public class OmhHotelsAvailabilityAgent {
     }
 
     public OmhHotelsAvailabilityResponse getHotelsAvailability(OmhHotelsAvailabilityRequest request) {
+        log.info("OmhHotelsAvailabilityRequest: {}", ObjectMapperUtils.writeAsString(request));
         try {
-            return getHotelsAvailabilityMono(request).block();
+            OmhHotelsAvailabilityResponse response =  getHotelsAvailabilityMono(request).block();
+            log.info("OmhHotelsAvailabilityResponse: {}", ObjectMapperUtils.writeAsString(response));
+            return response;
         } catch (OmhApiException e) {
             log.error(AgentConstants.LOG_FORMAT, HOTELS_AVAILABILITY, ObjectMapperUtils.writeAsString(request), e.getResponse());
             throw e;
