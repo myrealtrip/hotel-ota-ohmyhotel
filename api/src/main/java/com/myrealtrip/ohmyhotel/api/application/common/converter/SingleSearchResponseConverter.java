@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
+
 @Component
 @RequiredArgsConstructor
 public class SingleSearchResponseConverter {
@@ -150,14 +152,15 @@ public class SingleSearchResponseConverter {
             .collect(Collectors.toList());
     }
 
-    private List<RateAvailability> toRateAvailabilities(List<OmhRoomAvailability> omhSimpleAvailabilities,
+    private List<RateAvailability> toRateAvailabilities(List<OmhRoomAvailability> omhRoomAvailabilities,
                                                         BigDecimal mrtCommissionRate,
                                                         int ratePlanCount,
                                                         ZeroMargin zeroMargin) {
-        if (CollectionUtils.isEmpty(omhSimpleAvailabilities)) {
+        if (CollectionUtils.isEmpty(omhRoomAvailabilities)) {
             return Collections.emptyList();
         }
-        return omhSimpleAvailabilities.stream()
+        return omhRoomAvailabilities.stream()
+            .filter(omhRoomAvailability -> isNull(omhRoomAvailability.getTotalMspAmount()))
             .map(omhRoomSimpleAvailability -> toRateAvailability(omhRoomSimpleAvailability, mrtCommissionRate, zeroMargin))
             .sorted(CommonSearchResponseConverter.RATE_COMPARATOR)
             .limit(ratePlanCount)

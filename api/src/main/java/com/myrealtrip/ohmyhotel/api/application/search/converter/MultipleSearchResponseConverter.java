@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
+
 @Component
 @RequiredArgsConstructor
 public class MultipleSearchResponseConverter {
@@ -111,6 +113,7 @@ public class MultipleSearchResponseConverter {
             return Collections.emptyList();
         }
         return omhRoomSimpleAvailabilities.stream()
+            .filter(omhRoomSimpleAvailability -> isNull(omhRoomSimpleAvailability.getTotalMspAmount()))
             .map(omhRoomSimpleAvailability -> toRateAvailability(omhRoomSimpleAvailability, mrtCommissionRate, zeroMargin))
             .sorted(CommonSearchResponseConverter.RATE_COMPARATOR)
             .limit(ratePlanCount)
