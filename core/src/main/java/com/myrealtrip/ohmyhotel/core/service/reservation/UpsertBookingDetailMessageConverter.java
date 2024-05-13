@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.core.service.reservation;
 
+import com.google.common.collect.Lists;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Reservation;
 import com.myrealtrip.ohmyhotel.core.service.BedDescriptionConverter;
 import com.myrealtrip.ohmyhotel.core.service.CommonSearchResponseConverter;
@@ -20,6 +21,7 @@ import com.myrealtrip.unionstay.common.model.booking.retrieve.RoomBookingAmount;
 import com.myrealtrip.unionstay.common.model.booking.retrieve.RoomBookingBed;
 import com.myrealtrip.unionstay.common.model.booking.retrieve.RoomBookingDailyAmount;
 import com.myrealtrip.unionstay.common.model.booking.retrieve.RoomBookingRateBenefit;
+import com.myrealtrip.unionstay.common.model.booking.retrieve.RoomBookingSurcharge;
 import com.myrealtrip.unionstay.common.model.booking.retrieve.RoomBookingTotalPayment;
 import com.myrealtrip.unionstay.common.model.booking.retrieve.RoomCancelReason;
 import com.myrealtrip.unionstay.common.model.booking.retrieve.Voucher;
@@ -33,6 +35,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,7 +88,7 @@ public class UpsertBookingDetailMessageConverter {
             .totalPayment(toTotalPayment(reservation))
             .profits(toProfits(reservation))
             .dailyAmountList(toDailyAmountList(reservation))
-            .surcharges(Collections.emptyList())
+            .surcharges(toSurCharges(reservation))
             .onSiteSurcharges(List.of())
             .monetaryPromotion(null)
             .nonMonetaryPromotions(List.of())
@@ -117,17 +120,37 @@ public class UpsertBookingDetailMessageConverter {
 
     // 통합숙소는 multi-room 예약이 불가능하니 reservation 의 가격정보로 세팅
     private RoomBookingTotalPayment toTotalPayment(Reservation reservation) {
+        BigDecimal inclusive = BooleanUtils.isTrue(reservation.getZeroMarginApply()) ?
+                               reservation.getZeroMarginApplyPrice() :
+                               reservation.getSalePrice();
+        BigDecimal vat = BooleanUtils.isTrue(reservation.getZeroMarginApply()) ?
+                         OmhPriceCalculateUtils.toVat(reservation.getZeroMarginApplyPrice()) :
+                         OmhPriceCalculateUtils.toVat(reservation.getSalePrice());
         return RoomBookingTotalPayment.builder()
             .currency(CurrencyCode.KRW)
-            .inclusive(BooleanUtils.isTrue(reservation.getZeroMarginApply()) ?
-                       reservation.getZeroMarginApplyPrice() :
-                       reservation.getSalePrice())
-            .exclusive(BooleanUtils.isTrue(reservation.getZeroMarginApply()) ?
-                       reservation.getZeroMarginApplyPrice() :
-                       reservation.getSalePrice())
-            .taxAndServiceFee(BigDecimal.valueOf(0))
+            .inclusive(inclusive)
+            .exclusive(inclusive.subtract(vat))
+            .taxAndServiceFee(vat)
             .refundedAmount(reservation.getCancelRefundAmount())
             .build();
+    }
+
+    private List<RoomBookingSurcharge> toSurCharges(Reservation reservation) {
+        List<RoomBookingSurcharge> results =  new ArrayList<>();
+        BigDecimal vat = BooleanUtils.isTrue(reservation.getZeroMarginApply()) ?
+                         OmhPriceCalculateUtils.toVat(reservation.getZeroMarginApplyPrice()) :
+                         OmhPriceCalculateUtils.toVat(reservation.getSalePrice());
+        results.add(RoomBookingSurcharge.builder()
+                        .id(null)
+                        .name("세금 및 수수료")
+                        .margin(null)
+                        .currency(CurrencyCode.KRW)
+                        .inclusive(vat)
+                        .exclusive(vat)
+                        .tax(BigDecimal.valueOf(0))
+                        .fee(BigDecimal.valueOf(0))
+                        .build());
+        return results;
     }
 
     private ReservationProfits toProfits(Reservation reservation) {

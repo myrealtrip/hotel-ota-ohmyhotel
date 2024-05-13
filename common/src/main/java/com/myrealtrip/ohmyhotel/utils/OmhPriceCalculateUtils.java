@@ -35,4 +35,13 @@ public class OmhPriceCalculateUtils {
     public static BigDecimal reverseToDepositPrice(BigDecimal price, BigDecimal commissionRate) {
         return price.divide(commissionRate.multiply(BigDecimal.valueOf(0.01)).add(BigDecimal.ONE), 0, RoundingMode.DOWN);
     }
+
+    /**
+     * 세금을 계산한다.
+     * @param salePrice 판매가
+     * @return
+     */
+    public static BigDecimal toVat(BigDecimal salePrice) {
+        return salePrice.divide(new BigDecimal("11"), 0, RoundingMode.DOWN);
+    }
 }

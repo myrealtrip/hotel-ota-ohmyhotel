@@ -183,7 +183,7 @@ public class SingleSearchResponseConverter {
                           commonSearchResponseConverter.toZeroMarginTotalPayment(omhRoomAvailability.getTotalNetAmount(), mrtCommissionRate, zeroMargin) :
                           commonSearchResponseConverter.toTotalPayment(omhRoomAvailability.getTotalNetAmount(), mrtCommissionRate))
             .commissions(commonSearchResponseConverter.toCommissions(omhRoomAvailability.getTotalNetAmount(), mrtCommissionRate))
-            .surCharges(Collections.emptyList())
+            .surCharges(commonSearchResponseConverter.toSurcharges(omhRoomAvailability.getTotalNetAmount(), mrtCommissionRate, zeroMargin))
             .onSiteSurCharges(Collections.emptyList())
             .monetaryPromotions(Collections.emptyList())
             .mrtPromotions(zeroMargin.isOn() ?

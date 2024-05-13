@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.core.service;
 
+import com.google.common.collect.Lists;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
 import com.myrealtrip.ohmyhotel.enumarate.PenaltyBasis;
@@ -8,6 +9,7 @@ import com.myrealtrip.ohmyhotel.enumarate.RateOrAmount;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCancelPolicy;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCancelPolicy.OmhCancelPolicyValue;
 import com.myrealtrip.ohmyhotel.utils.OmhPriceCalculateUtils;
+import com.myrealtrip.srtcommon.support.currency.CurrencyCode;
 import com.myrealtrip.srtcommon.support.utils.NumericUtils;
 import com.myrealtrip.srtcommon.support.utils.ZeroMarginUtils;
 import com.myrealtrip.unionstay.common.constant.CancelPolicyType;
@@ -18,6 +20,7 @@ import com.myrealtrip.unionstay.dto.hotelota.search.response.Commissions.Unionst
 import com.myrealtrip.unionstay.dto.hotelota.search.response.RateAvailability;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.RateBenefit;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.RoomAvailability;
+import com.myrealtrip.unionstay.dto.hotelota.search.response.Surcharge;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.TotalPayment;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.CancelPolicy;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.OffsetCancelPolicy;
@@ -27,6 +30,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -89,21 +93,23 @@ public class CommonSearchResponseConverter {
     }
 
     public TotalPayment toTotalPayment(BigDecimal omhTotalNetAmount, BigDecimal mrtCommissionRate) {
-        double salePrice = OmhPriceCalculateUtils.toSalePrice(omhTotalNetAmount, mrtCommissionRate).doubleValue();
+        BigDecimal salePrice = OmhPriceCalculateUtils.toSalePrice(omhTotalNetAmount, mrtCommissionRate);
+        BigDecimal vat = OmhPriceCalculateUtils.toVat(salePrice);
         return TotalPayment.builder()
-            .exclusive(salePrice)
-            .baseExclusive(salePrice)
-            .inclusive(salePrice)
-            .baseInclusive(salePrice)
+            .exclusive(salePrice.subtract(vat).doubleValue())
+            .baseExclusive(salePrice.subtract(vat).doubleValue())
+            .inclusive(salePrice.doubleValue())
+            .baseInclusive(salePrice.doubleValue())
             .build();
     }
 
     public TotalPayment toZeroMarginTotalPayment(BigDecimal omhTotalNetAmount, BigDecimal mrtCommissionRate, ZeroMargin zeroMargin) {
         BigDecimal salePrice = OmhPriceCalculateUtils.toSalePrice(omhTotalNetAmount, mrtCommissionRate);
         BigDecimal zeroMarginSalePrice = ZeroMarginUtils.toZeroMarginSalePrice(omhTotalNetAmount, zeroMargin.getZeroMarginRate());
+        BigDecimal vat = OmhPriceCalculateUtils.toVat(zeroMarginSalePrice);
         return TotalPayment.builder()
-            .exclusive(zeroMarginSalePrice.doubleValue())
-            .baseExclusive(salePrice.doubleValue())
+            .exclusive(zeroMarginSalePrice.subtract(vat).doubleValue())
+            .baseExclusive(salePrice.subtract(vat).doubleValue())
             .inclusive(zeroMarginSalePrice.doubleValue())
             .baseInclusive(salePrice.doubleValue())
             .build();
@@ -138,5 +144,32 @@ public class CommonSearchResponseConverter {
             return promotionValue;
         }
         return null;
+    }
+
+    public List<Surcharge> toSurcharges(BigDecimal omhTotalNetAmount, BigDecimal mrtCommissionRate, ZeroMargin zeroMargin) {
+        BigDecimal salePrice = OmhPriceCalculateUtils.toSalePrice(omhTotalNetAmount, mrtCommissionRate);
+        BigDecimal vat;
+        if (zeroMargin.isOn()) {
+            BigDecimal zeroMarginSalePrice = ZeroMarginUtils.toZeroMarginSalePrice(omhTotalNetAmount, zeroMargin.getZeroMarginRate());
+            vat = OmhPriceCalculateUtils.toVat(zeroMarginSalePrice);
+        } else {
+            vat = OmhPriceCalculateUtils.toVat(salePrice);
+        }
+
+        List<Surcharge> results = new ArrayList<>();
+        results.add(Surcharge.builder()
+                        .id(null)
+                        .name("세금 및 수수료")
+                        .margin(null)
+                        .taxAndFee(true)
+                        .currency(CurrencyCode.KRW)
+                        .korInclusive(vat.doubleValue())
+                        .inclusive(vat.doubleValue())
+                        .exclusive(vat.doubleValue())
+                        .tax(0d)
+                        .fee(0d)
+                        .charge(null)
+                        .build());
+        return results;
     }
 }
