@@ -32,7 +32,7 @@ public class OrderEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id")
+    @Column(name = "id")
     private Long orderId;
 
     @Column(name = "hotel_id")

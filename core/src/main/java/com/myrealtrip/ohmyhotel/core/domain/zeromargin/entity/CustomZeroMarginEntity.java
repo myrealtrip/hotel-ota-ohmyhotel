@@ -28,7 +28,7 @@ import java.math.BigDecimal;
 public class CustomZeroMarginEntity extends BaseEntity {
 
     @Id
-    @Column(name = "custom_zero_margin_id", nullable = false)
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long customZeroMarginId;
 

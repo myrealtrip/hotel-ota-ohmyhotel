@@ -26,7 +26,7 @@ import java.math.BigDecimal;
 public class PartnerEntity extends BaseEntity {
 
     @Id
-    @Column(name = "partner_id", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long partnerId;
 
     @Column(name = "commission_type")

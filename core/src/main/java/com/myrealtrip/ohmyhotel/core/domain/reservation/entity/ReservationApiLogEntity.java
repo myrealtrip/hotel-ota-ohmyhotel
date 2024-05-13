@@ -28,7 +28,7 @@ public class ReservationApiLogEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reservation_api_log_id")
+    @Column(name = "id")
     private Long reservationApiLogId;
 
     @Column(name = "log_key")

@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 public class GlobalZeroMarginEntity extends BaseEntity {
 
     @Id
-    @Column(name = "global_zero_margin_id", nullable = false)
+    @Column(name = "id", nullable = false)
     private Long globalZeroMarginId;
 
     @Column(name = "zero_margin_rate")

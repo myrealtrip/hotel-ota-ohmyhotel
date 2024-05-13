@@ -35,7 +35,7 @@ import java.util.List;
 public class HotelEntity extends BaseEntity {
 
     @Id
-    @Column(name = "hotel_id")
+    @Column(name = "id")
     private Long hotelId;
 
     @Column(name = "ko_name")
