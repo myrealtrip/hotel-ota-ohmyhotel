@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
 import com.myrealtrip.ohmyhotel.enumarate.PromotionType;
@@ -32,6 +33,7 @@ public class OmhRoomsAvailabilityResponse extends OmhCommonResponse {
 
     private List<OmhRoomAvailability> rooms;
 
+    @JsonIgnore
     public Map<String, List<OmhRoomAvailability>> getRoomsGroupByRoomTypeCode() {
         if (isNull(rooms)) {
             return Collections.emptyMap();
