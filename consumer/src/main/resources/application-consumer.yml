@@ -96,29 +96,15 @@ logging:
 myrealtrip:
   datasource:
     read-write:
-      jdbc-url: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gEtQz3Vh1qI2hlfdhmewWLXAAABFTCCAREGCSqGSIb3DQEHBqCCAQIwgf8CAQAwgfkGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMDWCtgmaLST3cvNSDAgEQgIHLkQGfxZ1/AGI01HZu5V2ghTZcKYU0xMesgFV7Guo3gpMaX0MhEJLN1R46ITVn8E6ADnNvJDnSdTu3hdMasGgoA+D9veYXpHP3HOypOsQqaaOubuUA7QdQ0RifPeLb+tzkSeMOnMz440OEWxCqblv6wZAqOjt/qMEO+rYwd5PhnHdlTxYK/hvN22RZgzvlwRfo5eOmEIoPhIRurzApHJhma9sKTSUG5vhrO7CD5cJSIPKYJPdIzU7qogOTD6FRu95k/Lpo6p6NCT72jJU=
-      username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gFWr+z5NvViCYJvhL3O6bBIAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMI1lWjTiKY9gkHLSIAgEQgCsy9ByvWDIqhRzU+K+OnQ1dEBAr88F9yy+MRj1gX/h67TVwuBTbsGu272wN
-      password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gF9WDCYI4Nopxy3RkzwkaN9AAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMOtsACoAfwJQVIT4UAgEQgCuV2sqqUyXWgTpWj5n83iW7iZgMt7Zd02C/e65nthN+gLgReKObDdAbW54I
-      pool-name: hikari-cp
+      username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gHugG4tn4H2QWFqB2x7jhWtAAAAcDBuBgkqhkiG9w0BBwagYTBfAgEAMFoGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMK7tSFV3sNV7GhPf5AgEQgC09VFk0WdIm4cgUINJ6Lgo7Ci71kBx2A+aobIshM6ll9UWR2Tdg0OKAQWmXg8U=
+      password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gEAELIH2OxZB413drkX73IsAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM0MZWPQsOQNzIAD+EAgEQgCv7PRVbP0dNEVzYi+ljJfZrdXZVoDP1bEgozQE1ucnfwbAaMjPnvQx7W1tm
       extra:
         maximum-pool-size: 50
-        data-source-properties:
-          cachePrepStmts: true
-          prepStmtCacheSize: 250
-          prepStmtCacheSqlLimit: 2048
-          useServerPrepStmts: true
     read-only:
-      jdbc-url: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gFkeQavQESVh8cxLQOA8p7oAAABGTCCARUGCSqGSIb3DQEHBqCCAQYwggECAgEAMIH8BgkqhkiG9w0BBwEwHgYJYIZIAWUDBAEuMBEEDEz0Gb0SBJ0TXg834QIBEICBzudVppe2Z5O1duMH3iRhTNw/KUpCbCFHclwumdHzj7r1URYpsXEOjYGm7Czu/c+tJKGU7H20CepP5YdsBhAapGQMRsxfh4FSjOpjJu4bnAgdfmEuS1lMqXUCXzDtJSFmqfUJSlemRbUzp0+avfgr3fxvnqDg/4w2kCeMUlQF6y2Aw723+UbUYyGbdx6I+zaooA5mBKI61ngsVnXgerWFWQyRbSrgmPFtyJpRZHNuUWX0McrCKwUmHWkmb+/IS5MIKzsy5izB1c4ElXu/bJN1
-      username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gFWr+z5NvViCYJvhL3O6bBIAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMI1lWjTiKY9gkHLSIAgEQgCsy9ByvWDIqhRzU+K+OnQ1dEBAr88F9yy+MRj1gX/h67TVwuBTbsGu272wN
-      password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gF9WDCYI4Nopxy3RkzwkaN9AAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMOtsACoAfwJQVIT4UAgEQgCuV2sqqUyXWgTpWj5n83iW7iZgMt7Zd02C/e65nthN+gLgReKObDdAbW54I
-      pool-name: hikari-cp-slave
+      username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gHugG4tn4H2QWFqB2x7jhWtAAAAcDBuBgkqhkiG9w0BBwagYTBfAgEAMFoGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMK7tSFV3sNV7GhPf5AgEQgC09VFk0WdIm4cgUINJ6Lgo7Ci71kBx2A+aobIshM6ll9UWR2Tdg0OKAQWmXg8U=
+      password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gEAELIH2OxZB413drkX73IsAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM0MZWPQsOQNzIAD+EAgEQgCv7PRVbP0dNEVzYi+ljJfZrdXZVoDP1bEgozQE1ucnfwbAaMjPnvQx7W1tm
       extra:
         maximum-pool-size: 50
-        data-source-properties:
-          cachePrepStmts: true
-          prepStmtCacheSize: 250
-          prepStmtCacheSqlLimit: 2048
-          useServerPrepStmts: true
 ---
 spring:
   config:
@@ -140,12 +126,12 @@ logging:
 myrealtrip:
   datasource:
     read-write:
-      username:
-      password:
+      username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gHugG4tn4H2QWFqB2x7jhWtAAAAcDBuBgkqhkiG9w0BBwagYTBfAgEAMFoGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMK7tSFV3sNV7GhPf5AgEQgC09VFk0WdIm4cgUINJ6Lgo7Ci71kBx2A+aobIshM6ll9UWR2Tdg0OKAQWmXg8U=
+      password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gEAELIH2OxZB413drkX73IsAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM0MZWPQsOQNzIAD+EAgEQgCv7PRVbP0dNEVzYi+ljJfZrdXZVoDP1bEgozQE1ucnfwbAaMjPnvQx7W1tm
       extra:
         maximum-pool-size: 50
     read-only:
-      username:
-      password:
+      username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gHugG4tn4H2QWFqB2x7jhWtAAAAcDBuBgkqhkiG9w0BBwagYTBfAgEAMFoGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMK7tSFV3sNV7GhPf5AgEQgC09VFk0WdIm4cgUINJ6Lgo7Ci71kBx2A+aobIshM6ll9UWR2Tdg0OKAQWmXg8U=
+      password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gEAELIH2OxZB413drkX73IsAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM0MZWPQsOQNzIAD+EAgEQgCv7PRVbP0dNEVzYi+ljJfZrdXZVoDP1bEgozQE1ucnfwbAaMjPnvQx7W1tm
       extra:
         maximum-pool-size: 50

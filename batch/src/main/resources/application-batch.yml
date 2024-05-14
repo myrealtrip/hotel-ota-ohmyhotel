@@ -49,13 +49,13 @@ logging:
 myrealtrip:
   datasource:
     read-write:
-      username:
-      password:
+      username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gG5DSXXD7vbONdz2PLNlR5EAAAAbTBrBgkqhkiG9w0BBwagXjBcAgEAMFcGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMVJWmE/c4bwTQ2tq+AgEQgCovJoOy81DH3fXHtjQphVShy8HH3AxDqeSSXxGQk4KhUoXCoUbCoknMBJY=
+      password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gEAELIH2OxZB413drkX73IsAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM0MZWPQsOQNzIAD+EAgEQgCv7PRVbP0dNEVzYi+ljJfZrdXZVoDP1bEgozQE1ucnfwbAaMjPnvQx7W1tm
       extra:
         maximum-pool-size: 10
     read-only:
-      username:
-      password:
+      username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gG5DSXXD7vbONdz2PLNlR5EAAAAbTBrBgkqhkiG9w0BBwagXjBcAgEAMFcGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMVJWmE/c4bwTQ2tq+AgEQgCovJoOy81DH3fXHtjQphVShy8HH3AxDqeSSXxGQk4KhUoXCoUbCoknMBJY=
+      password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gEAELIH2OxZB413drkX73IsAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM0MZWPQsOQNzIAD+EAgEQgCv7PRVbP0dNEVzYi+ljJfZrdXZVoDP1bEgozQE1ucnfwbAaMjPnvQx7W1tm
       extra:
         maximum-pool-size: 10
 
@@ -73,12 +73,12 @@ logging:
 myrealtrip:
   datasource:
     read-write:
-      username:
-      password:
+      username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gG5DSXXD7vbONdz2PLNlR5EAAAAbTBrBgkqhkiG9w0BBwagXjBcAgEAMFcGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMVJWmE/c4bwTQ2tq+AgEQgCovJoOy81DH3fXHtjQphVShy8HH3AxDqeSSXxGQk4KhUoXCoUbCoknMBJY=
+      password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gEAELIH2OxZB413drkX73IsAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM0MZWPQsOQNzIAD+EAgEQgCv7PRVbP0dNEVzYi+ljJfZrdXZVoDP1bEgozQE1ucnfwbAaMjPnvQx7W1tm
       extra:
         maximum-pool-size: 10
     read-only:
-      username:
-      password:
+      username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gG5DSXXD7vbONdz2PLNlR5EAAAAbTBrBgkqhkiG9w0BBwagXjBcAgEAMFcGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMVJWmE/c4bwTQ2tq+AgEQgCovJoOy81DH3fXHtjQphVShy8HH3AxDqeSSXxGQk4KhUoXCoUbCoknMBJY=
+      password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gEAELIH2OxZB413drkX73IsAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM0MZWPQsOQNzIAD+EAgEQgCv7PRVbP0dNEVzYi+ljJfZrdXZVoDP1bEgozQE1ucnfwbAaMjPnvQx7W1tm
       extra:
         maximum-pool-size: 10
