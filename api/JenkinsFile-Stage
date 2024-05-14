@@ -1,0 +1,32 @@
+@Library('mrt3-jenkins-library@master') _
+
+pipeline {
+  agent any
+
+  stages {
+    stage('Build') {
+      steps {
+        mrtBuildForJar()
+      }
+    }
+    stage('Push Revision') {
+      steps {
+        mrtPushRevisionForDefaultOpenJDKDockerAmiJar(
+        'javaagent:/myrealtrip/apps/jmx-prometheus/jmx_prometheus_javaagent-0.12.0.jar=9404:/myrealtrip/apps/jmx-prometheus/config.yaml':''
+        )
+      }
+    }
+    stage('Deploy') {
+      steps {
+        mrtDeploy()
+      }
+    }
+  }
+
+  environment {
+    SUB_MODULE_NAME = 'api'
+    APPLICATION_NAME = 'mrt-stage-api-ohmyhotel'
+    SPRING_PROFILES_ACTIVE = 'stage'
+    pinpoint_name = 'stage-ohmyhotel-api'
+  }
+}
