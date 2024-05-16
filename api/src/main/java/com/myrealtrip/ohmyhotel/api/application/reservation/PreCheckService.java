@@ -42,7 +42,7 @@ public class PreCheckService {
         String mrtReservationNo = preCheckRequest.getMrtOrderNumber();
         Order order = orderProvider.getByOrderId(Long.valueOf(preCheckRequest.getPreCheckApiKey()));
 
-        OmhPreCheckRequest omhPreCheckRequest = preCheckRequestConverter.toOmhPreCheckRequest(preCheckRequest, order.getAdditionalInfo().getRateType(), order.getDepositPrice());
+        OmhPreCheckRequest omhPreCheckRequest = preCheckRequestConverter.toOmhPreCheckRequest(preCheckRequest, order);
         OmhPreCheckResponse omhPreCheckResponse = omhPreCheckAgent.preCheck(omhPreCheckRequest);
         saveApiLog(mrtReservationNo, omhPreCheckRequest, omhPreCheckResponse);
 

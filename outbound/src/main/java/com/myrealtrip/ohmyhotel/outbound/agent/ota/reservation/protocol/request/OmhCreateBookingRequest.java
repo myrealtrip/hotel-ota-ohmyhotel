@@ -37,6 +37,8 @@ public class OmhCreateBookingRequest {
 
     private String roomTypeCode;
 
+    private String roomToken;
+
     private String ratePlanCode;
 
     private String freeBreakfastName;

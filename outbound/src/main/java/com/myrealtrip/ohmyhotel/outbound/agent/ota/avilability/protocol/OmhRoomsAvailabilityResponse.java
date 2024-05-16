@@ -65,6 +65,8 @@ public class OmhRoomsAvailabilityResponse extends OmhCommonResponse {
 
         private String freeBreakfastName;
 
+        private String roomToken;
+
         private String ratePlanCode;
 
         private String ratePlanName;

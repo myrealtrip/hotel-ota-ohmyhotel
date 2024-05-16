@@ -56,6 +56,7 @@ public class OrderConverter {
                             .build())
             .additionalInfo(AdditionalOrderInfo.builder()
                                 .rateType(omhRoomAvailability.getRateType())
+                                .roomToken(omhRoomAvailability.getRoomToken())
                                 .cancelPolicy(omhRoomAvailability.getCancellationPolicy())
                                 .bedGroups(omhRoomAvailability.getBedGroups())
                                 .mealBasisCode(omhRoomAvailability.getMealBasisCode())
