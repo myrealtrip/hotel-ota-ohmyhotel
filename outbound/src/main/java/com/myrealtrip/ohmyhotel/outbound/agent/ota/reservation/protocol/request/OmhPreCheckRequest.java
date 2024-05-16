@@ -30,6 +30,8 @@ public class OmhPreCheckRequest {
 
     private String roomTypeCode;
 
+    private String roomToken;
+
     private String ratePlanCode;
 
     private List<OmhRoomGuestCount> rooms;
