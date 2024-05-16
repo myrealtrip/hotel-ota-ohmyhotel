@@ -38,8 +38,6 @@ public class BookingConsumer {
         BookingOrderMessage message = null;
         try {
             message = ObjectMapperUtils.readString(payload, BookingOrderMessage.class);
-            log.info("BookingOrderMessage : {}", message.toString());
-
             if (isOhMyHotelEvent(message)) {
                 consume(message);
             }

@@ -28,6 +28,7 @@ public class OmhCreateBookingRequestConverter {
             .checkInDate(reservation.getCheckInDate())
             .checkOutDate(reservation.getCheckOutDate())
             .roomTypeCode(reservation.getRoomTypeCode())
+            .roomToken(reservation.getAdditionalInfo().getRoomToken())
             .ratePlanCode(reservation.getRatePlanCode())
             .freeBreakfastName(null)
             .rooms(toOmhRoomGuestInfos(reservation))

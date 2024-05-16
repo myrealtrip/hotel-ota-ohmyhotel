@@ -26,6 +26,7 @@ import java.util.List;
 public class AdditionalOrderInfo {
 
     private RateType rateType;
+    private String roomToken;
     private OmhCancelPolicy cancelPolicy;
     private List<OmhBedGroup> bedGroups;
     private MealBasisCode mealBasisCode;
