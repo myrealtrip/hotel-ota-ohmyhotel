@@ -168,7 +168,7 @@ spring:
       on-profile: "stage"
 
 ohmyhotel:
-  api: # TODO api-key 세팅 필요
+  api:
     base-url: https://api-ota-v2.ohmyhotel.com
     api-key: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gHLzGKoz9qyKKhAPYN+JK25AAAAlTCBkgYJKoZIhvcNAQcGoIGEMIGBAgEAMHwGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMU3uWAwQRIGYHJTwBAgEQgE8ROc+iZcNYnaNIpnWVUNxr769wCjXFMnkvrLr7xpB2aeaHiYmQRA9fAcJ8nqL3qqB5USMSD9zJ1Ry7zDTtmQdquey46NISsePvlDjcwPBv
     secret: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gGomjPvLS3YF+IjepZWvjnAAAAAaDBmBgkqhkiG9w0BBwagWTBXAgEAMFIGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMnlSTVwRhz8twZ6LzAgEQgCVe/3ZzP7yUTmSXidxpSrRzNPzwqdPI02Rox/bAZ4pnZXOSofiH
@@ -186,7 +186,7 @@ spring:
       on-profile: "prod"
 
 ohmyhotel:
-  api: # TODO api-key 세팅 필요
+  api:
     base-url: https://api-ota-v2.ohmyhotel.com
     api-key: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gHLzGKoz9qyKKhAPYN+JK25AAAAlTCBkgYJKoZIhvcNAQcGoIGEMIGBAgEAMHwGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMU3uWAwQRIGYHJTwBAgEQgE8ROc+iZcNYnaNIpnWVUNxr769wCjXFMnkvrLr7xpB2aeaHiYmQRA9fAcJ8nqL3qqB5USMSD9zJ1Ry7zDTtmQdquey46NISsePvlDjcwPBv
     secret: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gGomjPvLS3YF+IjepZWvjnAAAAAaDBmBgkqhkiG9w0BBwagWTBXAgEAMFIGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMnlSTVwRhz8twZ6LzAgEQgCVe/3ZzP7yUTmSXidxpSrRzNPzwqdPI02Rox/bAZ4pnZXOSofiH
