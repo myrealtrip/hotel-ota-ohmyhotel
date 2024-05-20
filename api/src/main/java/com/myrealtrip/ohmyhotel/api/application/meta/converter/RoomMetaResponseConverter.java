@@ -71,14 +71,14 @@ public class RoomMetaResponseConverter {
                 .build();
             roomMetaAttributes.add(roomMetaAttribute);
         }
-        if (nonNull(omhRoomInfoResponse.getRoomSizeFeet())) {
+        if (nonNull(omhRoomInfoResponse.getRoomSizeFeet()) && omhRoomInfoResponse.getRoomSizeFeet() > 0) {
             roomMetaAttributes.add(RoomMetaAttribute.builder()
                                        .providerAttributeId(ROOM_SIZE_FEET_PROVIDER_ATTRIBUTE_ID)
                                        .providerAttributeGroup(ROOM_SIZE_PROVIDER_ATTRIBUTE_GROUP)
                                        .providerLabel(String.format(ROOM_SIZE_FEET_PROVIDER_LABEL_FORMAT, omhRoomInfoResponse.getRoomSizeFeet()))
                                        .build());
         }
-        if (nonNull(omhRoomInfoResponse.getRoomSizeMeter())) {
+        if (nonNull(omhRoomInfoResponse.getRoomSizeMeter()) && omhRoomInfoResponse.getRoomSizeMeter() > 0) {
             roomMetaAttributes.add(RoomMetaAttribute.builder()
                                        .providerAttributeId(ROOM_SIZE_METER_PROVIDER_ATTRIBUTE_ID)
                                        .providerAttributeGroup(ROOM_SIZE_PROVIDER_ATTRIBUTE_GROUP)
