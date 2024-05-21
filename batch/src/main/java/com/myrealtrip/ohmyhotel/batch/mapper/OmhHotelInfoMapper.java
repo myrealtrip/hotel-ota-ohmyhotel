@@ -8,11 +8,13 @@ import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.HotelModifyInfo;
 import com.myrealtrip.ohmyhotel.core.domain.hotel.dto.Photo;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response.OmhStaticHotelInfoListResponse.OmhHotelInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.mapstruct.Mapper;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -21,35 +23,63 @@ import static java.util.Objects.isNull;
 @Slf4j
 public class OmhHotelInfoMapper {
 
-    private static final Long TEST_HOTEL_ID = 862813L;
+    private static final List<Long> DEV_TEST_HOTEL_IDS = List.of(862813L);
+    private static final List<Long> PROD_TEST_HOTEL_IDS = List.of(858846L, 732447L, 164418L, 655329L, 985004L, 116929L, 370496L);
+
+    private static final Map<String, List<Long>> TEST_HOTEL_IDS_MAP = Map.of(
+        "local", DEV_TEST_HOTEL_IDS,
+        "dev", DEV_TEST_HOTEL_IDS,
+        "dev01", DEV_TEST_HOTEL_IDS,
+        "dev02", DEV_TEST_HOTEL_IDS,
+        "test", DEV_TEST_HOTEL_IDS,
+        "test01", DEV_TEST_HOTEL_IDS,
+        "test02", DEV_TEST_HOTEL_IDS,
+        "stage", PROD_TEST_HOTEL_IDS,
+        "prod", PROD_TEST_HOTEL_IDS
+    );
 
     @Value("${spring.profiles.active}")
     private String profile;
 
     public Hotel toHotel(OmhHotelInfoAggr omhHotelInfoAggr, HotelModifyInfo hotelModifyInfo) {
-        if (!profile.contains("stage") &&
-            !profile.contains("prod") &&
-            omhHotelInfoAggr.getHotelCode().equals(TEST_HOTEL_ID)) {
+        if (TEST_HOTEL_IDS_MAP.get(profile).contains(omhHotelInfoAggr.getHotelCode())) {
             return toTestHotel(omhHotelInfoAggr, hotelModifyInfo);
         }
         return toHotelBuilder(omhHotelInfoAggr, hotelModifyInfo).build();
     }
 
     /**
-     * 통합숙소 입점을 위해 필요한 필수정보를 테스트 호텔이 가지고 있지 않아 임의로 정보를 채웁니다.
+     * 통합숙소 입점을 위해 필요한 필수정보를 테스트 호텔이 가지고 있지 않을경우 임의로 정보를 채웁니다.
      */
     private Hotel toTestHotel(OmhHotelInfoAggr omhHotelInfoAggr, HotelModifyInfo hotelModifyInfo) {
         return toHotelBuilder(omhHotelInfoAggr, hotelModifyInfo)
-            .koAddress("2-19-2 Chiyozaki, Nishi-ku")
-            .enAddress("2-19-2 Chiyozaki, Nishi-ku")
-            .checkInTime("3:00 PM")
-            .checkOutTime("11:00 AM")
-            .latitude(34.67234)
-            .longitude(135.479768)
-            .photos(List.of(Photo.builder()
+            .koAddress(StringUtils.isEmpty(omhHotelInfoAggr.getKoInfo().getAddress()) ?
+                       "2-19-2 Chiyozaki, Nishi-ku" :
+                       omhHotelInfoAggr.getKoInfo().getAddress())
+            .enAddress(StringUtils.isEmpty(omhHotelInfoAggr.getEnInfo().getAddress()) ?
+                       "2-19-2 Chiyozaki, Nishi-ku" :
+                       omhHotelInfoAggr.getKoInfo().getAddress())
+            .checkInTime(StringUtils.isEmpty(omhHotelInfoAggr.getKoInfo().getCheckInTime()) ?
+                         "3:00 PM" :
+                         omhHotelInfoAggr.getKoInfo().getCheckInTime())
+            .checkOutTime(StringUtils.isEmpty(omhHotelInfoAggr.getKoInfo().getCheckOutTime()) ?
+                          "11:00 AM" :
+                          omhHotelInfoAggr.getKoInfo().getCheckOutTime())
+            .latitude((isNull(omhHotelInfoAggr.getKoInfo().getLatitude()) || omhHotelInfoAggr.getKoInfo().getLatitude() == 0) ?
+                      34.67234 :
+                      omhHotelInfoAggr.getKoInfo().getLatitude())
+            .longitude((isNull(omhHotelInfoAggr.getKoInfo().getLongitude()) || omhHotelInfoAggr.getKoInfo().getLongitude() == 0) ?
+                       135.479768 :
+                       omhHotelInfoAggr.getKoInfo().getLongitude())
+            .photos(CollectionUtils.isEmpty(omhHotelInfoAggr.getKoInfo().getPhotos()) ?
+                    List.of(Photo.builder()
                                 .url("https://photos01.ohmyhotel.com/hotels/11000000/10010000/10007500/10007435/039152d8_z.jpg")
                                 .order(1)
-                                .build()))
+                                .build()) :
+                    omhHotelInfoAggr.getKoInfo().getPhotos().stream()
+                        .map(omhHotelPhoto -> new Photo(omhHotelPhoto.getUrl(), omhHotelPhoto.getOrder(), omhHotelPhoto.getCaption()))
+                        .collect(Collectors.toList())
+            )
             .build();
     }
 
