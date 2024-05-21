@@ -19,15 +19,16 @@ public class CommonProducer {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
 
+    // TODO 주석 해체
     public void publishPropertyUpsert(UpsertPropertyMessage message) {
-        kafkaTemplate.send(topics.getUnionstayPropertyUpsert(), String.valueOf(message.getProviderPropertyId()), writeAsString(message));
+        // kafkaTemplate.send(topics.getUnionstayPropertyUpsert(), String.valueOf(message.getProviderPropertyId()), writeAsString(message));
     }
 
     public void publishMrtDiscountTypesUpdate(UpdatePropertyMrtDiscountTypesMessage message) {
-        kafkaTemplate.send(topics.getUnionstayPropertyMrtDiscountTypesUpdate(), writeAsString(message));
+        // kafkaTemplate.send(topics.getUnionstayPropertyMrtDiscountTypesUpdate(), writeAsString(message));
     }
 
     public void publishUpsertBookingDetail(UpsertBookingDetailMessage message) {
-        kafkaTemplate.send(topics.getUnionstayBookingDetailUpsert(), message.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
+        // kafkaTemplate.send(topics.getUnionstayBookingDetailUpsert(), message.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
     }
 }
