@@ -39,7 +39,7 @@ public class OmhHotelInfoMapper {
     private String profile;
 
     public Hotel toHotel(OmhHotelInfoAggr omhHotelInfoAggr, HotelModifyInfo hotelModifyInfo) {
-        if (TEST_HOTEL_IDS_MAP.get(profile).contains(omhHotelInfoAggr.getHotelCode())) {
+        if (TEST_HOTEL_IDS_MAP.getOrDefault(profile, List.of()).contains(omhHotelInfoAggr.getHotelCode())) {
             return toTestHotel(omhHotelInfoAggr, hotelModifyInfo);
         }
         return toHotelBuilder(omhHotelInfoAggr, hotelModifyInfo).build();
