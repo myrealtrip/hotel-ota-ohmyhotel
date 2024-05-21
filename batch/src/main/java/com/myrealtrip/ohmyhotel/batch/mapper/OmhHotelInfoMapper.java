@@ -23,19 +23,16 @@ import static java.util.Objects.isNull;
 @Slf4j
 public class OmhHotelInfoMapper {
 
-    private static final List<Long> DEV_TEST_HOTEL_IDS = List.of(862813L);
-    private static final List<Long> PROD_TEST_HOTEL_IDS = List.of(858846L, 732447L, 164418L, 655329L, 985004L, 116929L, 370496L);
+    private static final List<Long> TEST_HOTEL_IDS = List.of(862813L);
 
     private static final Map<String, List<Long>> TEST_HOTEL_IDS_MAP = Map.of(
-        "local", DEV_TEST_HOTEL_IDS,
-        "dev", DEV_TEST_HOTEL_IDS,
-        "dev01", DEV_TEST_HOTEL_IDS,
-        "dev02", DEV_TEST_HOTEL_IDS,
-        "test", DEV_TEST_HOTEL_IDS,
-        "test01", DEV_TEST_HOTEL_IDS,
-        "test02", DEV_TEST_HOTEL_IDS,
-        "stage", PROD_TEST_HOTEL_IDS,
-        "prod", PROD_TEST_HOTEL_IDS
+        "local", TEST_HOTEL_IDS,
+        "dev", TEST_HOTEL_IDS,
+        "dev01", TEST_HOTEL_IDS,
+        "dev02", TEST_HOTEL_IDS,
+        "test", TEST_HOTEL_IDS,
+        "test01", TEST_HOTEL_IDS,
+        "test02", TEST_HOTEL_IDS
     );
 
     @Value("${spring.profiles.active}")
