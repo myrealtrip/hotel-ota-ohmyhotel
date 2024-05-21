@@ -54,7 +54,6 @@ public class CommonSearchResponseConverter {
             .id(mealBasisCode.name())
             .group("MEAL_BASIS_CODE")
             .benefitName(mealBasisCode.getExposedName())
-            .attributeValue(null)
             .build();
         return List.of(rateBenefit);
     }
