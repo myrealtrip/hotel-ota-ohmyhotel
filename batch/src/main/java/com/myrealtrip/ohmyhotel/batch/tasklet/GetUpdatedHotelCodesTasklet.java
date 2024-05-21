@@ -32,7 +32,6 @@ public class GetUpdatedHotelCodesTasklet implements Tasklet {
         Long lastHotelCode = 0L;
         while (true) {
             OmhStaticBulkHotelListResponse response = omhStaticHotelBulkListAgent.getBulkHotels(lastUpdateDate, lastHotelCode);
-            log.info("hotelCount: {}", response.getHotelCount());
             if (response.getHotelCount() == 0) {
                 break;
             }
@@ -42,7 +41,6 @@ public class GetUpdatedHotelCodesTasklet implements Tasklet {
             allHotelCodeStorage.addAll(hotelCodes);
             lastHotelCode = hotelCodes.get(hotelCodes.size() - 1);
         }
-        log.info("hotelCodes: {}", ObjectMapperUtils.writeAsString(allHotelCodeStorage.getHotelCodes()));
         log.info("total updated hotel size: {}", allHotelCodeStorage.getHotelCodes().size());
         return RepeatStatus.FINISHED;
     }
