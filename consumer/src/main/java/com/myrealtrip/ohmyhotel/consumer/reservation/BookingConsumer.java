@@ -38,7 +38,7 @@ public class BookingConsumer {
         BookingOrderMessage message = null;
         try {
             message = ObjectMapperUtils.readString(payload, BookingOrderMessage.class);
-            if (isOhMyHotelEvent(message)) {
+            if (isOhMyHotelEvent(message.getProviderType(), message.getProviderCode())) {
                 consume(message);
             }
         } catch (JacksonProcessingException exception) {
@@ -55,6 +55,9 @@ public class BookingConsumer {
     public void listenBookingDetailUpsertDeadLetter(@Payload String payload, Acknowledgment acknowledgment) {
         try {
             BookingDetailDeadLetterMessage message = ObjectMapperUtils.readString(payload, BookingDetailDeadLetterMessage.class);
+            if (!isOhMyHotelEvent(message.getProviderType(), message.getProviderCode())) {
+                return;
+            }
             log.info("BookingDetailDeadLetterMessage 메세지 : {}", message.toString());
             bookingMessageKafkaSendService.sendByMrtReservationNo(message.getMrtReservationNo(), null, message.getRetryCount() + 1);
         } catch (Exception e) {
@@ -64,9 +67,9 @@ public class BookingConsumer {
         }
     }
 
-    private boolean isOhMyHotelEvent(BookingOrderMessage bookingOrderMessage) {
-        return bookingOrderMessage.getProviderType() == ProviderType.GDS &&
-               bookingOrderMessage.getProviderCode() == ProviderCode.OH_MY_HOTEL;
+    private boolean isOhMyHotelEvent(ProviderType providerType, ProviderCode providerCode) {
+        return providerType == ProviderType.GDS &&
+               providerCode == ProviderCode.OH_MY_HOTEL;
     }
 
     public void consume(BookingOrderMessage message) {
