@@ -4,6 +4,7 @@ import com.myrealtrip.ohmyhotel.batch.storage.HotelCodeStorage;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.OmhStaticHotelBulkListAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response.OmhStaticBulkHotelListResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response.OmhStaticBulkHotelListResponse.OmhBulkHotel;
+import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepContribution;
@@ -31,6 +32,7 @@ public class GetUpdatedHotelCodesTasklet implements Tasklet {
         Long lastHotelCode = 0L;
         while (true) {
             OmhStaticBulkHotelListResponse response = omhStaticHotelBulkListAgent.getBulkHotels(lastUpdateDate, lastHotelCode);
+            log.info("hotelCount: {}", response.getHotelCount());
             if (response.getHotelCount() == 0) {
                 break;
             }
@@ -40,6 +42,7 @@ public class GetUpdatedHotelCodesTasklet implements Tasklet {
             allHotelCodeStorage.addAll(hotelCodes);
             lastHotelCode = hotelCodes.get(hotelCodes.size() - 1);
         }
+        log.info("hotelCodes: {}", ObjectMapperUtils.writeAsString(allHotelCodeStorage.getHotelCodes()));
         log.info("total updated hotel size: {}", allHotelCodeStorage.getHotelCodes().size());
         return RepeatStatus.FINISHED;
     }
