@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.nonNull;
+
 @Component
 public class BedDescriptionConverter {
 
@@ -17,7 +19,12 @@ public class BedDescriptionConverter {
 
     private String toBedGroupDescription(OmhBedGroup omhBedGroup) {
         return omhBedGroup.getBeds().stream()
-            .map(bed -> bed.getBedTypeCode().getExposedName() + " " + bed.getBedTypeCount() + "개")
+            .map(bed -> {
+                if (nonNull(bed.getBedTypeCode())) {
+                    return bed.getBedTypeCode().getExposedName() + " " + bed.getBedTypeCount() + "개";
+                }
+                return bed.getBedTypeName() + " " + bed.getBedTypeCount() + "개";
+            })
             .collect(Collectors.joining(","));
     }
 }
