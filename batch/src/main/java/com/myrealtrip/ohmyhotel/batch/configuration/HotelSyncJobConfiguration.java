@@ -6,6 +6,7 @@ import com.myrealtrip.ohmyhotel.batch.reader.HotelCodeStorageReader;
 import com.myrealtrip.ohmyhotel.batch.service.PropertyUpsertKafkaSendService;
 import com.myrealtrip.ohmyhotel.batch.storage.HotelCodeStorage;
 import com.myrealtrip.ohmyhotel.batch.tasklet.GetUpdatedHotelCodesTasklet;
+import com.myrealtrip.ohmyhotel.batch.tasklet.NotFoundHotelCodesLoggingTasklet;
 import com.myrealtrip.ohmyhotel.batch.writer.HotelInfoWriter;
 import com.myrealtrip.ohmyhotel.core.provider.hotel.HotelProvider;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.OmhStaticHotelBulkListAgent;
@@ -14,12 +15,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
@@ -96,12 +95,12 @@ public class HotelSyncJobConfiguration {
     @StepScope
     public Tasklet getUpdatedHotelCodesTasklet(@Value("#{jobParameters[beforeDays]}") Integer beforeDays,
                                                @Qualifier("allHotelCodeStorage") HotelCodeStorage allHotelCodeStorage,
-                                               @Qualifier("notFindHotelCodeStorage") HotelCodeStorage notFindHotelCodeStorage,
+                                               @Qualifier("notFoundHotelCodeStorage") HotelCodeStorage notFoundHotelCodeStorage,
                                                OmhStaticHotelBulkListAgent omhStaticHotelBulkListAgent) {
         LocalDate lastUpdatedDate = isNull(beforeDays) ?
                                     LocalDate.of(1970, 1, 1) :
                                     LocalDate.now().minusDays(beforeDays);
-        return new GetUpdatedHotelCodesTasklet(allHotelCodeStorage, notFindHotelCodeStorage, omhStaticHotelBulkListAgent, lastUpdatedDate);
+        return new GetUpdatedHotelCodesTasklet(allHotelCodeStorage, notFoundHotelCodeStorage, omhStaticHotelBulkListAgent, lastUpdatedDate);
     }
 
     @Bean
@@ -116,20 +115,14 @@ public class HotelSyncJobConfiguration {
                                             OmhHotelInfoMapper omhHotelInfoMapper,
                                             OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent,
                                             @Qualifier("chunkUpdatedHotelCodeStorage") HotelCodeStorage chunkUpdatedHotelCodeStorage,
-                                            @Qualifier("notFindHotelCodeStorage") HotelCodeStorage notFindHotelCodeStorage) {
-        return new HotelInfoWriter(hotelProvider, omhHotelInfoMapper, omhStaticHotelInfoListAgent, chunkUpdatedHotelCodeStorage, notFindHotelCodeStorage);
+                                            @Qualifier("notFoundHotelCodeStorage") HotelCodeStorage notFoundHotelCodeStorage) {
+        return new HotelInfoWriter(hotelProvider, omhHotelInfoMapper, omhStaticHotelInfoListAgent, chunkUpdatedHotelCodeStorage, notFoundHotelCodeStorage);
     }
 
     @Bean
     @StepScope
-    public Tasklet loggingTasklet(@Qualifier("notFindHotelCodeStorage") HotelCodeStorage notFindHotelCodeStorage) {
-        return (contribution, chunkContext) -> {
-            String notFindHotelIds = notFindHotelCodeStorage.getHotelCodes().stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining("\n"));
-            log.info("notFindHotelIDs: \n {}", notFindHotelIds);
-            return RepeatStatus.FINISHED;
-        };
+    public Tasklet loggingTasklet(@Qualifier("notFoundHotelCodeStorage") HotelCodeStorage notFindHotelCodeStorage) {
+        return new NotFoundHotelCodesLoggingTasklet(notFindHotelCodeStorage);
     }
 
     /* 오마이호텔에서 제공하는 전체 호텔 코드 */
@@ -145,8 +138,8 @@ public class HotelSyncJobConfiguration {
     }
 
     /* 오마이호텔에서 제공하는 전체 호텔 코드 중 상세정보가 검색되지 않는 호텔 코드 */
-    @Bean(name = "notFindHotelCodeStorage")
-    public HotelCodeStorage notFindHotelCodeStorage() {
+    @Bean(name = "notFoundHotelCodeStorage")
+    public HotelCodeStorage notFoundHotelCodeStorage() {
         return new HotelCodeStorage();
     }
 }

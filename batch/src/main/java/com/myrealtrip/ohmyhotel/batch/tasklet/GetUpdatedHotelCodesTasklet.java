@@ -4,7 +4,6 @@ import com.myrealtrip.ohmyhotel.batch.storage.HotelCodeStorage;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.OmhStaticHotelBulkListAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response.OmhStaticBulkHotelListResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response.OmhStaticBulkHotelListResponse.OmhBulkHotel;
-import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.StepContribution;
@@ -24,7 +23,7 @@ import java.util.stream.Collectors;
 public class GetUpdatedHotelCodesTasklet implements Tasklet {
 
     private final HotelCodeStorage allHotelCodeStorage;
-    private final HotelCodeStorage notFindHotelCodeStorage;
+    private final HotelCodeStorage notFoundHotelCodeStorage;
     private final OmhStaticHotelBulkListAgent omhStaticHotelBulkListAgent;
     private final LocalDate lastUpdateDate;
 
@@ -40,7 +39,7 @@ public class GetUpdatedHotelCodesTasklet implements Tasklet {
                 .map(OmhBulkHotel::getHotelCode)
                 .collect(Collectors.toList());
             allHotelCodeStorage.addAll(hotelCodes);
-            notFindHotelCodeStorage.addAll(hotelCodes);
+            notFoundHotelCodeStorage.addAll(hotelCodes);
             lastHotelCode = hotelCodes.get(hotelCodes.size() - 1);
         }
         log.info("total updated hotel size: {}", allHotelCodeStorage.getHotelCodes().size());
