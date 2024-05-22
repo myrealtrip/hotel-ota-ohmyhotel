@@ -29,7 +29,7 @@ public enum ReservationStatus {
     private enum ReservationStatusTransition {
         PRECHECK_FAIL(Set.of(ReservationStatus.PRECHECK_SUCCESS)),
         PRECHECK_SUCCESS(Set.of(ReservationStatus.RESERVE_CONFIRM, ReservationStatus.RESERVE_CONFIRM_PENDING, ReservationStatus.RESERVE_CONFIRM_FAIL)),
-        RESERVE_CONFIRM_PENDING(Set.of(ReservationStatus.RESERVE_CONFIRM, ReservationStatus.RESERVE_CONFIRM_FAIL)),
+        RESERVE_CONFIRM_PENDING(Set.of(ReservationStatus.RESERVE_CONFIRM_PENDING, ReservationStatus.RESERVE_CONFIRM, ReservationStatus.RESERVE_CONFIRM_FAIL)),
         RESERVE_CONFIRM(Set.of(ReservationStatus.CANCEL_SUCCESS, ReservationStatus.CANCEL_FAIL)),
         RESERVE_CONFIRM_FAIL(Set.of()),
         CANCEL_PENDING(Set.of(ReservationStatus.CANCEL_SUCCESS, ReservationStatus.CANCEL_FAIL)),

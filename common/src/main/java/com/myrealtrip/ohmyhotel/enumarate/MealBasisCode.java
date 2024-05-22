@@ -1,7 +1,10 @@
 package com.myrealtrip.ohmyhotel.enumarate;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.EnumUtils;
 
 @RequiredArgsConstructor
 @Getter
@@ -19,7 +22,18 @@ public enum MealBasisCode {
     L("Breakfast and lunch included", "조식, 중식 포함"),
     N("None", null),
     S("Silver", "Silver"),
-    Z("N/A", null);
+    Z("N/A", null),
+    NONE("", null);
+
+    @JsonCreator
+    public static MealBasisCode get(String label) {
+        return EnumUtils.getEnum(MealBasisCode.class, label, MealBasisCode.NONE);
+    }
+
+    @JsonValue
+    public String jsonSerializeValue() {
+        return this.name();
+    }
 
     private final String description;
     private final String exposedName;
