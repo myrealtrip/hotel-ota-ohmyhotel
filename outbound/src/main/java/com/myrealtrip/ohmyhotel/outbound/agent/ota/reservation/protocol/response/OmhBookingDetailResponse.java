@@ -1,6 +1,7 @@
 package com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.myrealtrip.ohmyhotel.enumarate.BookingRequestCode;
 import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
@@ -10,6 +11,7 @@ import com.myrealtrip.ohmyhotel.enumarate.RateType;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCommonResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhNightlyAmount;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.OmhRoomGuestDetail;
+import com.myrealtrip.ohmyhotel.utils.DateTimeUtils;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -161,13 +163,29 @@ public class OmhBookingDetailResponse extends OmhCommonResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhBookingCancelPolicyValue {
 
-        @JsonFormat(pattern = "[yyyy-MM-dd HH:mm:ss][yyyy-MM-dd HH:mm]")
-        private LocalDateTime fromDateTime;
+        private String fromDateTime;
 
-        @JsonFormat(pattern = "[yyyy-MM-dd HH:mm:ss][yyyy-MM-dd HH:mm]")
-        private LocalDateTime toDateTime;
+        private String toDateTime;
 
         private BigDecimal penaltyAmount;
+
+        @JsonIgnore
+        public LocalDateTime getLocalDateTimeOfFromDateTime() {
+            try {
+                return LocalDateTime.parse(fromDateTime, DateTimeUtils.OMH_CANCEL_POLICY_DATE_TIME_FORMAT1);
+            } catch (Exception e) {
+                return LocalDateTime.parse(fromDateTime, DateTimeUtils.OMH_CANCEL_POLICY_DATE_TIME_FORMAT2);
+            }
+        }
+
+        @JsonIgnore
+        public LocalDateTime getLocalDateTimeOfToDateTime() {
+            try {
+                return LocalDateTime.parse(toDateTime, DateTimeUtils.OMH_CANCEL_POLICY_DATE_TIME_FORMAT1);
+            } catch (Exception e) {
+                return LocalDateTime.parse(toDateTime, DateTimeUtils.OMH_CANCEL_POLICY_DATE_TIME_FORMAT2);
+            }
+        }
     }
 
     @SuperBuilder

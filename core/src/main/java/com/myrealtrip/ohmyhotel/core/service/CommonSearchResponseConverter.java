@@ -1,6 +1,5 @@
 package com.myrealtrip.ohmyhotel.core.service;
 
-import com.google.common.collect.Lists;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
 import com.myrealtrip.ohmyhotel.enumarate.PenaltyBasis;
@@ -24,13 +23,11 @@ import com.myrealtrip.unionstay.dto.hotelota.search.response.Surcharge;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.TotalPayment;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.CancelPolicy;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.LocalCancelPolicy;
-import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.OffsetCancelPolicy;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -84,8 +81,8 @@ public class CommonSearchResponseConverter {
             throw new IllegalStateException("cannot mapping CancelPolicyType");
         }
         return LocalCancelPolicy.builder()
-            .start(omhCancelPolicyValue.getFromDateTime())
-            .end(omhCancelPolicyValue.getToDateTime())
+            .start(omhCancelPolicyValue.getLocalDateTimeOfFromDateTime())
+            .end(omhCancelPolicyValue.getLocalDateTimeOfToDateTime())
             .type(cancelPolicyType)
             .value(value)
             .build();

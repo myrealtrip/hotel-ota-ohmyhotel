@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CancelRefundCalculateService {
 
-    private static final Comparator<OmhBookingCancelPolicyValue> CANCEL_POLICY_COMPARATOR = Comparator.comparing(OmhBookingCancelPolicyValue::getFromDateTime);
+    private static final Comparator<OmhBookingCancelPolicyValue> CANCEL_POLICY_COMPARATOR = Comparator.comparing(OmhBookingCancelPolicyValue::getLocalDateTimeOfFromDateTime);
 
     private final OmhBookingDetailAgent omhBookingDetailAgent;
     private final ReservationProvider reservationProvider;
@@ -56,13 +56,13 @@ public class CancelRefundCalculateService {
 
         // 현재 날짜가 policy 날짜 안에 있을 경우
         for (OmhBookingCancelPolicyValue cancelPolicyDetail : sortedCancelPolicyDetails) {
-            if (DateTimeUtils.goe(now, cancelPolicyDetail.getFromDateTime()) &&
-                DateTimeUtils.loe(now, cancelPolicyDetail.getToDateTime())) {
+            if (DateTimeUtils.goe(now, cancelPolicyDetail.getLocalDateTimeOfFromDateTime()) &&
+                DateTimeUtils.loe(now, cancelPolicyDetail.getLocalDateTimeOfToDateTime())) {
                 return cancelPolicyDetail.getPenaltyAmount();
             }
         }
         // 현재 날짜가 policy 날짜 밖에 있을 경우
-        if (now.isBefore(sortedCancelPolicyDetails.get(0).getFromDateTime())) {
+        if (now.isBefore(sortedCancelPolicyDetails.get(0).getLocalDateTimeOfFromDateTime())) {
             return BigDecimal.ZERO;
         }
         return depositPrice;
