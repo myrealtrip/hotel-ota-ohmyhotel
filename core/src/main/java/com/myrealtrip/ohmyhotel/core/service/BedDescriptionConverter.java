@@ -14,7 +14,7 @@ public class BedDescriptionConverter {
     public String toUnionStayBedDescription(List<OmhBedGroup> omhBedGroups) {
         return omhBedGroups.stream()
             .map(this::toBedGroupDescription)
-            .collect(Collectors.joining("또는 "));
+            .collect(Collectors.joining(" 또는 "));
     }
 
     private String toBedGroupDescription(OmhBedGroup omhBedGroup) {
