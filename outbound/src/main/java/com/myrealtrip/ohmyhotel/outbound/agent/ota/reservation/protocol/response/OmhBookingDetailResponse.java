@@ -161,10 +161,10 @@ public class OmhBookingDetailResponse extends OmhCommonResponse {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhBookingCancelPolicyValue {
 
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "[yyyy-MM-dd HH:mm:ss][yyyy-MM-dd HH:mm]")
         private LocalDateTime fromDateTime;
 
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "[yyyy-MM-dd HH:mm:ss][yyyy-MM-dd HH:mm]")
         private LocalDateTime toDateTime;
 
         private BigDecimal penaltyAmount;

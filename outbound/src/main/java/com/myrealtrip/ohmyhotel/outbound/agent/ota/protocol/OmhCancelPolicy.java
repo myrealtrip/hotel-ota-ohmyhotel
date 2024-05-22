@@ -36,10 +36,10 @@ public class OmhCancelPolicy {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhCancelPolicyValue {
 
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "[yyyy-MM-dd HH:mm:ss][yyyy-MM-dd HH:mm]")
         private LocalDateTime fromDateTime;
 
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "[yyyy-MM-dd HH:mm:ss][yyyy-MM-dd HH:mm]")
         private LocalDateTime toDateTime;
 
         private RateOrAmount rateOrAmount;
