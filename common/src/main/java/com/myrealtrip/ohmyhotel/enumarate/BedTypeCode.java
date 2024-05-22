@@ -3,6 +3,11 @@ package com.myrealtrip.ohmyhotel.enumarate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Getter
 public enum BedTypeCode {
@@ -19,6 +24,13 @@ public enum BedTypeCode {
     BDT10("Capsule Bed", "캡슐침대"),
     BDT11("Camping Deck", "캠핑 데크");
 
+    private static final Map<String, BedTypeCode> DESC_TO_BED_TYPE_CODE = Arrays.stream(BedTypeCode.values())
+        .collect(Collectors.toMap(BedTypeCode::getDescription, Function.identity()));
+
     private final String description;
     private final String exposedName;
+
+    public static BedTypeCode getByDescription(String description) {
+        return DESC_TO_BED_TYPE_CODE.get(description);
+    }
 }

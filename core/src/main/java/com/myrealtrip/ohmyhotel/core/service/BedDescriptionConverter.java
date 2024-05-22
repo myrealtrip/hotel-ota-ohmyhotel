@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.core.service;
 
+import com.myrealtrip.ohmyhotel.enumarate.BedTypeCode;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhBedGroup;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +23,9 @@ public class BedDescriptionConverter {
             .map(bed -> {
                 if (nonNull(bed.getBedTypeCode())) {
                     return bed.getBedTypeCode().getExposedName() + " " + bed.getBedTypeCount() + "개";
+                }
+                if (nonNull(BedTypeCode.getByDescription(bed.getBedTypeName()))) {
+                    return BedTypeCode.getByDescription(bed.getBedTypeName()).getExposedName() + " " + bed.getBedTypeCount() + "개";
                 }
                 return bed.getBedTypeName() + " " + bed.getBedTypeCount() + "개";
             })

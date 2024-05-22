@@ -1,6 +1,7 @@
 package com.myrealtrip.ohmyhotel.api.application.meta.converter;
 
 import com.myrealtrip.ohmyhotel.core.service.BedDescriptionConverter;
+import com.myrealtrip.ohmyhotel.enumarate.BedTypeCode;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhBedGroup;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhBedGroup.OmhBed;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomFacility;
@@ -124,14 +125,22 @@ public class RoomMetaResponseConverter {
                     .flatMap(Collection::stream)
                     .map(omhBed -> BedConfiguration.builder()
                         .size(String.valueOf(omhBed.getBedTypeSize()))
-                        .type(nonNull(omhBed.getBedTypeCode()) ?
-                              omhBed.getBedTypeCode().getExposedName() :
-                              omhBed.getBedTypeName())
+                        .type(toBedType(omhBed))
                         .quantity(omhBed.getBedTypeCount())
                         .build())
                     .collect(Collectors.toList())
             )
             .build();
         return List.of(roomMetaBed);
+    }
+
+    private String toBedType(OmhBedGroup.OmhBed bed) {
+        if (nonNull(bed.getBedTypeCode())) {
+            return bed.getBedTypeCode().getExposedName();
+        }
+        if (nonNull(BedTypeCode.getByDescription(bed.getBedTypeName()))) {
+            return BedTypeCode.getByDescription(bed.getBedTypeName()).getExposedName();
+        }
+        return bed.getBedTypeName();
     }
 }
