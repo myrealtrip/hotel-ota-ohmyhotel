@@ -106,7 +106,7 @@ public class UpsertBookingDetailMessageConverter {
     }
 
     private List<RoomBookingRateBenefit> toBenefits(Reservation reservation) {
-        MealBasisCode mealBasisCode = reservation.getAdditionalInfo().getMealBasisCode();
+        MealBasisCode mealBasisCode = EnumUtils.getEnum(MealBasisCode.class, reservation.getAdditionalInfo().getMealBasisCode(), MealBasisCode.NONE);
         if (isNull(mealBasisCode) ||
             StringUtils.isBlank(mealBasisCode.getExposedName())) {
             return Collections.emptyList();

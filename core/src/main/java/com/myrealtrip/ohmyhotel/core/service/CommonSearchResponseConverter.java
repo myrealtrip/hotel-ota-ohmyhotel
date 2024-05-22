@@ -24,6 +24,7 @@ import com.myrealtrip.unionstay.dto.hotelota.search.response.TotalPayment;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.CancelPolicy;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.LocalCancelPolicy;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +44,8 @@ public class CommonSearchResponseConverter {
 
     public static final Comparator<RoomAvailability> ROOM_COMPARATOR = Comparator.comparing(room -> room.getRates().get(0).getTotalPayment().getInclusive());
 
-    public List<RateBenefit> toRateBenefits(MealBasisCode mealBasisCode) {
+    public List<RateBenefit> toRateBenefits(String mealBasisCodeStr) {
+        MealBasisCode mealBasisCode = EnumUtils.getEnum(MealBasisCode.class, mealBasisCodeStr, MealBasisCode.NONE);
         if (isNull(mealBasisCode) ||
             StringUtils.isBlank(mealBasisCode.getExposedName())) {
             return Collections.emptyList();

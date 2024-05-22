@@ -60,7 +60,7 @@ public class OmhBookingDetailResponse extends OmhCommonResponse {
 
     private String ratePlanCode;
 
-    private MealBasisCode mealBasisCode;
+    private String mealBasisCode;
 
     private String mealBasisName;
 

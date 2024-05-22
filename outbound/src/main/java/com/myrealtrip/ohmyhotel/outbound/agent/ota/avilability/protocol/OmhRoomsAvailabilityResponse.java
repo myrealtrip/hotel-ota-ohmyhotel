@@ -59,7 +59,7 @@ public class OmhRoomsAvailabilityResponse extends OmhCommonResponse {
 
         private String roomTypeDescriptionByLanguage;
 
-        private MealBasisCode mealBasisCode;
+        private String mealBasisCode;
 
         private String mealBasisName;
 

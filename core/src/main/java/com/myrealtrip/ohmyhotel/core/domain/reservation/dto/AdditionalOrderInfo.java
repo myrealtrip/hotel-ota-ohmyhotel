@@ -29,6 +29,6 @@ public class AdditionalOrderInfo {
     private String roomToken;
     private OmhCancelPolicy cancelPolicy;
     private List<OmhBedGroup> bedGroups;
-    private MealBasisCode mealBasisCode;
+    private String mealBasisCode;
     private List<OmhNightlyAmount> nightlyAmounts;
 }

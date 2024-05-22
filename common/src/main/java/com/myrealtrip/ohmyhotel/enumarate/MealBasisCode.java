@@ -25,16 +25,6 @@ public enum MealBasisCode {
     Z("N/A", null),
     NONE("", null);
 
-    @JsonCreator
-    public static MealBasisCode get(String label) {
-        return EnumUtils.getEnum(MealBasisCode.class, label, MealBasisCode.NONE);
-    }
-
-    @JsonValue
-    public String jsonSerializeValue() {
-        return this.name();
-    }
-
     private final String description;
     private final String exposedName;
 }
