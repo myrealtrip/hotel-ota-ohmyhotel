@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 public class GetUpdatedHotelCodesTasklet implements Tasklet {
 
     private final HotelCodeStorage allHotelCodeStorage;
+    private final HotelCodeStorage notFindHotelCodeStorage;
     private final OmhStaticHotelBulkListAgent omhStaticHotelBulkListAgent;
     private final LocalDate lastUpdateDate;
 
@@ -39,6 +40,7 @@ public class GetUpdatedHotelCodesTasklet implements Tasklet {
                 .map(OmhBulkHotel::getHotelCode)
                 .collect(Collectors.toList());
             allHotelCodeStorage.addAll(hotelCodes);
+            notFindHotelCodeStorage.addAll(hotelCodes);
             lastHotelCode = hotelCodes.get(hotelCodes.size() - 1);
         }
         log.info("total updated hotel size: {}", allHotelCodeStorage.getHotelCodes().size());

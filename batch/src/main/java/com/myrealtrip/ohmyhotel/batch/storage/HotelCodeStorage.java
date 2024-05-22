@@ -21,4 +21,8 @@ public class HotelCodeStorage {
     public List<Long> getHotelCodes() {
         return new ArrayList<>(this.hotelCodes);
     }
+
+    public void removeAll(List<Long> hotelCodes) {
+        this.hotelCodes.removeAll(hotelCodes);
+    }
 }

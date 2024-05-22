@@ -14,13 +14,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -29,6 +32,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.time.LocalDate;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
@@ -53,6 +57,7 @@ public class HotelSyncJobConfiguration {
         return jobBuilderFactory.get(HOTEL_SYNC_JOB)
             .start(getUpdatedHotelCodesStep())
             .next(hotelUpsertStep(null, null))
+            .next(loggingStep())
             .build();
     }
 
@@ -61,7 +66,7 @@ public class HotelSyncJobConfiguration {
     public Step getUpdatedHotelCodesStep() {
         return stepBuilderFactory.get("getUpdatedHotelCodesStep")
             .transactionManager(transactionManager)
-            .tasklet(getUpdatedHotelCodesTasklet(null, null, null))
+            .tasklet(getUpdatedHotelCodesTasklet(null, null, null, null))
             .build();
     }
 
@@ -73,20 +78,30 @@ public class HotelSyncJobConfiguration {
             .transactionManager(transactionManager)
             .<Long, Long>chunk(CHUNK_SIZE)
             .reader(hotelCodeStorageReader(null))
-            .writer(hotelInfoWriter(null, null, null, null))
+            .writer(hotelInfoWriter(null, null, null, null, null))
             .listener(new HotelUpdateChunkListener(chunkUpdatedHotelCodeStorage, propertyUpsertKafkaSendService))
+            .build();
+    }
+
+    @Bean
+    @JobScope
+    public Step loggingStep() {
+        return stepBuilderFactory.get("loggingStep")
+            .transactionManager(transactionManager)
+            .tasklet(loggingTasklet(null))
             .build();
     }
 
     @Bean
     @StepScope
     public Tasklet getUpdatedHotelCodesTasklet(@Value("#{jobParameters[beforeDays]}") Integer beforeDays,
-                                               @Qualifier("allHotelCodeStorage") HotelCodeStorage hotelCodeStorage,
+                                               @Qualifier("allHotelCodeStorage") HotelCodeStorage allHotelCodeStorage,
+                                               @Qualifier("notFindHotelCodeStorage") HotelCodeStorage notFindHotelCodeStorage,
                                                OmhStaticHotelBulkListAgent omhStaticHotelBulkListAgent) {
         LocalDate lastUpdatedDate = isNull(beforeDays) ?
                                     LocalDate.of(1970, 1, 1) :
                                     LocalDate.now().minusDays(beforeDays);
-        return new GetUpdatedHotelCodesTasklet(hotelCodeStorage, omhStaticHotelBulkListAgent, lastUpdatedDate);
+        return new GetUpdatedHotelCodesTasklet(allHotelCodeStorage, notFindHotelCodeStorage, omhStaticHotelBulkListAgent, lastUpdatedDate);
     }
 
     @Bean
@@ -100,17 +115,38 @@ public class HotelSyncJobConfiguration {
     public ItemWriter<Long> hotelInfoWriter(HotelProvider hotelProvider,
                                             OmhHotelInfoMapper omhHotelInfoMapper,
                                             OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent,
-                                            @Qualifier("chunkUpdatedHotelCodeStorage") HotelCodeStorage chunkUpdatedHotelCodeStorage) {
-        return new HotelInfoWriter(hotelProvider, omhHotelInfoMapper, omhStaticHotelInfoListAgent, chunkUpdatedHotelCodeStorage);
+                                            @Qualifier("chunkUpdatedHotelCodeStorage") HotelCodeStorage chunkUpdatedHotelCodeStorage,
+                                            @Qualifier("notFindHotelCodeStorage") HotelCodeStorage notFindHotelCodeStorage) {
+        return new HotelInfoWriter(hotelProvider, omhHotelInfoMapper, omhStaticHotelInfoListAgent, chunkUpdatedHotelCodeStorage, notFindHotelCodeStorage);
     }
 
+    @Bean
+    @StepScope
+    public Tasklet loggingTasklet(@Qualifier("notFindHotelCodeStorage") HotelCodeStorage notFindHotelCodeStorage) {
+        return (contribution, chunkContext) -> {
+            String notFindHotelIds = notFindHotelCodeStorage.getHotelCodes().stream()
+                .map(String::valueOf)
+                .collect(Collectors.joining("\n"));
+            log.info("notFindHotelIDs: \n {}", notFindHotelIds);
+            return RepeatStatus.FINISHED;
+        };
+    }
+
+    /* 오마이호텔에서 제공하는 전체 호텔 코드 */
     @Bean(name = "allHotelCodeStorage")
     public HotelCodeStorage updatedHotelCodeStorage() {
         return new HotelCodeStorage();
     }
 
+    /* 매 청크마다 업데이트 하는 호텔 코드 */
     @Bean(name = "chunkUpdatedHotelCodeStorage")
     public HotelCodeStorage chunkUpdatedHotelCodeStorage() {
+        return new HotelCodeStorage();
+    }
+
+    /* 오마이호텔에서 제공하는 전체 호텔 코드 중 상세정보가 검색되지 않는 호텔 코드 */
+    @Bean(name = "notFindHotelCodeStorage")
+    public HotelCodeStorage notFindHotelCodeStorage() {
         return new HotelCodeStorage();
     }
 }

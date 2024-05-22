@@ -28,16 +28,17 @@ public class HotelInfoWriter implements ItemWriter<Long> {
     private final OmhHotelInfoMapper omhHotelInfoMapper;
     private final OmhStaticHotelInfoListAgent omhStaticHotelInfoListAgent;
     private final HotelCodeStorage chunkUpdatedHotelCodeStorage;
+    private final HotelCodeStorage notFindHotelCodeStorage;
 
     @Override
     public void write(List<? extends Long> hotelCodes) throws Exception {
         List<OmhHotelInfoAggr> omhHotelInfoAggrs = getOmhHotelInfoAggrs((List<Long>) hotelCodes);
 
-        List<Long> hotelIds = omhHotelInfoAggrs.stream()
+        List<Long> updatedHotelIds = omhHotelInfoAggrs.stream()
             .map(OmhHotelInfoAggr::getHotelCode)
             .collect(Collectors.toList());
 
-        Map<Long, HotelModifyInfo> hotelModifyInfoMap = hotelProvider.getHotelModifyInfoByHotelIds(hotelIds).stream()
+        Map<Long, HotelModifyInfo> hotelModifyInfoMap = hotelProvider.getHotelModifyInfoByHotelIds(updatedHotelIds).stream()
             .collect(Collectors.toMap(HotelModifyInfo::getHotelId, Function.identity()));
 
         List<Hotel> hotels = omhHotelInfoAggrs.stream()
@@ -46,7 +47,8 @@ public class HotelInfoWriter implements ItemWriter<Long> {
 
         hotelProvider.upsert(hotels);
         chunkUpdatedHotelCodeStorage.clear();
-        chunkUpdatedHotelCodeStorage.addAll((List<Long>) hotelCodes);
+        chunkUpdatedHotelCodeStorage.addAll(updatedHotelIds);
+        notFindHotelCodeStorage.removeAll(updatedHotelIds);
     }
 
     private List<OmhHotelInfoAggr> getOmhHotelInfoAggrs(List<Long> hotelCodes) {
