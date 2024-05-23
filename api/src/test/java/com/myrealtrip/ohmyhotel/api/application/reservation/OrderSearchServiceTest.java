@@ -140,7 +140,7 @@ class OrderSearchServiceTest {
             .rooms(List.of(OmhRoomAvailability.builder()
                                .roomTypeCode("10")
                                .ratePlanCode("100")
-                               .mealBasisCode(MealBasisCode.A)
+                               .mealBasisCode("A")
                                .promotionType(PromotionType.NONE)
                                .totalNetAmount(BigDecimal.valueOf(10000))
                                .bedGroups(List.of(OmhBedGroup.builder()

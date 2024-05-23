@@ -36,8 +36,7 @@ public class PreCheckResponseConverter {
     public PreCheckStatus toPreCheckStatus(OmhPreCheckResponse omhPreCheckResponse, Order order) {
         if (omhPreCheckResponse.getStatus() == OmhPreCheckStatus.SOLD_OUT) {
             return PreCheckStatus.SOLD_OUT;
-        } else if (omhPreCheckResponse.getStatus() == OmhPreCheckStatus.AMOUNT_CHANGED ||
-                   !NumericUtils.equals(order.getDepositPrice(), omhPreCheckResponse.getAmount().getTotalNetAmount())) {
+        } else if (!NumericUtils.equals(order.getDepositPrice(), omhPreCheckResponse.getAmount().getTotalNetAmount())) {
             return PreCheckStatus.PRICE_CHANGED;
         } else if (omhPreCheckResponse.getStatus() == OmhPreCheckStatus.AVAILABLE) {
             return PreCheckStatus.AVAILABLE;

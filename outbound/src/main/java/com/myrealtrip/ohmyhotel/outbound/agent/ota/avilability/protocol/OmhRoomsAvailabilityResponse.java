@@ -115,6 +115,11 @@ public class OmhRoomsAvailabilityResponse extends OmhCommonResponse {
         private List<OmhBedGroup> bedGroups;
 
         private ChildPolicy childPolicy;
+
+        @JsonIgnore
+        public void changeTotalNetAmount(BigDecimal totalNetAmount) {
+            this.totalNetAmount = totalNetAmount;
+        }
     }
 
     @SuperBuilder

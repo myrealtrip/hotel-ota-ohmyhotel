@@ -1,6 +1,7 @@
 package com.myrealtrip.ohmyhotel.api.application.reservation;
 
 
+import com.myrealtrip.ohmyhotel.api.application.reservation.converter.PreCheckRequestConverter;
 import com.myrealtrip.ohmyhotel.core.service.reservation.ReservationApiLogService;
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.OrderConverter;
 import com.myrealtrip.ohmyhotel.api.application.common.converter.SearchRequestConverter;
@@ -16,8 +17,13 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.OmhRoomsAvailabil
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse.OmhRoomAvailability;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomsAvailabilityRequest;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhPreCheckAgent;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.request.OmhPreCheckRequest;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhPreCheckResponse;
 import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
+import com.myrealtrip.unionstay.dto.hotelota.precheck.request.PreCheckRequest;
 import com.myrealtrip.unionstay.dto.hotelota.search.request.SearchRequest;
+import com.myrealtrip.unionstay.dto.hotelota.search.response.RoomAvailability;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.SearchResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,6 +48,9 @@ public class OrderSearchService {
     private final SearchRequestConverter searchRequestConverter;
     private final OrderConverter orderConverter;
 
+    private final OmhPreCheckAgent omhPreCheckAgent;
+    private final PreCheckRequestConverter preCheckRequestConverter;
+
     /**
      * 숙소의 실시간 재고/가격을 검색합니다. (주문서 진입시 호출)
      *
@@ -61,6 +70,8 @@ public class OrderSearchService {
         if (isNull(orderedRoomAvailability)) {
             return singleSearchResponseConverter.empty();
         }
+
+        changePrice(searchRequest, orderedRoomAvailability);
 
         BigDecimal mrtCommissionRate = commissionRateService.getMrtCommissionRate();
         ZeroMargin zeroMargin = zeroMarginSearchService.getZeroMargin(hotelId, true);
@@ -97,5 +108,14 @@ public class OrderSearchService {
                             OmhRoomsAvailabilityResponse omhRoomsAvailabilityResponse) {
         reservationApiLogService.saveRoomsAvailabilityLog(orderId, ApiLogType.REQUEST, ObjectMapperUtils.writeAsString(omhRoomsAvailabilityRequest));
         reservationApiLogService.saveRoomsAvailabilityLog(orderId, ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhRoomsAvailabilityResponse));
+    }
+
+    /**
+     * price-check API 를 호출하여 가격이 변경되었다면 해당 가격을 사용한다.
+     */
+    private void changePrice(SearchRequest searchRequest, OmhRoomAvailability omhRoomAvailability) {
+        OmhPreCheckRequest omhPreCheckRequest = preCheckRequestConverter.toOmhPreCheckRequest(searchRequest, omhRoomAvailability);
+        OmhPreCheckResponse omhPreCheckResponse = omhPreCheckAgent.preCheck(omhPreCheckRequest);
+        omhRoomAvailability.changeTotalNetAmount(omhPreCheckResponse.getAmount().getTotalNetAmount());
     }
 }

@@ -3,6 +3,7 @@ package com.myrealtrip.ohmyhotel.api.application.reservation.converter;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Order;
 import com.myrealtrip.ohmyhotel.enumarate.Language;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse.OmhRoomAvailability;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomGuestCount;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.request.OmhPreCheckRequest;
 import com.myrealtrip.unionstay.dto.hotelota.precheck.request.PreCheckRequest;
@@ -14,6 +15,21 @@ import java.util.List;
 
 @Component
 public class PreCheckRequestConverter {
+
+    public OmhPreCheckRequest toOmhPreCheckRequest(SearchRequest searchRequest, OmhRoomAvailability omhRoomAvailability) {
+        return OmhPreCheckRequest.builder()
+            .language(Language.KO)
+            .hotelCode(Long.valueOf(searchRequest.getPropertyIds().get(0)))
+            .checkInDate(searchRequest.getCheckin())
+            .checkOutDate(searchRequest.getCheckout())
+            .roomTypeCode(omhRoomAvailability.getRoomTypeCode())
+            .roomToken(omhRoomAvailability.getRoomToken())
+            .ratePlanCode(omhRoomAvailability.getRatePlanCode())
+            .rateType(omhRoomAvailability.getRateType())
+            .totalNetAmount(omhRoomAvailability.getTotalNetAmount())
+            .rooms(List.of(toOmhRoomGuestCount(searchRequest)))
+            .build();
+    }
 
     public OmhPreCheckRequest toOmhPreCheckRequest(PreCheckRequest preCheckRequest, Order order) {
         return OmhPreCheckRequest.builder()
@@ -35,6 +51,14 @@ public class PreCheckRequestConverter {
             .adultCount(preCheckRequest.getAdultCount())
             .childCount(preCheckRequest.getChildCount())
             .childAges(preCheckRequest.getChildAges())
+            .build();
+    }
+
+    private OmhRoomGuestCount toOmhRoomGuestCount(SearchRequest searchRequest) {
+        return OmhRoomGuestCount.builder()
+            .adultCount(searchRequest.getAdultCount())
+            .childCount(searchRequest.getChildCount())
+            .childAges(searchRequest.getChildAges())
             .build();
     }
 }
