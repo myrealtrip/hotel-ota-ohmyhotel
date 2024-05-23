@@ -48,7 +48,7 @@ public interface UpsertPropertyMessageMapper {
             .providerType(ProviderType.GDS)
             .providerCode(ProviderCode.OH_MY_HOTEL)
             .providerPropertyId(String.valueOf((hotel.getHotelId())))
-            .providerPropertyStatus(hotel.isActive() ? ProviderPropertyStatus.ON_SALE : ProviderPropertyStatus.OFF_SALE)
+            .providerPropertyStatus(toProviderPropertyStatus(hotel))
             .chainId(null)
             .chainName(null)
             .brandId(null)
@@ -86,6 +86,15 @@ public interface UpsertPropertyMessageMapper {
             .mrtDiscountTypes(toMrtDiscountTypes(zeroMarginApply))
             .mrtPartnerId(partnerId)
             .build();
+    }
+
+    private ProviderPropertyStatus toProviderPropertyStatus(Hotel hotel) {
+        // 해외 상품만 on_sale 한다.
+        // https://myrealtrip.slack.com/archives/C051MGEQ2PP/p1716430178397629?thread_ts=1716355897.854959&cid=C051MGEQ2PP
+        if (hotel.isActive() && !StringUtils.equals(hotel.getCountryCode(), "KR")) {
+            return ProviderPropertyStatus.ON_SALE;
+        }
+        return ProviderPropertyStatus.OFF_SALE;
     }
 
     private List<Attribute> toAttributes(Hotel hotel) {
