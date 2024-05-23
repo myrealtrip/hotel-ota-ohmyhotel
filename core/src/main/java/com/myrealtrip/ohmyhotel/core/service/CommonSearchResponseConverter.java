@@ -76,7 +76,7 @@ public class CommonSearchResponseConverter {
                                CancelPolicyType.FIRST_NIGHT_PERCENT :
                                CancelPolicyType.PERCENT;
             value = omhCancelPolicyValue.getPenaltyValue().doubleValue();
-        } else if (omhCancelPolicyValue.getRateOrAmount() == RateOrAmount.AMOUNT){
+        } else if (omhCancelPolicyValue.getRateOrAmount() == RateOrAmount.AMOUNT) {
             cancelPolicyType = CancelPolicyType.AMOUNT;
             value = OmhPriceCalculateUtils.toSalePrice(omhCancelPolicyValue.getPenaltyValue(), mrtCommissionRate).doubleValue();
         } else {
@@ -169,5 +169,23 @@ public class CommonSearchResponseConverter {
                         .charge(null)
                         .build());
         return results;
+    }
+
+    public String toUnionStayRoomName(String roomName, String roomNameByLanguage) {
+        return StringUtils.isNotBlank(roomNameByLanguage) ?
+               roomNameByLanguage :
+               roomName;
+    }
+
+    public String toUnionStayOptionName(String roomName, String roomNameByLanguage, String ratePlanName, String ratePlanNameByLanguage) {
+        String unionStayRoomName = toUnionStayRoomName(roomName, roomNameByLanguage);
+        String unionStayOptionName = StringUtils.isNotBlank(ratePlanNameByLanguage) ?
+                                     ratePlanNameByLanguage :
+                                     ratePlanName;
+
+        if (StringUtils.equals(unionStayRoomName, unionStayOptionName)) {
+            return null;
+        }
+        return unionStayOptionName;
     }
 }

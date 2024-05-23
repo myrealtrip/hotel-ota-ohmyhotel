@@ -129,9 +129,7 @@ public class SingleSearchResponseConverter {
                                                 ZeroMargin zeroMargin) {
         return RoomAvailability.builder()
             .roomId(omhRoomAvailabilities.get(0).getRoomTypeCode())
-            .roomName(StringUtils.isNotBlank(omhRoomAvailabilities.get(0).getRoomTypeNameByLanguage()) ?
-                      omhRoomAvailabilities.get(0).getRoomTypeNameByLanguage() :
-                      omhRoomAvailabilities.get(0).getRoomTypeName())
+            .roomName(commonSearchResponseConverter.toUnionStayRoomName(omhRoomAvailabilities.get(0).getRoomTypeName(), omhRoomAvailabilities.get(0).getRoomTypeNameByLanguage()))
             .rates(toRateAvailabilities(omhRoomAvailabilities, mrtCommissionRate, ratePlanCount, zeroMargin))
             .benefits(toRoomBenefit(omhRoomAvailabilities.get(0)))
             .build();
@@ -168,12 +166,11 @@ public class SingleSearchResponseConverter {
     }
 
     private RateAvailability toRateAvailability(OmhRoomAvailability omhRoomAvailability, BigDecimal mrtCommissionRate, ZeroMargin zeroMargin) {
+
         return RateAvailability.builder()
             .rateId(omhRoomAvailability.getRatePlanCode())
             .optionId(null)
-            .optionName(StringUtils.isNotBlank(omhRoomAvailability.getRatePlanNameByLanguage()) ?
-                        omhRoomAvailability.getRatePlanNameByLanguage() :
-                        omhRoomAvailability.getRatePlanName())
+            .optionName(commonSearchResponseConverter.toUnionStayOptionName(omhRoomAvailability.getRoomTypeName(), omhRoomAvailability.getRoomTypeNameByLanguage(), omhRoomAvailability.getRatePlanName(), omhRoomAvailability.getRatePlanNameByLanguage()))
             .remainingRooms(omhRoomAvailability.getLeftRooms())
             .saleScenario(null)
             .benefits(commonSearchResponseConverter.toRateBenefits(omhRoomAvailability.getMealBasisCode()))
