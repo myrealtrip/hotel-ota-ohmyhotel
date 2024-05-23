@@ -103,6 +103,7 @@ class PreCheckServiceTest {
 
         OmhPreCheckResponse omhPreCheckResponse = OmhPreCheckResponse.builder()
             .status(OmhPreCheckStatus.AMOUNT_CHANGED)
+            .amount(OmhPreCheckAmount.builder().totalNetAmount(BigDecimal.valueOf(99)).build())
             .build();
         given(omhPreCheckAgent.preCheck(any()))
             .willReturn(omhPreCheckResponse);

@@ -194,8 +194,8 @@ class CancelRefundCalculateServiceTest {
             .isNonRefundable(false)
             .timeZone("Asia/Seoul")
             .policies(List.of(OmhBookingCancelPolicyValue.builder()
-                                  .fromDateTime(LocalDateTime.of(2023, 1, 5, 0, 0, 0))
-                                  .toDateTime(LocalDateTime.of(2023, 1, 5, 23, 59, 59))
+                                  .fromDateTime("2023-01-05 00:00:00")
+                                  .toDateTime("2023-01-05 23:59:59")
                                   .penaltyAmount(BigDecimal.valueOf(60))
                                   .build()))
             .build();

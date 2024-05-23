@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.api.application.reservation;
 
+import com.myrealtrip.ohmyhotel.api.application.reservation.converter.PreCheckRequestConverter;
 import com.myrealtrip.ohmyhotel.core.service.BedDescriptionConverter;
 import com.myrealtrip.ohmyhotel.core.service.reservation.ReservationApiLogService;
 import com.myrealtrip.ohmyhotel.core.service.CommonSearchResponseConverter;
@@ -23,6 +24,9 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhBedGr
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse.OmhRoomAvailability;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCancelPolicy;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhPreCheckAgent;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhPreCheckResponse;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhPreCheckResponse.OmhPreCheckAmount;
 import com.myrealtrip.unionstay.common.constant.CountryCode;
 import com.myrealtrip.unionstay.dto.hotelota.search.request.SearchRequest;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.SearchResponse;
@@ -58,6 +62,7 @@ class OrderSearchServiceTest {
     @Spy private SearchRequestConverter searchRequestConverter;
     @Spy private SingleSearchResponseConverter singleSearchResponseConverter =
         new SingleSearchResponseConverter(new CommonSearchResponseConverter(), new BedDescriptionConverter());
+    @Spy private PreCheckRequestConverter preCheckRequestConverter = new PreCheckRequestConverter();
 
     @Mock private ReservationApiLogService reservationApiLogService;
     @Mock private CommissionRateService commissionRateService;
@@ -65,6 +70,7 @@ class OrderSearchServiceTest {
     @Mock private OmhRoomsAvailabilityAgent omhRoomsAvailabilityAgent;
     @Mock private OrderConverter orderConverter;
     @Mock private ZeroMarginSearchService zeroMarginSearchService;
+    @Mock private OmhPreCheckAgent omhPreCheckAgent;
 
     @Test
     @DisplayName("한 개 이상의 호텔이 요청으로 들어오면 Exception 을 던진다.")
@@ -158,6 +164,12 @@ class OrderSearchServiceTest {
             .build();
         given(omhRoomsAvailabilityAgent.getRoomsAvailability(any()))
             .willReturn(omhRoomsAvailabilityResponse);
+
+        OmhPreCheckResponse omhPreCheckResponse = OmhPreCheckResponse.builder()
+            .amount(OmhPreCheckAmount.builder().totalNetAmount(BigDecimal.valueOf(10000)).build())
+            .build();
+        given(omhPreCheckAgent.preCheck(any()))
+            .willReturn(omhPreCheckResponse);
 
         given(commissionRateService.getMrtCommissionRate())
             .willReturn(BigDecimal.valueOf(20));
