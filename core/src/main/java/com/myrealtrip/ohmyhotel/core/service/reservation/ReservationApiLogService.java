@@ -53,8 +53,8 @@ public class ReservationApiLogService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void savePreCheckLog(String mrtReservationNo, ApiLogType logType, String log) {
-        save(mrtReservationNo, ReservationStepApi.PRE_CHECK, OmhPreCheckAgent.URI, logType, log);
+    public void savePreCheckLog(String key, ApiLogType logType, String log) {
+        save(key, ReservationStepApi.PRE_CHECK, OmhPreCheckAgent.URI, logType, log);
     }
 
     private void save(String logKey, ReservationStepApi api, String url, ApiLogType type, String log) {

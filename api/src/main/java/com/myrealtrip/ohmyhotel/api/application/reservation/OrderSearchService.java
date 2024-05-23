@@ -71,12 +71,15 @@ public class OrderSearchService {
             return singleSearchResponseConverter.empty();
         }
 
-        changePrice(searchRequest, orderedRoomAvailability);
+        // pre-check API 호출하여 최종 가격 으로 업데이트
+        OmhPreCheckRequest omhPreCheckRequest = preCheckRequestConverter.toOmhPreCheckRequest(searchRequest, orderedRoomAvailability);
+        OmhPreCheckResponse omhPreCheckResponse = omhPreCheckAgent.preCheck(omhPreCheckRequest);
+        orderedRoomAvailability.changeTotalNetAmount(omhPreCheckResponse.getAmount().getTotalNetAmount());
 
         BigDecimal mrtCommissionRate = commissionRateService.getMrtCommissionRate();
         ZeroMargin zeroMargin = zeroMarginSearchService.getZeroMargin(hotelId, true);
         Order order = saveOrder(searchRequest, mrtCommissionRate, orderedRoomAvailability, zeroMargin);
-        saveApiLog(order.getOrderId(), omhRoomsAvailabilityRequest, omhRoomsAvailabilityResponse);
+        saveApiLog(order.getOrderId(), omhRoomsAvailabilityRequest, omhRoomsAvailabilityResponse, omhPreCheckRequest, omhPreCheckResponse);
         return singleSearchResponseConverter.toSearchResponse(
             hotelId,
             orderedRoomAvailability,
@@ -105,17 +108,12 @@ public class OrderSearchService {
 
     private void saveApiLog(Long orderId,
                             OmhRoomsAvailabilityRequest omhRoomsAvailabilityRequest,
-                            OmhRoomsAvailabilityResponse omhRoomsAvailabilityResponse) {
+                            OmhRoomsAvailabilityResponse omhRoomsAvailabilityResponse,
+                            OmhPreCheckRequest omhPreCheckRequest,
+                            OmhPreCheckResponse omhPreCheckResponse) {
         reservationApiLogService.saveRoomsAvailabilityLog(orderId, ApiLogType.REQUEST, ObjectMapperUtils.writeAsString(omhRoomsAvailabilityRequest));
         reservationApiLogService.saveRoomsAvailabilityLog(orderId, ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhRoomsAvailabilityResponse));
-    }
-
-    /**
-     * price-check API 를 호출하여 가격이 변경되었다면 해당 가격을 사용한다.
-     */
-    private void changePrice(SearchRequest searchRequest, OmhRoomAvailability omhRoomAvailability) {
-        OmhPreCheckRequest omhPreCheckRequest = preCheckRequestConverter.toOmhPreCheckRequest(searchRequest, omhRoomAvailability);
-        OmhPreCheckResponse omhPreCheckResponse = omhPreCheckAgent.preCheck(omhPreCheckRequest);
-        omhRoomAvailability.changeTotalNetAmount(omhPreCheckResponse.getAmount().getTotalNetAmount());
+        reservationApiLogService.savePreCheckLog(String.valueOf(orderId), ApiLogType.REQUEST, ObjectMapperUtils.writeAsString(omhPreCheckRequest));
+        reservationApiLogService.savePreCheckLog(String.valueOf(orderId), ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhPreCheckResponse));
     }
 }
