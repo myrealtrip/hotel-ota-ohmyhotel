@@ -21,8 +21,8 @@ public class BedDescriptionConverter {
     private String toBedGroupDescription(OmhBedGroup omhBedGroup) {
         return omhBedGroup.getBeds().stream()
             .map(bed -> {
-                if (nonNull(bed.getBedTypeCode())) {
-                    return bed.getBedTypeCode().getExposedName() + " " + bed.getBedTypeCount() + "개";
+                if (nonNull(bed.getBedTypeCodeEnum()) && bed.getBedTypeCodeEnum() != BedTypeCode.NONE) {
+                    return bed.getBedTypeCodeEnum().getExposedName() + " " + bed.getBedTypeCount() + "개";
                 }
                 if (nonNull(BedTypeCode.getByDescription(bed.getBedTypeName()))) {
                     return BedTypeCode.getByDescription(bed.getBedTypeName()).getExposedName() + " " + bed.getBedTypeCount() + "개";

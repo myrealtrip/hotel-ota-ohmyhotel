@@ -151,7 +151,7 @@ class OrderSearchServiceTest {
                                .totalNetAmount(BigDecimal.valueOf(10000))
                                .bedGroups(List.of(OmhBedGroup.builder()
                                                       .beds(List.of(OmhBed.builder()
-                                                                        .bedTypeCode(BedTypeCode.BDT01)
+                                                                        .bedTypeCode(BedTypeCode.BDT01.name())
                                                                         .bedTypeName("Single")
                                                                         .bedTypeCount(3)
                                                                         .build()))

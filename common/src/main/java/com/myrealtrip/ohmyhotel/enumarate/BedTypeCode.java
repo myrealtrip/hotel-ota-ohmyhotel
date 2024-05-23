@@ -22,7 +22,9 @@ public enum BedTypeCode {
     BDT08("Sofa bed", "소파베드"),
     BDT09("Bunk Bed", "벙크베드"),
     BDT10("Capsule Bed", "캡슐침대"),
-    BDT11("Camping Deck", "캠핑 데크");
+    BDT11("Camping Deck", "캠핑 데크"),
+    NONE("", ""),
+    ;
 
     private static final Map<String, BedTypeCode> DESC_TO_BED_TYPE_CODE = Arrays.stream(BedTypeCode.values())
         .collect(Collectors.toMap(BedTypeCode::getDescription, Function.identity()));

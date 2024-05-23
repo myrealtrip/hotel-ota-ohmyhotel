@@ -134,8 +134,8 @@ public class RoomMetaResponseConverter {
     }
 
     private String toBedType(OmhBedGroup.OmhBed bed) {
-        if (nonNull(bed.getBedTypeCode())) {
-            return bed.getBedTypeCode().getExposedName();
+        if (nonNull(bed.getBedTypeCodeEnum()) && bed.getBedTypeCodeEnum() != BedTypeCode.NONE) {
+            return bed.getBedTypeCodeEnum().getExposedName();
         }
         if (nonNull(BedTypeCode.getByDescription(bed.getBedTypeName()))) {
             return BedTypeCode.getByDescription(bed.getBedTypeName()).getExposedName();
