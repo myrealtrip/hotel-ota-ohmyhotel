@@ -38,10 +38,8 @@ public class PreCheckResponseConverter {
             return PreCheckStatus.SOLD_OUT;
         } else if (!NumericUtils.equals(order.getDepositPrice(), omhPreCheckResponse.getAmount().getTotalNetAmount())) {
             return PreCheckStatus.PRICE_CHANGED;
-        } else if (omhPreCheckResponse.getStatus() == OmhPreCheckStatus.AVAILABLE) {
-            return PreCheckStatus.AVAILABLE;
         } else {
-            throw new IllegalStateException("cannot mapping preCheck status");
+            return PreCheckStatus.AVAILABLE;
         }
     }
 }
