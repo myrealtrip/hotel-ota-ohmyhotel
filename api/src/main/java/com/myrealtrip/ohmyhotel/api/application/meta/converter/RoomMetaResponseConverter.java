@@ -59,9 +59,6 @@ public class RoomMetaResponseConverter {
     }
 
     private List<RoomMetaAttribute> toRoomMetaAttributes(OmhRoomInfoResponse omhRoomInfoResponse) {
-        if (CollectionUtils.isEmpty(omhRoomInfoResponse.getFacilities())) {
-            return Collections.emptyList();
-        }
         List<RoomMetaAttribute> roomMetaAttributes = new ArrayList<>();
         for (OmhRoomFacility omhRoomFacility : omhRoomInfoResponse.getFacilities()) {
             RoomMetaAttribute roomMetaAttribute = RoomMetaAttribute.builder()
