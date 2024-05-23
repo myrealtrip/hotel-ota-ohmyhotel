@@ -39,9 +39,15 @@ public class OmhCreateBookingRequestConverter {
     }
 
     private OmhCreateBookingContactPerson toOmhCreateBookingContactPerson(Reservation reservation) {
+        String name;
+        if (reservation.getCheckInUser().getFirstName().equals("TEST")) {
+            name = "TEST";
+        } else {
+            name = reservation.getCheckInUser().getFirstName() + " " + reservation.getCheckInUser().getLastName();
+        }
         return OmhCreateBookingContactPerson.builder()
             .email(reservation.getCheckInUser().getEmail())
-            .name(reservation.getCheckInUser().getFirstName() + " " + reservation.getCheckInUser().getLastName())
+            .name(name)
             .mobileNo(reservation.getCheckInUser().getContact())
             .build();
     }
