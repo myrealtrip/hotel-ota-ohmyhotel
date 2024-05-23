@@ -60,15 +60,17 @@ public class RoomMetaResponseConverter {
 
     private List<RoomMetaAttribute> toRoomMetaAttributes(OmhRoomInfoResponse omhRoomInfoResponse) {
         List<RoomMetaAttribute> roomMetaAttributes = new ArrayList<>();
-        for (OmhRoomFacility omhRoomFacility : omhRoomInfoResponse.getFacilities()) {
-            RoomMetaAttribute roomMetaAttribute = RoomMetaAttribute.builder()
-                .providerAttributeGroup(ROOM_FACILITY_PROVIDER_ATTRIBUTE_GROUP)
-                .providerAttributeId(omhRoomFacility.getFacilityCode())
-                .providerLabel(StringUtils.isNotBlank((omhRoomFacility.getFacilityNameByLanguage())) ?
-                               omhRoomFacility.getFacilityNameByLanguage() :
-                               omhRoomFacility.getFacilityName())
-                .build();
-            roomMetaAttributes.add(roomMetaAttribute);
+        if (nonNull(omhRoomInfoResponse.getFacilities())) {
+            for (OmhRoomFacility omhRoomFacility : omhRoomInfoResponse.getFacilities()) {
+                RoomMetaAttribute roomMetaAttribute = RoomMetaAttribute.builder()
+                    .providerAttributeGroup(ROOM_FACILITY_PROVIDER_ATTRIBUTE_GROUP)
+                    .providerAttributeId(omhRoomFacility.getFacilityCode())
+                    .providerLabel(StringUtils.isNotBlank((omhRoomFacility.getFacilityNameByLanguage())) ?
+                                   omhRoomFacility.getFacilityNameByLanguage() :
+                                   omhRoomFacility.getFacilityName())
+                    .build();
+                roomMetaAttributes.add(roomMetaAttribute);
+            }
         }
         if (nonNull(omhRoomInfoResponse.getRoomSizeFeet()) && omhRoomInfoResponse.getRoomSizeFeet() > 0) {
             roomMetaAttributes.add(RoomMetaAttribute.builder()
