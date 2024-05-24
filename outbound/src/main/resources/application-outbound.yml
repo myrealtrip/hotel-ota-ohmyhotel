@@ -52,10 +52,10 @@ ohmyhotel:
       response-timeout: 60
       max-in-memory-size: -1
     booking-detail:
-      connect-timeout: 30
-      write-timeout: 30
-      read-timeout: 60
-      response-timeout: 60
+      connect-timeout: 5
+      write-timeout: 5
+      read-timeout: 10
+      response-timeout: 10
       max-in-memory-size: -1
     cancel-booking:
       connect-timeout: 30
