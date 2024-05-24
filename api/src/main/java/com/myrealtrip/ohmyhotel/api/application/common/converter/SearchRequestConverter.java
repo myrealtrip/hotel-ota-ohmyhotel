@@ -45,6 +45,7 @@ public class SearchRequestConverter {
             .build();
     }
 
+    /* https://myrealtrip.slack.com/archives/C051MGEQ2PP/p1716537289178509 */
     private RateType toRateType(SearchRequest searchRequest) {
         if (nonNull(searchRequest.getRateOptions()) &&
             searchRequest.getRateOptions().contains(RateOption.MEMBER)) {
