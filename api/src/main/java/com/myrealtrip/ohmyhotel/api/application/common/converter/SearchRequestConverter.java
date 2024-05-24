@@ -47,8 +47,7 @@ public class SearchRequestConverter {
 
     private RateType toRateType(SearchRequest searchRequest) {
         if (nonNull(searchRequest.getRateOptions()) &&
-            searchRequest.getRateOptions().contains(RateOption.CROSS_SELL) &&
-            searchRequest.getSalesEnvironment() == SalesEnvironment.HOTEL_PACKAGE) {
+            searchRequest.getRateOptions().contains(RateOption.MEMBER)) {
             return RateType.PACKAGE_RATE;
         }
         return RateType.STANDARD_RATE;
