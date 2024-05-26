@@ -23,12 +23,14 @@ import com.myrealtrip.unionstay.dto.hotelota.search.response.Surcharge;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.TotalPayment;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.CancelPolicy;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.LocalCancelPolicy;
+import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.OffsetCancelPolicy;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -63,12 +65,13 @@ public class CommonSearchResponseConverter {
             return Collections.emptyList();
         }
         PenaltyBasis penaltyBasis = omhCancelPolicy.getPenaltyBasis();
+        ZoneId zoneId = ZoneId.of(omhCancelPolicy.getTimeZone());
         return omhCancelPolicy.getPolicies().stream()
-            .map(omhCancelPolicyValue -> toCancelPolicy(omhCancelPolicyValue, penaltyBasis, mrtCommissionRate))
+            .map(omhCancelPolicyValue -> toCancelPolicy(omhCancelPolicyValue, penaltyBasis, zoneId, mrtCommissionRate))
             .collect(Collectors.toList());
     }
 
-    private CancelPolicy toCancelPolicy(OmhCancelPolicyValue omhCancelPolicyValue, PenaltyBasis penaltyBasis, BigDecimal mrtCommissionRate) {
+    private CancelPolicy toCancelPolicy(OmhCancelPolicyValue omhCancelPolicyValue, PenaltyBasis penaltyBasis, ZoneId zone, BigDecimal mrtCommissionRate) {
         CancelPolicyType cancelPolicyType;
         double value;
         if (omhCancelPolicyValue.getRateOrAmount() == RateOrAmount.RATE) {
@@ -82,9 +85,9 @@ public class CommonSearchResponseConverter {
         } else {
             throw new IllegalStateException("cannot mapping CancelPolicyType");
         }
-        return LocalCancelPolicy.builder()
-            .start(omhCancelPolicyValue.getLocalDateTimeOfFromDateTime())
-            .end(omhCancelPolicyValue.getLocalDateTimeOfToDateTime())
+        return OffsetCancelPolicy.builder()
+            .start(omhCancelPolicyValue.getLocalDateTimeOfFromDateTime().atZone(zone).toOffsetDateTime())
+            .end(omhCancelPolicyValue.getLocalDateTimeOfToDateTime().atZone(zone).toOffsetDateTime())
             .type(cancelPolicyType)
             .value(value)
             .build();
