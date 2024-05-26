@@ -24,7 +24,7 @@ public class OmhCancelPolicy {
 
     private Boolean isNonRefundable;
 
-    private String timeZone;
+    private String timeZoneName;
 
     private PenaltyBasis penaltyBasis;
 

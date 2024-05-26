@@ -22,7 +22,6 @@ import com.myrealtrip.unionstay.dto.hotelota.search.response.RoomAvailability;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.Surcharge;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.TotalPayment;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.CancelPolicy;
-import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.LocalCancelPolicy;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.OffsetCancelPolicy;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.EnumUtils;
@@ -65,7 +64,7 @@ public class CommonSearchResponseConverter {
             return Collections.emptyList();
         }
         PenaltyBasis penaltyBasis = omhCancelPolicy.getPenaltyBasis();
-        ZoneId zoneId = ZoneId.of(omhCancelPolicy.getTimeZone());
+        ZoneId zoneId = ZoneId.of(omhCancelPolicy.getTimeZoneName());
         return omhCancelPolicy.getPolicies().stream()
             .map(omhCancelPolicyValue -> toCancelPolicy(omhCancelPolicyValue, penaltyBasis, zoneId, mrtCommissionRate))
             .collect(Collectors.toList());
