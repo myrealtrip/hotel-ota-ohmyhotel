@@ -103,7 +103,7 @@ class CancelConsumeServiceTest {
     }
 
     @Test
-    @DisplayName("오마이호텔 예약취소 API 에 성공했다면 예약취소성공 상태로 변경한다.")
+    @DisplayName("오마이호텔 예약취소 API 에 성공했고 예약조회 했을 때 취소 상태라면 예약취소성공 상태로 변경한다.")
     void case_2() {
         // given
         Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM);
@@ -112,9 +112,9 @@ class CancelConsumeServiceTest {
 
         BookingOrderMessage message = createMessage(BigDecimal.valueOf(0));
 
-        OmhBookingDetailResponse omhBookingDetailResponse = createOmhBookingDetailResponse(OmhBookingStatus.CONFIRMED, BigDecimal.valueOf(10000));
         given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-            .willReturn(omhBookingDetailResponse);
+            .willReturn(createOmhBookingDetailResponse(OmhBookingStatus.CONFIRMED, BigDecimal.valueOf(10000)),
+                        createOmhBookingDetailResponse(OmhBookingStatus.CANCELLED, BigDecimal.valueOf(10000)));
 
         OmhCancelBookingResponse omhCancelBookingResponse = createOmhCancelBookingResponse(BigDecimal.valueOf(10000));
         given(omhCancelBookingAgent.cancelBooking(MRT_RESERVATION_NO))
@@ -129,7 +129,33 @@ class CancelConsumeServiceTest {
     }
 
     @Test
-    @DisplayName("오마이호텔 예약취소 API 에 성공했다면 예약취소성공 상태로 변경한다. 개발환경이라면 메세지로 들어온 환불금액을 그대로 사용한다.")
+    @DisplayName("오마이호텔 예약취소 API 에 성공했지만 예약조회 했을 때 취소 상태가 아니라면 예약취소실패 상태로 변경한다.")
+    void case_2_1() {
+        // given
+        Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM);
+        given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
+            .willReturn(reservation);
+
+        BookingOrderMessage message = createMessage(BigDecimal.valueOf(0));
+
+        given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
+            .willReturn(createOmhBookingDetailResponse(OmhBookingStatus.CONFIRMED, BigDecimal.valueOf(10000)),
+                        createOmhBookingDetailResponse(OmhBookingStatus.CONFIRMED, BigDecimal.valueOf(10000)));
+
+        OmhCancelBookingResponse omhCancelBookingResponse = createOmhCancelBookingResponse(BigDecimal.valueOf(10000));
+        given(omhCancelBookingAgent.cancelBooking(MRT_RESERVATION_NO))
+            .willReturn(omhCancelBookingResponse);
+
+        // when
+        prodCancelConsumeService.consume(message);
+
+        // then
+        verify(reservationProvider, times(1))
+            .cancelFail(reservation.getReservationId(), CanceledBy.TRAVELER, message.getCancelReason(), message.getCancelReasonType(), "예약 취소 API 는 성공했지만 에약조회 결과 CANCELLED 상태가 아닙니다.", BookingErrorCode.INTERNAL_ERROR.name());
+    }
+
+    @Test
+    @DisplayName("오마이호텔 예약취소 API 에 성공했고 예약조회 했을 때 취소 상태라면 예약취소성공 상태로 변경한다. 개발환경이라면 메세지로 들어온 환불금액을 그대로 사용한다.")
     void case_3() {
         // given
         Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM);
@@ -138,9 +164,9 @@ class CancelConsumeServiceTest {
 
         BookingOrderMessage message = createMessage(BigDecimal.valueOf(0));
 
-        OmhBookingDetailResponse omhBookingDetailResponse = createOmhBookingDetailResponse(OmhBookingStatus.CONFIRMED, BigDecimal.valueOf(10000));
         given(omhBookingDetailAgent.bookingDetail(MRT_RESERVATION_NO))
-            .willReturn(omhBookingDetailResponse);
+            .willReturn(createOmhBookingDetailResponse(OmhBookingStatus.CONFIRMED, BigDecimal.valueOf(10000)),
+                        createOmhBookingDetailResponse(OmhBookingStatus.CANCELLED, BigDecimal.valueOf(10000)));
 
         OmhCancelBookingResponse omhCancelBookingResponse = createOmhCancelBookingResponse(null);
         given(omhCancelBookingAgent.cancelBooking(MRT_RESERVATION_NO))

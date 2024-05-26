@@ -64,7 +64,7 @@ public class CancelConsumeService {
             log.error("{} - 예약확정 상태전이 불가. 현재 상태: {}", reservation.getMrtReservationNo(), reservation.getReservationStatus());
             return;
         }
-        // 예약상세 API 조회하여 이미 취소되어 있는지 여부 확인
+        // 예약상세 API 조회하여 취소되어 있는지 여부 확인
         OmhBookingDetailResponse omhBookingDetailResponse = omhBookingDetail(reservation);
         if (omhBookingDetailResponse.getStatus() == OmhBookingStatus.CANCELLED) {
             handleCancelSuccess(reservation, message, null, omhBookingDetailResponse.getAmount().getTotalNetAmount());
@@ -86,24 +86,34 @@ public class CancelConsumeService {
         try {
             omhCancelBookingResponse = omhCancelBookingAgent.cancelBooking(reservation.getMrtReservationNo());
         } catch (OmhApiException omhApiException) {
+            log.error("{} - 예약 취소 API 실패", message.getMrtReservationNo());
             saveCancelBookingApiLog(reservation.getMrtReservationNo(), ApiLogType.REQUEST, omhApiException.getResponse());
-            handleCancelFail(reservation, message, omhApiException);
+            handleCancelFail(reservation, message, omhApiException.toString());
             return;
         } catch (Throwable t) {
-            handleCancelFail(reservation, message, t);
+            log.error("{} - 예약 취소 API 실패", message.getMrtReservationNo());
+            handleCancelFail(reservation, message, t.toString());
             return;
         }
         saveCancelBookingApiLog(reservation.getMrtReservationNo(), ApiLogType.RESPONSE, ObjectMapperUtils.writeAsString(omhCancelBookingResponse));
-        handleCancelSuccess(reservation, message, omhCancelBookingResponse.getCancelConfirmNo(), omhCancelBookingResponse.getCancelPenaltyAmount());
+
+        // 예약상세 API 조회하여 취소되어 있는지 여부 확인
+        OmhBookingDetailResponse omhBookingDetailResponse = omhBookingDetail(reservation);
+        if (omhBookingDetailResponse.getStatus() == OmhBookingStatus.CANCELLED) {
+            handleCancelSuccess(reservation, message, omhCancelBookingResponse.getCancelConfirmNo(), omhBookingDetailResponse.getAmount().getTotalNetAmount());
+        } else {
+            log.error("{} - 예약 취소 API 는 성공했지만 에약조회 결과 CANCELLED 상태가 아닙니다.", message.getMrtReservationNo());
+            handleCancelFail(reservation, message, "예약 취소 API 는 성공했지만 에약조회 결과 CANCELLED 상태가 아닙니다.");
+        }
     }
 
-    public void handleCancelFail(Reservation reservation, BookingOrderMessage message, Throwable t) {
+    public void handleCancelFail(Reservation reservation, BookingOrderMessage message, String errorMessage) {
         reservationProvider.cancelFail(
             reservation.getReservationId(),
             bookingOrderMessageConverter.toCanceledBy(message),
             message.getCancelReason(),
             message.getCancelReasonType(),
-            t.toString(),
+            errorMessage,
             BookingErrorCode.INTERNAL_ERROR.name()
         );
         reservationSlackSender.sendToSrtWithMention(ReservationSlackEvent.CANCEL_FAIL, reservation.getMrtReservationNo(), ObjectMapperUtils.writeAsString(message));
