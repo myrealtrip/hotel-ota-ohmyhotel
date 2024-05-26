@@ -12,7 +12,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhCreateBookingResponse extends OmhCommonResponse {
 
     private String channelBookingCode;

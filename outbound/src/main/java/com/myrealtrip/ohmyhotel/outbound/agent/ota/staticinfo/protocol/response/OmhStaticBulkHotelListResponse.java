@@ -16,7 +16,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhStaticBulkHotelListResponse extends OmhCommonResponse {
 
     private Integer hotelCount;
@@ -27,7 +26,6 @@ public class OmhStaticBulkHotelListResponse extends OmhCommonResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhBulkHotel {
 
         private Long hotelCode;

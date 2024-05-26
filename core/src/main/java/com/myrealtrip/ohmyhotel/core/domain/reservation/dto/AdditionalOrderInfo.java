@@ -1,12 +1,9 @@
 package com.myrealtrip.ohmyhotel.core.domain.reservation.dto;
 
-import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhBedGroup;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhBedGroup.OmhBed;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response.OmhBedGroup;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCancelPolicy;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhNightlyAmount;
-import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.CancelPolicy;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

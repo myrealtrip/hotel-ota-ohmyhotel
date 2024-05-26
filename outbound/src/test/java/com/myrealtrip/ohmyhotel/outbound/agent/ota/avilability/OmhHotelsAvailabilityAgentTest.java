@@ -4,7 +4,7 @@ import com.myrealtrip.ohmyhotel.enumarate.Language;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
 import com.myrealtrip.ohmyhotel.outbound.AgentTestContext;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhHotelsAvailabilityRequest;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhHotelsAvailabilityResponse;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response.OmhHotelsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomGuestCount;
 import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import lombok.extern.slf4j.Slf4j;

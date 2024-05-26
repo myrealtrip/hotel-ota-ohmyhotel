@@ -1,7 +1,7 @@
 package com.myrealtrip.ohmyhotel.core.service;
 
 import com.myrealtrip.ohmyhotel.enumarate.BedTypeCode;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhBedGroup;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response.OmhBedGroup;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

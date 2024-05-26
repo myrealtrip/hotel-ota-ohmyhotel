@@ -27,7 +27,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhBookingDetailResponse extends OmhCommonResponse {
 
     private OmhBookingStatus status;
@@ -78,13 +77,10 @@ public class OmhBookingDetailResponse extends OmhCommonResponse {
 
     private String emergencyContact;
 
-
-
     @SuperBuilder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhBookingCodes {
 
         private String channelBookingCode;
@@ -98,7 +94,6 @@ public class OmhBookingDetailResponse extends OmhCommonResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhBookingDetailContactPerson {
 
         private String name;
@@ -114,7 +109,6 @@ public class OmhBookingDetailResponse extends OmhCommonResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhBookingDetailRoomGuestInfo {
 
         private Integer roomNo;
@@ -128,7 +122,6 @@ public class OmhBookingDetailResponse extends OmhCommonResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhBookingDetailAmount {
 
         private String currency;
@@ -144,7 +137,6 @@ public class OmhBookingDetailResponse extends OmhCommonResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhBookingDetailCancelPolicy {
 
         private Boolean isNonRefundable;
@@ -160,7 +152,6 @@ public class OmhBookingDetailResponse extends OmhCommonResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhBookingCancelPolicyValue {
 
         private String fromDateTime;
@@ -192,7 +183,6 @@ public class OmhBookingDetailResponse extends OmhCommonResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhBookingDetailRequest {
 
         private BookingRequestCode code;

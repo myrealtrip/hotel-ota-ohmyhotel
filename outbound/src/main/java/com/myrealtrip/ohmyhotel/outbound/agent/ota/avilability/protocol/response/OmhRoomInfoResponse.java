@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol;
+package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCommonResponse;
@@ -17,7 +17,6 @@ import static java.util.Objects.isNull;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhRoomInfoResponse extends OmhCommonResponse {
 
     private Long hotelCode;
@@ -48,7 +47,6 @@ public class OmhRoomInfoResponse extends OmhCommonResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhRoomPhoto {
 
         private String url;

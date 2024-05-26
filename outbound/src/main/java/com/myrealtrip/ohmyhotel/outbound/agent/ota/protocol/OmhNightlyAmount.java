@@ -16,7 +16,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhNightlyAmount {
 
     private Integer roomNo;
@@ -27,7 +26,6 @@ public class OmhNightlyAmount {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhAmount {
 
         @JsonFormat(pattern = "yyyy-MM-dd")

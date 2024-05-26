@@ -2,7 +2,7 @@ package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability;
 
 import com.myrealtrip.ohmyhotel.enumarate.Language;
 import com.myrealtrip.ohmyhotel.outbound.AgentTestContext;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomInfoResponse;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response.OmhRoomInfoResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomInfoRequest;
 import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(classes = AgentTestContext.class, properties = "spring.profiles.active=dev")
 @Slf4j

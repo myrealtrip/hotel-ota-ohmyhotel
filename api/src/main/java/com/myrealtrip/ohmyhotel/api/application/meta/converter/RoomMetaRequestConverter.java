@@ -1,7 +1,6 @@
 package com.myrealtrip.ohmyhotel.api.application.meta.converter;
 
 import com.myrealtrip.ohmyhotel.enumarate.Language;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomInfoResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomInfoRequest;
 import com.myrealtrip.unionstay.dto.hotelota.meta.room.RoomMetaItem;
 import com.myrealtrip.unionstay.dto.hotelota.meta.room.RoomMetaRequest;

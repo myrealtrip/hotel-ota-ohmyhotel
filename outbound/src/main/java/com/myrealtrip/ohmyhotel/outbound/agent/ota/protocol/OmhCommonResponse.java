@@ -2,6 +2,7 @@ package com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,25 +19,32 @@ import static java.util.Objects.nonNull;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhCommonResponse {
 
+    @JsonInclude(Include.NON_NULL)
     private Boolean succeedYn;
 
+    @JsonInclude(Include.NON_NULL)
     private String transactionSetId;
 
+    @JsonInclude(Include.NON_NULL)
     private String serviceCode;
 
+    @JsonInclude(Include.NON_NULL)
     private String serviceName;
 
+    @JsonInclude(Include.NON_NULL)
     private String serviceTime;
 
 //    private String status; OmhPreCheckResponse.status 와 겹쳐 주석처리
 
+    @JsonInclude(Include.NON_NULL)
     private String errorCode;
 
+    @JsonInclude(Include.NON_NULL)
     private String errorMessage;
 
+    @JsonInclude(Include.NON_NULL)
     private List<OmhError> errors;
 
     @JsonIgnore
@@ -60,11 +68,12 @@ public class OmhCommonResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhError {
 
+        @JsonInclude(Include.NON_NULL)
         private String errorCode;
 
+        @JsonInclude(Include.NON_NULL)
         private String errorMessage;
     }
 

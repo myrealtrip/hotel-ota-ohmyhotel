@@ -4,7 +4,7 @@ import com.myrealtrip.ohmyhotel.outbound.agent.common.AgentConstants;
 import com.myrealtrip.ohmyhotel.outbound.agent.common.CircuitBreakerFactory;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.OmhAgentSupport;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhHotelsAvailabilityRequest;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhHotelsAvailabilityResponse;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response.OmhHotelsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.exception.OmhApiException;
 import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;

@@ -13,7 +13,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhHealthCheckResponse extends OmhCommonResponse {
 
     private OmhHealthCheckResult result;

@@ -3,8 +3,6 @@ package com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation;
 import com.myrealtrip.ohmyhotel.outbound.agent.common.AgentConstants;
 import com.myrealtrip.ohmyhotel.outbound.agent.common.CircuitBreakerFactory;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.OmhAgentSupport;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhHotelsAvailabilityResponse;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhHotelsAvailabilityRequest;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.exception.OmhApiException;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.request.OmhPreCheckRequest;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhPreCheckResponse;

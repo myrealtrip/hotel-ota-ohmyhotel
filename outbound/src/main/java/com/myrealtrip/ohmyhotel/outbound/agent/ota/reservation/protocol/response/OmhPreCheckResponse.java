@@ -20,7 +20,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhPreCheckResponse extends OmhCommonResponse {
 
     private OmhPreCheckStatus status;
@@ -35,7 +34,6 @@ public class OmhPreCheckResponse extends OmhCommonResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhPreCheckAmount {
 
         private String currency;

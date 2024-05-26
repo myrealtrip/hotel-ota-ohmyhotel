@@ -1,13 +1,13 @@
-package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol;
+package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
 import com.myrealtrip.ohmyhotel.enumarate.PromotionType;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCancelPolicy;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhNightlyAmount;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCommonResponse;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhRoomOccupancy;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,58 +26,24 @@ import static java.util.Objects.isNull;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class OmhHotelsAvailabilityResponse extends OmhCommonResponse {
+public class OmhRoomsAvailabilityResponse extends OmhCommonResponse {
 
-    private List<OmhHotelAvailability> hotels;
+    private List<OmhRoomAvailability> rooms;
 
-    @SuperBuilder
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class OmhHotelAvailability {
-
-        private Long hotelCode;
-
-        private String hotelName;
-
-        private String hotelNameByLanguage;
-
-        private String hotelType;
-
-        private String starRating;
-
-        private String zipCode;
-
-        private String address;
-
-        private String addressByLanguage;
-
-        private Double latitude;
-
-        private Double longitude;
-
-        private Boolean recommendYn;
-
-        private List<OmhRoomSimpleAvailability> rooms;
-
-        @JsonIgnore
-        public Map<String, List<OmhRoomSimpleAvailability>> getRoomsGroupByRoomTypeCode() {
-            if (isNull(rooms)) {
-                return Collections.emptyMap();
-            }
-            return rooms.stream()
-                .collect(Collectors.groupingBy(OmhRoomSimpleAvailability::getRoomTypeCode));
+    @JsonIgnore
+    public Map<String, List<OmhRoomAvailability>> getRoomsGroupByRoomTypeCode() {
+        if (isNull(rooms)) {
+            return Collections.emptyMap();
         }
+        return rooms.stream()
+            .collect(Collectors.groupingBy(OmhRoomAvailability::getRoomTypeCode));
     }
 
     @SuperBuilder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class OmhRoomSimpleAvailability {
+    public static class OmhRoomAvailability {
 
         private String roomTypeCode;
 
@@ -85,11 +51,17 @@ public class OmhHotelsAvailabilityResponse extends OmhCommonResponse {
 
         private String roomTypeNameByLanguage;
 
+        private String roomTypeDescription;
+
+        private String roomTypeDescriptionByLanguage;
+
         private String mealBasisCode;
 
         private String mealBasisName;
 
         private String freeBreakfastName;
+
+        private String roomToken;
 
         private String ratePlanCode;
 
@@ -114,6 +86,10 @@ public class OmhHotelsAvailabilityResponse extends OmhCommonResponse {
 
         private String promotionInfoByLanguage;
 
+        private Double roomSizeMeter;
+
+        private Double roomSizeFeet;
+
         private RateType rateType;
 
         private Integer leftRooms;
@@ -127,6 +103,35 @@ public class OmhHotelsAvailabilityResponse extends OmhCommonResponse {
         private List<OmhNightlyAmount> nightly;
 
         private OmhCancelPolicy cancellationPolicy;
+
+        private OmhRoomOccupancy occupancy;
+
+        private List<OmhRoomFacility> facilities;
+
+        private List<OmhBedGroup> bedGroups;
+
+        private ChildPolicy childPolicy;
+
+        @JsonIgnore
+        public void changeTotalNetAmount(BigDecimal totalNetAmount) {
+            this.totalNetAmount = totalNetAmount;
+        }
     }
 
+    @SuperBuilder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class ChildPolicy {
+
+        private Integer infantAge;
+
+        private Integer childFromAge;
+
+        private Integer childToAge;
+
+        private Boolean freeStay;
+
+        private Integer minimumGuestAge;
+    }
 }

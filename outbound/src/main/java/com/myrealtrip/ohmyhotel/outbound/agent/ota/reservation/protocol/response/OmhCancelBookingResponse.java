@@ -1,6 +1,7 @@
 package com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCommonResponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,6 @@ import java.math.BigDecimal;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhCancelBookingResponse extends OmhCommonResponse {
 
     private String cancelConfirmNo;

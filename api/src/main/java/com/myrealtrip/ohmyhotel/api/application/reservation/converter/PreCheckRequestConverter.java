@@ -2,15 +2,13 @@ package com.myrealtrip.ohmyhotel.api.application.reservation.converter;
 
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Order;
 import com.myrealtrip.ohmyhotel.enumarate.Language;
-import com.myrealtrip.ohmyhotel.enumarate.RateType;
-import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.OmhRoomsAvailabilityResponse.OmhRoomAvailability;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response.OmhRoomsAvailabilityResponse.OmhRoomAvailability;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomGuestCount;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.request.OmhPreCheckRequest;
 import com.myrealtrip.unionstay.dto.hotelota.precheck.request.PreCheckRequest;
 import com.myrealtrip.unionstay.dto.hotelota.search.request.SearchRequest;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Component

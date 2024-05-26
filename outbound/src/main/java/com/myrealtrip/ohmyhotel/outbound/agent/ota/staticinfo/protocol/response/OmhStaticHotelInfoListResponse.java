@@ -18,7 +18,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhStaticHotelInfoListResponse extends OmhCommonResponse {
 
     private List<OmhHotelInfo> hotels;
@@ -27,7 +26,6 @@ public class OmhStaticHotelInfoListResponse extends OmhCommonResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhHotelInfo {
 
         private Long hotelCode;
@@ -94,7 +92,6 @@ public class OmhStaticHotelInfoListResponse extends OmhCommonResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhHotelDescriptions {
         private String introduction;
 
@@ -116,7 +113,6 @@ public class OmhStaticHotelInfoListResponse extends OmhCommonResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhHotelPhoto {
 
         private String url;

@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol;
+package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -16,7 +16,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhBedGroup {
 
     private Integer bedGroupNo;
@@ -27,7 +26,6 @@ public class OmhBedGroup {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhBed {
 
         private Integer bedNo;

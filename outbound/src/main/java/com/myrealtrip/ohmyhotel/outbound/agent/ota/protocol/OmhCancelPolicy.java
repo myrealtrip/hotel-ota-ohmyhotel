@@ -20,7 +20,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhCancelPolicy {
 
     private Boolean isNonRefundable;
@@ -35,7 +34,6 @@ public class OmhCancelPolicy {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class OmhCancelPolicyValue {
 
         private String fromDateTime;

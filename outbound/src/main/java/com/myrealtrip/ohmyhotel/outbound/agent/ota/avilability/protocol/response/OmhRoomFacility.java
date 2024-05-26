@@ -1,4 +1,4 @@
-package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol;
+package com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
@@ -11,7 +11,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OmhRoomFacility {
     private String facilityCode;
     private String facilityName;
