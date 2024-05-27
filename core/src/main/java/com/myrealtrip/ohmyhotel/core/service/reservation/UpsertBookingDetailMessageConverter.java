@@ -1,9 +1,11 @@
 package com.myrealtrip.ohmyhotel.core.service.reservation;
 
 import com.google.common.collect.Lists;
+import com.myrealtrip.ohmyhotel.constants.AttributeConstants;
 import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Reservation;
 import com.myrealtrip.ohmyhotel.core.service.BedDescriptionConverter;
 import com.myrealtrip.ohmyhotel.core.service.CommonSearchResponseConverter;
+import com.myrealtrip.ohmyhotel.core.service.MealBasisCodeConverter;
 import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
 import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
 import com.myrealtrip.ohmyhotel.utils.OmhPriceCalculateUtils;
@@ -31,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -53,6 +56,7 @@ public class UpsertBookingDetailMessageConverter {
     private final BedDescriptionConverter bedDescriptionConverter;
     private final CommonSearchResponseConverter commonSearchResponseConverter;
     private final BookingStatusConverter bookingStatusConverter;
+    private final MealBasisCodeConverter mealBasisCodeConverter;
 
     public UpsertBookingDetailMessage toMessage(Reservation reservation, int retryCount) {
         return UpsertBookingDetailMessage.builder()
@@ -107,13 +111,14 @@ public class UpsertBookingDetailMessageConverter {
 
     private List<RoomBookingRateBenefit> toBenefits(Reservation reservation) {
         MealBasisCode mealBasisCode = EnumUtils.getEnum(MealBasisCode.class, reservation.getAdditionalInfo().getMealBasisCode(), MealBasisCode.NONE);
-        if (isNull(mealBasisCode) ||
-            StringUtils.isBlank(mealBasisCode.getExposedName())) {
+        Pair<String, String> mealAttribute = mealBasisCodeConverter.toAttribute(mealBasisCode);
+        if (isNull(mealAttribute)) {
             return Collections.emptyList();
         }
+
         RoomBookingRateBenefit rateBenefit = RoomBookingRateBenefit.builder()
-            .id(mealBasisCode.name())
-            .benefitName(mealBasisCode.getExposedName())
+            .id(mealAttribute.getFirst())
+            .benefitName(mealAttribute.getSecond())
             .build();
         return List.of(rateBenefit);
     }

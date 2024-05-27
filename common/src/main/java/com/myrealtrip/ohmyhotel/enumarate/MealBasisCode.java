@@ -23,7 +23,7 @@ public enum MealBasisCode {
     N("None", null),
     S("Silver", "Silver"),
     Z("N/A", null),
-    NONE("", null);
+    NONE("매핑되는 enum 없음", null);
 
     private final String description;
     private final String exposedName;
