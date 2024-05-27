@@ -13,8 +13,9 @@ import static java.util.Objects.isNull;
 public class MealBasisCodeConverter {
 
     /**
-     * first: attribute id
-     * second: attribute name
+     * MealBasisCode 를 통합숙소 Attribute 로 변환한다. <br>
+     * first: attribute id <br>
+     * second: attribute name <br>
      * @return
      */
     public Pair<String, String> toAttribute(MealBasisCode mealBasisCode) {
