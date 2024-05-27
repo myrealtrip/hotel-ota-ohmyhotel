@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
 import com.myrealtrip.ohmyhotel.enumarate.PromotionType;
 import com.myrealtrip.ohmyhotel.enumarate.RateType;
+import com.myrealtrip.ohmyhotel.enumarate.RecommendYn;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCancelPolicy;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhNightlyAmount;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.protocol.OmhCommonResponse;
@@ -56,7 +57,7 @@ public class OmhHotelsAvailabilityResponse extends OmhCommonResponse {
 
         private Double longitude;
 
-        private Boolean recommendYn;
+        private RecommendYn recommendYn;
 
         private List<OmhRoomSimpleAvailability> rooms;
 
