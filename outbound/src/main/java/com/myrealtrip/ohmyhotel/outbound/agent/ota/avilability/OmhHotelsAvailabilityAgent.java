@@ -12,8 +12,11 @@ import io.github.resilience4j.reactor.circuitbreaker.operator.CircuitBreakerOper
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.time.temporal.ChronoUnit;
 
 @Component
 @Slf4j
@@ -35,16 +38,23 @@ public class OmhHotelsAvailabilityAgent {
     }
 
     public OmhHotelsAvailabilityResponse getHotelsAvailability(OmhHotelsAvailabilityRequest request) {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
         log.info("OmhHotelsAvailabilityRequest: {}", ObjectMapperUtils.writeAsString(request));
         try {
-            OmhHotelsAvailabilityResponse response =  getHotelsAvailabilityMono(request).block();
-            return response;
+            return getHotelsAvailabilityMono(request).block();
         } catch (OmhApiException e) {
             log.error(AgentConstants.LOG_FORMAT, HOTELS_AVAILABILITY, ObjectMapperUtils.writeAsString(request), e.getResponse());
             throw e;
         } catch (Throwable e) {
             log.error(AgentConstants.LOG_FORMAT, HOTELS_AVAILABILITY, ObjectMapperUtils.writeAsString(request), "");
             throw e;
+        } finally {
+            stopWatch.stop();
+            log.info("nights: {}, hotel count: {}, search api execute time: {}",
+                     request.getCheckInDate().until(request.getCheckOutDate(), ChronoUnit.DAYS),
+                     request.getHotelCodes().size(),
+                     stopWatch.getTotalTimeSeconds());
         }
     }
 

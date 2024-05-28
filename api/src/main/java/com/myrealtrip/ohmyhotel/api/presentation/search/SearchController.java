@@ -26,14 +26,7 @@ public class SearchController {
     @Operation(summary = "실시간 재고 및 가격 조회", description = "property 의 실시간 재고와 가격을 검색합니다.")
     @GetMapping(value = "/properties/search")
     public Resource<SearchResponse> search(@Valid SearchRequest searchRequest) {
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
         SearchResponse searchResponse = searchService.search(searchRequest);
-        stopWatch.stop();
-        log.info("nights: {}, hotel count: {}, search api execute time: {}",
-                 searchRequest.getCheckin().until(searchRequest.getCheckout(), ChronoUnit.DAYS),
-                 searchRequest.getPropertyIds().size(),
-                 stopWatch.getTotalTimeSeconds());
         return Resource.<SearchResponse>builder()
             .data(searchResponse)
             .build();
