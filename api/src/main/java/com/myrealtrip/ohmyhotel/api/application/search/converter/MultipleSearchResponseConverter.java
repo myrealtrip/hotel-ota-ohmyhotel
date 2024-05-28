@@ -1,8 +1,11 @@
 package com.myrealtrip.ohmyhotel.api.application.search.converter;
 
+import com.myrealtrip.ohmyhotel.core.domain.search.dto.RatePlan;
 import com.myrealtrip.ohmyhotel.core.service.CommonSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.protocol.search.RateSearchId;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
+import com.myrealtrip.ohmyhotel.core.service.RatePlanDistinctService;
+import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response.OmhHotelsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response.OmhHotelsAvailabilityResponse.OmhHotelAvailability;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response.OmhHotelsAvailabilityResponse.OmhRoomSimpleAvailability;
@@ -16,6 +19,7 @@ import com.myrealtrip.unionstay.dto.hotelota.search.response.SearchResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.EnumUtils;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -30,6 +34,7 @@ import static java.util.Objects.isNull;
 @RequiredArgsConstructor
 public class MultipleSearchResponseConverter {
 
+    private final RatePlanDistinctService ratePlanDistinctService;
     private final CommonSearchResponseConverter commonSearchResponseConverter;
 
     /**
@@ -109,8 +114,20 @@ public class MultipleSearchResponseConverter {
         if (CollectionUtils.isEmpty(omhRoomSimpleAvailabilities)) {
             return Collections.emptyList();
         }
+        List<RatePlan> ratePlans = omhRoomSimpleAvailabilities.stream()
+            .map(omhRoomSimpleAvailability -> RatePlan.builder()
+                .ratePlanCode(omhRoomSimpleAvailability.getRatePlanCode())
+                .ratePlanName(omhRoomSimpleAvailability.getRatePlanName())
+                .cancelPolicy(omhRoomSimpleAvailability.getCancellationPolicy())
+                .mealBasisCode(EnumUtils.getEnum(MealBasisCode.class, omhRoomSimpleAvailability.getMealBasisCode(), MealBasisCode.NONE))
+                .totalNetAmount(omhRoomSimpleAvailability.getTotalNetAmount())
+                .build())
+            .collect(Collectors.toList());
+
+        List<String> exposeRatePlanCode = ratePlanDistinctService.getExposeRatePlanCode(ratePlans);
         return omhRoomSimpleAvailabilities.stream()
-            .filter(omhRoomSimpleAvailability -> isNull(omhRoomSimpleAvailability.getTotalMspAmount()))
+            .filter(omhRoomSimpleAvailability -> isNull(omhRoomSimpleAvailability.getTotalMspAmount()) &&
+                                                 exposeRatePlanCode.contains(omhRoomSimpleAvailability.getRatePlanCode()))
             .map(omhRoomSimpleAvailability -> toRateAvailability(omhRoomSimpleAvailability, mrtCommissionRate, zeroMargin))
             .sorted(CommonSearchResponseConverter.RATE_COMPARATOR)
             .limit(ratePlanCount)

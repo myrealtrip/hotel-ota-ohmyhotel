@@ -8,6 +8,7 @@ import com.myrealtrip.ohmyhotel.enumarate.RateOrAmount;
 import com.myrealtrip.ohmyhotel.utils.DateTimeUtils;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -20,6 +21,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode
 public class OmhCancelPolicy {
 
     private Boolean isNonRefundable;
@@ -34,6 +36,7 @@ public class OmhCancelPolicy {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @EqualsAndHashCode
     public static class OmhCancelPolicyValue {
 
         private String fromDateTime;

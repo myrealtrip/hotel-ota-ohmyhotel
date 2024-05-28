@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.core.service;
 
+import com.myrealtrip.ohmyhotel.constants.AttributeConstants;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
 import com.myrealtrip.ohmyhotel.enumarate.PenaltyBasis;
@@ -23,9 +24,11 @@ import com.myrealtrip.unionstay.dto.hotelota.search.response.Surcharge;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.TotalPayment;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.CancelPolicy;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.cancelpolicy.OffsetCancelPolicy;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -36,25 +39,30 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.myrealtrip.ohmyhotel.constants.AttributeConstants.RATE_PLAN_NO_BREAK_FAST_PROVIDER_ATTRIBUTE_ID;
+import static com.myrealtrip.ohmyhotel.constants.AttributeConstants.RATE_PLAN_NO_BREAK_FAST_PROVIDER_ATTRIBUTE_NAME;
 import static java.util.Objects.isNull;
 
 @Component
+@RequiredArgsConstructor
 public class CommonSearchResponseConverter {
 
     public static final Comparator<RateAvailability> RATE_COMPARATOR = Comparator.comparing(rate -> rate.getTotalPayment().getInclusive());
-
     public static final Comparator<RoomAvailability> ROOM_COMPARATOR = Comparator.comparing(room -> room.getRates().get(0).getTotalPayment().getInclusive());
+
+    private final MealBasisCodeConverter mealBasisCodeConverter;
 
     public List<RateBenefit> toRateBenefits(String mealBasisCodeStr) {
         MealBasisCode mealBasisCode = EnumUtils.getEnum(MealBasisCode.class, mealBasisCodeStr, MealBasisCode.NONE);
-        if (isNull(mealBasisCode) ||
-            StringUtils.isBlank(mealBasisCode.getExposedName())) {
+        Pair<String, String> mealAttribute = mealBasisCodeConverter.toAttribute(mealBasisCode);
+        if (isNull(mealAttribute)) {
             return Collections.emptyList();
         }
+
         RateBenefit rateBenefit = RateBenefit.builder()
-            .id(mealBasisCode.name())
+            .id(mealAttribute.getFirst())
             .group("MEAL_BASIS_CODE")
-            .benefitName(mealBasisCode.getExposedName())
+            .benefitName(mealAttribute.getSecond())
             .build();
         return List.of(rateBenefit);
     }
