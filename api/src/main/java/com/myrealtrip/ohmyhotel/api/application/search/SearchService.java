@@ -3,6 +3,7 @@ package com.myrealtrip.ohmyhotel.api.application.search;
 import com.myrealtrip.ohmyhotel.api.application.search.converter.MultipleSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.application.common.converter.SearchRequestConverter;
 import com.myrealtrip.ohmyhotel.api.application.common.converter.SingleSearchResponseConverter;
+import com.myrealtrip.ohmyhotel.api.protocol.search.OmhHotelsAvailabilityCacheRequest;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.core.service.CommissionRateService;
 import com.myrealtrip.ohmyhotel.core.service.ZeroMarginSearchService;
@@ -33,7 +34,7 @@ public class SearchService {
     private final CommissionRateService commissionRateService;
     private final ZeroMarginSearchService zeroMarginSearchService;
 
-    private final OmhHotelsAvailabilityAgent omhHotelsAvailabilityAgent;
+    private final OmhHotelsAvailabilityCacheService omhHotelsAvailabilityCacheService;
     private final OmhRoomsAvailabilityAgent omhRoomsAvailabilityAgent;
 
     private final MultipleSearchResponseConverter multipleSearchResponseConverter;
@@ -66,7 +67,7 @@ public class SearchService {
             .collect(Collectors.toList());
         Map<Long, ZeroMargin> hotelIdToZeroMargin = zeroMarginSearchService.getZeroMargins(hotelIds, true);
         OmhHotelsAvailabilityRequest omhHotelsAvailabilityRequest = searchRequestConverter.toOmhHotelsAvailabilityRequest(searchRequest);
-        OmhHotelsAvailabilityResponse omhHotelsAvailabilityResponse =  omhHotelsAvailabilityAgent.getHotelsAvailability(omhHotelsAvailabilityRequest);
+        OmhHotelsAvailabilityResponse omhHotelsAvailabilityResponse =  omhHotelsAvailabilityCacheService.getHotelsAvailability(new OmhHotelsAvailabilityCacheRequest(omhHotelsAvailabilityRequest));
         return multipleSearchResponseConverter.toSearchResponse(
             omhHotelsAvailabilityResponse,
             mrtCommissionRate,
