@@ -2,6 +2,8 @@ package com.myrealtrip.ohmyhotel.api.application.reservation;
 
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.PreCheckRequestConverter;
 import com.myrealtrip.ohmyhotel.core.service.BedDescriptionConverter;
+import com.myrealtrip.ohmyhotel.core.service.MealBasisCodeConverter;
+import com.myrealtrip.ohmyhotel.core.service.RatePlanDistinctService;
 import com.myrealtrip.ohmyhotel.core.service.reservation.ReservationApiLogService;
 import com.myrealtrip.ohmyhotel.core.service.CommonSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.OrderConverter;
@@ -60,7 +62,7 @@ class OrderSearchServiceTest {
 
     @Spy private SearchRequestConverter searchRequestConverter;
     @Spy private SingleSearchResponseConverter singleSearchResponseConverter =
-        new SingleSearchResponseConverter(new CommonSearchResponseConverter(), new BedDescriptionConverter());
+        new SingleSearchResponseConverter(new RatePlanDistinctService(), new CommonSearchResponseConverter(new MealBasisCodeConverter()), new BedDescriptionConverter());
     @Spy private PreCheckRequestConverter preCheckRequestConverter = new PreCheckRequestConverter();
 
     @Mock private ReservationApiLogService reservationApiLogService;
