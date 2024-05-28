@@ -22,7 +22,7 @@ public class CacheProperties {
     @AllArgsConstructor
     public enum GlobalCache {
         ROOM_META(CacheName.ROOM_META, 6L, TimeUnit.HOURS),
-        HOTELS_AVAILABILITY(CacheName.HOTELS_AVAILABILITY, 10L, TimeUnit.MINUTES),
+        HOTELS_AVAILABILITY(CacheName.HOTELS_AVAILABILITY, 5L, TimeUnit.MINUTES),
         ;
 
         private static final String GLOBAL_CACHE_KEY_FORMAT = "%s:%s:%s:%s";    // ex. unionstay:{environment}:{cacheName}:{key}
