@@ -48,11 +48,11 @@ public class ReserveConfirmConsumeService {
             log.error("{} - 예약확정 상태전이 불가. 현재 상태: {}", reservation.getMrtReservationNo(), reservation.getReservationStatus());
             return;
         }
+        reservation = reservationProvider.updateOrderFormInfo(reservation.getReservationId(), bookingOrderMessageConverter.toOrderFormInfo(message));
         if (reservation.getReservationStatus() == ReservationStatus.RESERVE_CONFIRM_PENDING) {
             reserveConfirmCheckService.checkOmhBookDetailAndUpdateReservation(reservation);
             return;
         }
-        reservation = reservationProvider.updateOrderFormInfo(reservation.getReservationId(), bookingOrderMessageConverter.toOrderFormInfo(message));
         OmhCreateBookingRequest omhCreateBookingRequest = omhCreateBookingRequestConverter.toOmhCreateBookingRequest(reservation);
         saveCreateBookingApiLog(reservation.getMrtReservationNo(), ApiLogType.REQUEST, ObjectMapperUtils.writeAsString(omhCreateBookingRequest));
         OmhCreateBookingResponse omhCreateBookingResponse;
