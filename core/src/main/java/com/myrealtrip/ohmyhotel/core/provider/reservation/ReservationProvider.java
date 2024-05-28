@@ -39,6 +39,11 @@ public class ReservationProvider {
         return reservationMapper.toDto(reservationRepository.findByMrtReservationNo(mrtReservationNo));
     }
 
+    @Transactional(readOnly = true)
+    public Reservation getByMrtReservationNoReadOnly(String mrtReservationNo) {
+        return reservationMapper.toDto(reservationRepository.findByMrtReservationNo(mrtReservationNo));
+    }
+
     @Transactional
     public Reservation updateOrderFormInfo(Long reservationId, OrderFormInfo orderFormInfo) {
         ReservationEntity entity = findByReservationId(reservationId);

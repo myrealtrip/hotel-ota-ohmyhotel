@@ -5,6 +5,7 @@ import com.myrealtrip.ohmyhotel.core.domain.reservation.dto.Reservation;
 import com.myrealtrip.ohmyhotel.core.provider.reservation.ReservationProvider;
 import com.myrealtrip.ohmyhotel.core.service.reservation.ReservationApiLogService;
 import com.myrealtrip.ohmyhotel.enumarate.ApiLogType;
+import com.myrealtrip.ohmyhotel.enumarate.ReservationStatus;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhBookingDetailAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhBookingDetailResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhBookingDetailResponse.OmhBookingCancelPolicyValue;
@@ -17,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -38,8 +40,8 @@ public class CancelRefundCalculateService {
     private final CancelRefundResponseConverter cancelRefundResponseConverter;
 
     public ItineraryCancelRefundResponse getCancelRefund(String mrtReservationNo) {
-        Reservation reservation = reservationProvider.getByMrtReservationNo(mrtReservationNo);
         OmhBookingDetailResponse omhBookingDetailResponse = omhBookingDetailAgent.bookingDetail(mrtReservationNo);
+        Reservation reservation = reservationProvider.getByMrtReservationNoReadOnly(mrtReservationNo);
         BigDecimal cancelPenaltyDepositPrice = getCancelPenaltyDepositPrice(omhBookingDetailResponse.getCancellationPolicy(), reservation.getDepositPrice());
         saveApiLog(mrtReservationNo, omhBookingDetailResponse);
         return cancelRefundResponseConverter.toCancelRefundResponse(reservation, cancelPenaltyDepositPrice);
