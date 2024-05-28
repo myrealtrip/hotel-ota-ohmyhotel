@@ -43,7 +43,7 @@ public class SearchService {
     /**
      * 숙소의 실시간 재고/가격을 검색합니다. (검색 리스트, 상품 상세 에서 호출)
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public SearchResponse search(SearchRequest searchRequest) {
         if (CollectionUtils.isEmpty(searchRequest.getPropertyIds())) {
             return SearchResponse.builder()
