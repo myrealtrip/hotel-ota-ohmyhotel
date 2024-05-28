@@ -14,7 +14,8 @@ public class OmhHotelsAvailabilityCacheService {
 
     private final OmhHotelsAvailabilityAgent omhHotelsAvailabilityAgent;
 
-    @GlobalCacheable(cache = GlobalCache.HOTELS_AVAILABILITY, param = "#omhHotelsAvailabilityCacheRequest.cacheKey", type = OmhHotelsAvailabilityResponse.class)
+    // 레디스 사용량 우려되어 주석 처리. 오픈 이후 추이 살펴보며 캐시 적용/미적용 여부 판단 한다.
+    // @GlobalCacheable(cache = GlobalCache.HOTELS_AVAILABILITY, param = "#omhHotelsAvailabilityCacheRequest.cacheKey", type = OmhHotelsAvailabilityResponse.class)
     public OmhHotelsAvailabilityResponse getHotelsAvailability(OmhHotelsAvailabilityCacheRequest omhHotelsAvailabilityCacheRequest) {
         return omhHotelsAvailabilityAgent.getHotelsAvailability(omhHotelsAvailabilityCacheRequest.getOmhHotelsAvailabilityRequest());
     }
