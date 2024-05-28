@@ -68,7 +68,7 @@ class CancelRefundCalculateServiceTest {
     void nonRefundable_true() {
         // given
         Reservation reservation = createReservation();
-        given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
+        given(reservationProvider.getByMrtReservationNoReadOnly(MRT_RESERVATION_NO))
             .willReturn(reservation);
 
         OmhBookingDetailResponse omhBookingDetailResponse = OmhBookingDetailResponse.builder()
@@ -96,7 +96,7 @@ class CancelRefundCalculateServiceTest {
     void in_policy() {
         // given
         Reservation reservation = createReservation();
-        given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
+        given(reservationProvider.getByMrtReservationNoReadOnly(MRT_RESERVATION_NO))
             .willReturn(reservation);
 
         OmhBookingDetailResponse omhBookingDetailResponse = createOmhBookingDetailResponse();
@@ -125,7 +125,7 @@ class CancelRefundCalculateServiceTest {
     void before_policy() {
         // given
         Reservation reservation = createReservation();
-        given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
+        given(reservationProvider.getByMrtReservationNoReadOnly(MRT_RESERVATION_NO))
             .willReturn(reservation);
 
         OmhBookingDetailResponse omhBookingDetailResponse = createOmhBookingDetailResponse();
@@ -154,7 +154,7 @@ class CancelRefundCalculateServiceTest {
     void after_policy() {
         // given
         Reservation reservation = createReservation();
-        given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
+        given(reservationProvider.getByMrtReservationNoReadOnly(MRT_RESERVATION_NO))
             .willReturn(reservation);
 
         OmhBookingDetailResponse omhBookingDetailResponse = createOmhBookingDetailResponse();
