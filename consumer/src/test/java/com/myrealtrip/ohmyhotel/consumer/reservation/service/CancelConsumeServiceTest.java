@@ -68,7 +68,7 @@ class CancelConsumeServiceTest {
     void case_1() {
         // given
         Reservation reservation = createReservation(ReservationStatus.CANCEL_SUCCESS);
-        given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
+        given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
               .willReturn(reservation);
 
         BookingOrderMessage message = createMessage(BigDecimal.valueOf(0));
@@ -85,7 +85,7 @@ class CancelConsumeServiceTest {
     void case_1_2() {
         // given
         Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM);
-        given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
+        given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
             .willReturn(reservation);
 
         BookingOrderMessage message = createMessage(BigDecimal.valueOf(0));
@@ -107,7 +107,7 @@ class CancelConsumeServiceTest {
     void case_2() {
         // given
         Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM);
-        given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
+        given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
             .willReturn(reservation);
 
         BookingOrderMessage message = createMessage(BigDecimal.valueOf(0));
@@ -133,7 +133,7 @@ class CancelConsumeServiceTest {
     void case_2_1() {
         // given
         Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM);
-        given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
+        given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
             .willReturn(reservation);
 
         BookingOrderMessage message = createMessage(BigDecimal.valueOf(0));
@@ -159,7 +159,7 @@ class CancelConsumeServiceTest {
     void case_3() {
         // given
         Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM);
-        given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
+        given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
             .willReturn(reservation);
 
         BookingOrderMessage message = createMessage(BigDecimal.valueOf(0));
@@ -185,7 +185,7 @@ class CancelConsumeServiceTest {
     void case_4() {
         // given
         Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM);
-        given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
+        given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
             .willReturn(reservation);
 
         BookingOrderMessage message = createMessage(BigDecimal.valueOf(0));
@@ -213,7 +213,7 @@ class CancelConsumeServiceTest {
     void case_5() {
         // given
         Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM);
-        given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
+        given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
             .willReturn(reservation);
 
         BookingOrderMessage message = createMessage(BigDecimal.valueOf(0));

@@ -67,7 +67,7 @@ class ReserveConfirmConsumeServiceTest {
         // given
         Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM);
 
-        given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
+        given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
             .willReturn(reservation);
 
         // when
@@ -85,7 +85,7 @@ class ReserveConfirmConsumeServiceTest {
         BookingOrderMessage message = createMessage();
         Reservation reservation = createReservation(ReservationStatus.RESERVE_CONFIRM_PENDING);
 
-        given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
+        given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
             .willReturn(reservation);
 
         // when
@@ -107,7 +107,7 @@ class ReserveConfirmConsumeServiceTest {
             BookingOrderMessage message = createMessage();
             Reservation reservation = createReservation(ReservationStatus.PRECHECK_SUCCESS);
 
-            given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
+            given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
                 .willReturn(reservation);
 
             given(reservationProvider.updateOrderFormInfo(eq(reservation.getReservationId()), any()))
@@ -130,7 +130,7 @@ class ReserveConfirmConsumeServiceTest {
             BookingOrderMessage message = createMessage();
             Reservation reservation = createReservation(ReservationStatus.PRECHECK_SUCCESS);
 
-            given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
+            given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
                 .willReturn(reservation);
 
             given(reservationProvider.updateOrderFormInfo(eq(reservation.getReservationId()), any()))
@@ -155,7 +155,7 @@ class ReserveConfirmConsumeServiceTest {
             BookingOrderMessage message = createMessage();
             Reservation reservation = createReservation(ReservationStatus.PRECHECK_SUCCESS);
 
-            given(reservationProvider.getByMrtReservationNoWithLock(MRT_RESERVATION_NO))
+            given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
                 .willReturn(reservation);
 
             given(reservationProvider.updateOrderFormInfo(eq(reservation.getReservationId()), any()))
