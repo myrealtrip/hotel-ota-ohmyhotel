@@ -30,8 +30,9 @@ public class SearchController {
         stopWatch.start();
         SearchResponse searchResponse = searchService.search(searchRequest);
         stopWatch.stop();
-        log.info("nights: {}, execute time: {}",
+        log.info("nights: {}, hotel count: {}, search api execute time: {}",
                  searchRequest.getCheckin().until(searchRequest.getCheckout(), ChronoUnit.DAYS),
+                 searchRequest.getPropertyIds().size(),
                  stopWatch.getTotalTimeSeconds());
         return Resource.<SearchResponse>builder()
             .data(searchResponse)
