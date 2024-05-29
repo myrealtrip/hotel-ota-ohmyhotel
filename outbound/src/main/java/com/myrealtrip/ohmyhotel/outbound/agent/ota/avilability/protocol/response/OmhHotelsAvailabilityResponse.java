@@ -57,7 +57,7 @@ public class OmhHotelsAvailabilityResponse extends OmhCommonResponse {
 
         private Double longitude;
 
-        private RecommendYn recommendYn;
+//        private RecommendYn recommendYn;
 
         private List<OmhRoomSimpleAvailability> rooms;
 
