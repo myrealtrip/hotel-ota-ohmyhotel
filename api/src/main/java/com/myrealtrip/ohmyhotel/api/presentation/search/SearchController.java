@@ -26,7 +26,13 @@ public class SearchController {
     @Operation(summary = "실시간 재고 및 가격 조회", description = "property 의 실시간 재고와 가격을 검색합니다.")
     @GetMapping(value = "/properties/search")
     public Resource<SearchResponse> search(@Valid SearchRequest searchRequest) {
-        SearchResponse searchResponse = searchService.search(searchRequest);
+        SearchResponse searchResponse;
+        try {
+            searchResponse = searchService.search(searchRequest);
+        } catch (Throwable t) {
+            log.warn("search api error request: {}", ObjectMapperUtils.writeAsString(searchRequest), t);
+            throw t;
+        }
         return Resource.<SearchResponse>builder()
             .data(searchResponse)
             .build();

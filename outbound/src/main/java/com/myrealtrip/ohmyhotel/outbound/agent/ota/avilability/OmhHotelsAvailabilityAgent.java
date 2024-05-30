@@ -40,7 +40,6 @@ public class OmhHotelsAvailabilityAgent {
     public OmhHotelsAvailabilityResponse getHotelsAvailability(OmhHotelsAvailabilityRequest request) {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        log.info("OmhHotelsAvailabilityRequest: {}", ObjectMapperUtils.writeAsString(request));
         try {
             return getHotelsAvailabilityMono(request).block();
         } catch (OmhApiException e) {

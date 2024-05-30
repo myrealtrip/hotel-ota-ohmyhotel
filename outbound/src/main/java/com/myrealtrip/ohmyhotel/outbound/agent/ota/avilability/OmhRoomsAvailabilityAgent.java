@@ -35,7 +35,6 @@ public class OmhRoomsAvailabilityAgent {
     }
 
     public OmhRoomsAvailabilityResponse getRoomsAvailability(OmhRoomsAvailabilityRequest request) {
-        log.info("OmhRoomsAvailabilityRequest: {}", ObjectMapperUtils.writeAsString(request));
         try {
             OmhRoomsAvailabilityResponse response = getRoomsAvailabilityMono(request).block();
             return response;
