@@ -50,7 +50,7 @@ public class OmhHotelsAvailabilityAgent {
             throw e;
         } finally {
             stopWatch.stop();
-            log.info("nights: {}, hotel count: {}, search api execute time: {}",
+            log.info("nights: {}, hotel count: {}, /hotels/availability api execute time: {}",
                      request.getCheckInDate().until(request.getCheckOutDate(), ChronoUnit.DAYS),
                      request.getHotelCodes().size(),
                      stopWatch.getTotalTimeSeconds());
