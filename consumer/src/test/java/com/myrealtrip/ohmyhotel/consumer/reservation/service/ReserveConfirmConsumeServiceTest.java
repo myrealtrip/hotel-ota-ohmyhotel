@@ -88,6 +88,9 @@ class ReserveConfirmConsumeServiceTest {
         given(reservationProvider.getByMrtReservationNo(MRT_RESERVATION_NO))
             .willReturn(reservation);
 
+        given(reservationProvider.updateOrderFormInfo(eq(reservation.getReservationId()), any()))
+            .willReturn(reservation);
+
         // when
         reserveConfirmConsumeService.consume(message);
 
