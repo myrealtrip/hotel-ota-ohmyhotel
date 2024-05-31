@@ -28,6 +28,7 @@ public class OmhBedGroup {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @EqualsAndHashCode
     public static class OmhBed {
 
         private Integer bedNo;
