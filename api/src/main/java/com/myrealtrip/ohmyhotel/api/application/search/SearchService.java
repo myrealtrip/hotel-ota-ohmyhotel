@@ -88,8 +88,9 @@ public class SearchService {
 
         Map<Long, ZeroMargin> hotelIdToZeroMargin = zeroMarginSearchService.getZeroMargins(hotelIds, true);
 
+        int parallelRailsCount = (int) Math.ceil((double) searchRequest.getPropertyIds().size() / PARTITION_SIZE);
         List<OmhHotelAvailability> omhHotelAvailabilities = Flux.fromIterable(Lists.partition(hotelIds, PARTITION_SIZE))
-            .parallel((searchRequest.getPropertyIds().size() / PARTITION_SIZE) + 1)
+            .parallel(parallelRailsCount)
             .runOn(Schedulers.fromExecutorService(fixedThreadPool))
             .map(hotelIdsPartition -> {
                 try {
