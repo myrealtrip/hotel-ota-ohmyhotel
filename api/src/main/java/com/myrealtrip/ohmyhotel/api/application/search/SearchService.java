@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.api.application.search;
 
+import com.google.common.collect.Lists;
 import com.myrealtrip.ohmyhotel.api.application.search.converter.MultipleSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.application.common.converter.SearchRequestConverter;
 import com.myrealtrip.ohmyhotel.api.application.common.converter.SingleSearchResponseConverter;
@@ -10,6 +11,7 @@ import com.myrealtrip.ohmyhotel.core.service.ZeroMarginSearchService;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.OmhHotelsAvailabilityAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.OmhRoomsAvailabilityAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response.OmhHotelsAvailabilityResponse;
+import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response.OmhHotelsAvailabilityResponse.OmhHotelAvailability;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response.OmhRoomsAvailabilityResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhHotelsAvailabilityRequest;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomsAvailabilityRequest;
@@ -17,19 +19,33 @@ import com.myrealtrip.unionstay.common.constant.ProviderCode;
 import com.myrealtrip.unionstay.dto.hotelota.search.request.SearchRequest;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.SearchResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class SearchService {
+
+    private static final int PARTITION_SIZE = 20;
+
+    private final ExecutorService fixedThreadPool = Executors.newFixedThreadPool(400);
 
     private final CommissionRateService commissionRateService;
     private final ZeroMarginSearchService zeroMarginSearchService;
@@ -61,15 +77,37 @@ public class SearchService {
         return multipleOmhSearch(searchRequest, mrtCommissionRate);
     }
 
+    /**
+     * 한번에 최대 350 개의 호텔 조회 요청이 들어올 수 있다.
+     * 오마이호텔 API 성능 이슈로 20 개씩 쪼개어 요청을 보낸다.
+     */
     private SearchResponse multipleOmhSearch(SearchRequest searchRequest, BigDecimal mrtCommissionRate) {
         List<Long> hotelIds = searchRequest.getPropertyIds().stream()
             .map(Long::valueOf)
             .collect(Collectors.toList());
+
         Map<Long, ZeroMargin> hotelIdToZeroMargin = zeroMarginSearchService.getZeroMargins(hotelIds, true);
-        OmhHotelsAvailabilityRequest omhHotelsAvailabilityRequest = searchRequestConverter.toOmhHotelsAvailabilityRequest(searchRequest);
-        OmhHotelsAvailabilityResponse omhHotelsAvailabilityResponse =  omhHotelsAvailabilityCacheService.getHotelsAvailability(new OmhHotelsAvailabilityCacheRequest(omhHotelsAvailabilityRequest));
+
+        List<OmhHotelAvailability> omhHotelAvailabilities = Flux.fromIterable(Lists.partition(hotelIds, PARTITION_SIZE))
+            .parallel((searchRequest.getPropertyIds().size() / PARTITION_SIZE) + 1)
+            .runOn(Schedulers.fromExecutorService(fixedThreadPool))
+            .map(hotelIdsPartition -> {
+                try {
+                    OmhHotelsAvailabilityRequest omhHotelsAvailabilityRequest = searchRequestConverter.toOmhHotelsAvailabilityRequest(searchRequest, hotelIdsPartition);
+                    OmhHotelsAvailabilityResponse omhHotelsAvailabilityResponse = omhHotelsAvailabilityCacheService.getHotelsAvailability(new OmhHotelsAvailabilityCacheRequest(omhHotelsAvailabilityRequest));
+                    return omhHotelsAvailabilityResponse.getHotels();
+                } catch (Exception e) {
+                    log.error("hotels availability api error", e);
+                    return new ArrayList<OmhHotelAvailability>();
+                }
+            })
+            .flatMap(Flux::fromIterable)
+            .sequential()
+            .collectList()
+            .block();
+
         return multipleSearchResponseConverter.toSearchResponse(
-            omhHotelsAvailabilityResponse,
+            omhHotelAvailabilities,
             mrtCommissionRate,
             searchRequest.getRatePlanCount(),
             hotelIdToZeroMargin

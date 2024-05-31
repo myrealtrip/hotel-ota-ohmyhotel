@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.api.application.reservation;
 
+import com.google.common.collect.Lists;
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.PreCheckRequestConverter;
 import com.myrealtrip.ohmyhotel.core.service.BedDescriptionConverter;
 import com.myrealtrip.ohmyhotel.core.service.MealBasisCodeConverter;
