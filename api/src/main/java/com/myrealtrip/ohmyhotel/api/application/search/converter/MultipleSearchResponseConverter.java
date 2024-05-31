@@ -40,25 +40,25 @@ public class MultipleSearchResponseConverter {
     /**
      * 오마이호텔 재고/검색 응답을 통합숙소 재고/검색 응답으로 변환한다. (다건 호텔 검색시 사용)
      */
-    public SearchResponse toSearchResponse(OmhHotelsAvailabilityResponse omhHotelsAvailabilityResponse,
+    public SearchResponse toSearchResponse(List<OmhHotelAvailability> omhHotelAvailabilities,
                                            BigDecimal mrtCommissionRate,
                                            int ratePlanCount,
                                            Map<Long, ZeroMargin> hotelIdToZeroMargin) {
         return SearchResponse.builder()
             .searchId(ProviderCode.OH_MY_HOTEL.name())
             .providerCode(ProviderCode.OH_MY_HOTEL)
-            .properties(toPropertyAvailabilities(omhHotelsAvailabilityResponse, mrtCommissionRate, ratePlanCount, hotelIdToZeroMargin))
+            .properties(toPropertyAvailabilities(omhHotelAvailabilities, mrtCommissionRate, ratePlanCount, hotelIdToZeroMargin))
             .build();
     }
 
-    private List<PropertyAvailability> toPropertyAvailabilities(OmhHotelsAvailabilityResponse omhHotelsAvailabilityResponse,
+    private List<PropertyAvailability> toPropertyAvailabilities(List<OmhHotelAvailability> omhHotelAvailabilities,
                                                                 BigDecimal mrtCommissionRate,
                                                                 int ratePlanCount,
                                                                 Map<Long, ZeroMargin> hotelIdToZeroMargin) {
-        if (CollectionUtils.isEmpty(omhHotelsAvailabilityResponse.getHotels())) {
+        if (CollectionUtils.isEmpty(omhHotelAvailabilities)) {
             return Collections.emptyList();
         }
-        return omhHotelsAvailabilityResponse.getHotels().stream()
+        return omhHotelAvailabilities.stream()
             .map(omhHotelAvailability -> toPropertyAvailability(
                 omhHotelAvailability,
                 mrtCommissionRate,

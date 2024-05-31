@@ -20,7 +20,7 @@ import static java.util.Objects.nonNull;
 @Component
 public class SearchRequestConverter {
 
-    public OmhHotelsAvailabilityRequest toOmhHotelsAvailabilityRequest(SearchRequest searchRequest) {
+    public OmhHotelsAvailabilityRequest toOmhHotelsAvailabilityRequest(SearchRequest searchRequest, List<Long> hotelCodes) {
         return OmhHotelsAvailabilityRequest.builder()
             .nationalityCode(searchRequest.getCountryCode().getIso2CountryCode())
             .language(Language.KO)
@@ -28,8 +28,7 @@ public class SearchRequestConverter {
             .checkOutDate(searchRequest.getCheckout())
             .rooms(List.of(toOmhRoomGuestCount(searchRequest)))
             .rateType(toRateType(searchRequest))
-            .hotelCodes(searchRequest.getPropertyIds().stream()
-                            .map(Long::valueOf).collect(Collectors.toList()))
+            .hotelCodes(hotelCodes)
             .build();
     }
 
