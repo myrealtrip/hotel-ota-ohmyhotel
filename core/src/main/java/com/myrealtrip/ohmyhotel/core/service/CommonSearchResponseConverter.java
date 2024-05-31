@@ -1,6 +1,5 @@
 package com.myrealtrip.ohmyhotel.core.service;
 
-import com.myrealtrip.ohmyhotel.constants.AttributeConstants;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.enumarate.MealBasisCode;
 import com.myrealtrip.ohmyhotel.enumarate.PenaltyBasis;
@@ -39,8 +38,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.myrealtrip.ohmyhotel.constants.AttributeConstants.RATE_PLAN_NO_BREAK_FAST_PROVIDER_ATTRIBUTE_ID;
-import static com.myrealtrip.ohmyhotel.constants.AttributeConstants.RATE_PLAN_NO_BREAK_FAST_PROVIDER_ATTRIBUTE_NAME;
 import static java.util.Objects.isNull;
 
 @Component
@@ -72,7 +69,7 @@ public class CommonSearchResponseConverter {
             return Collections.emptyList();
         }
         PenaltyBasis penaltyBasis = omhCancelPolicy.getPenaltyBasis();
-        ZoneId zoneId = ZoneId.of(omhCancelPolicy.getTimeZoneName());
+        ZoneId zoneId = ZoneId.of(omhCancelPolicy.getTimeZone());
         return omhCancelPolicy.getPolicies().stream()
             .map(omhCancelPolicyValue -> toCancelPolicy(omhCancelPolicyValue, penaltyBasis, zoneId, mrtCommissionRate))
             .collect(Collectors.toList());
