@@ -39,7 +39,7 @@ public class OmhRoomsAvailabilityResponse extends OmhCommonResponse {
             .collect(Collectors.groupingBy(OmhRoomAvailability::getRoomTypeCode));
     }
 
-    @SuperBuilder
+    @SuperBuilder(toBuilder = true)
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)

@@ -93,7 +93,7 @@ public class OrderSearchService {
         for (OmhRoomAvailability omhRoomAvailability : omhRoomsAvailabilityResponse.getRooms()) {
             if (omhRoomAvailability.getRoomTypeCode().equals(rateSearchId.getRoomTypeCode()) &&
                 omhRoomAvailability.getRatePlanCode().equals(rateSearchId.getRatePlanCode())) {
-                return omhRoomAvailability;
+                return omhRoomAvailability.toBuilder().build();
             }
         }
         return null;
