@@ -45,7 +45,7 @@ public class SearchService {
 
     private static final int PARTITION_SIZE = 10;
 
-    private final ExecutorService fixedThreadPool = Executors.newFixedThreadPool(400);
+    private final ExecutorService fixedThreadPool = Executors.newFixedThreadPool(600);
 
     private final CommissionRateService commissionRateService;
     private final ZeroMarginSearchService zeroMarginSearchService;
