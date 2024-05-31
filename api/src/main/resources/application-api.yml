@@ -161,12 +161,12 @@ myrealtrip:
       username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gFYbr0fuZTxkI6Axx0R5RezAAAAazBpBgkqhkiG9w0BBwagXDBaAgEAMFUGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMOmTj9x3Oj5jwX8VSAgEQgCjD0gGOYvDtfZM3sdEiUdJJC497Tdb47QCsSn6WnRF5wwqUrOAlb5FN
       password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gEAELIH2OxZB413drkX73IsAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM0MZWPQsOQNzIAD+EAgEQgCv7PRVbP0dNEVzYi+ljJfZrdXZVoDP1bEgozQE1ucnfwbAaMjPnvQx7W1tm
       extra:
-        maximum-pool-size: 50
+        maximum-pool-size: 30
     read-only:
       username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gFYbr0fuZTxkI6Axx0R5RezAAAAazBpBgkqhkiG9w0BBwagXDBaAgEAMFUGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMOmTj9x3Oj5jwX8VSAgEQgCjD0gGOYvDtfZM3sdEiUdJJC497Tdb47QCsSn6WnRF5wwqUrOAlb5FN
       password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gEAELIH2OxZB413drkX73IsAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM0MZWPQsOQNzIAD+EAgEQgCv7PRVbP0dNEVzYi+ljJfZrdXZVoDP1bEgozQE1ucnfwbAaMjPnvQx7W1tm
       extra:
-        maximum-pool-size: 50
+        maximum-pool-size: 30
 ---
 spring:
   config:
@@ -190,9 +190,9 @@ myrealtrip:
       username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gFYbr0fuZTxkI6Axx0R5RezAAAAazBpBgkqhkiG9w0BBwagXDBaAgEAMFUGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMOmTj9x3Oj5jwX8VSAgEQgCjD0gGOYvDtfZM3sdEiUdJJC497Tdb47QCsSn6WnRF5wwqUrOAlb5FN
       password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gEAELIH2OxZB413drkX73IsAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM0MZWPQsOQNzIAD+EAgEQgCv7PRVbP0dNEVzYi+ljJfZrdXZVoDP1bEgozQE1ucnfwbAaMjPnvQx7W1tm
       extra:
-        maximum-pool-size: 50
+        maximum-pool-size: 30
     read-only:
       username: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gFYbr0fuZTxkI6Axx0R5RezAAAAazBpBgkqhkiG9w0BBwagXDBaAgEAMFUGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMOmTj9x3Oj5jwX8VSAgEQgCjD0gGOYvDtfZM3sdEiUdJJC497Tdb47QCsSn6WnRF5wwqUrOAlb5FN
       password: AQICAHjBvCRGPyjOz/X2af580VjoYm0zdHIUQQJDmVzX7G9C6gEAELIH2OxZB413drkX73IsAAAAbjBsBgkqhkiG9w0BBwagXzBdAgEAMFgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM0MZWPQsOQNzIAD+EAgEQgCv7PRVbP0dNEVzYi+ljJfZrdXZVoDP1bEgozQE1ucnfwbAaMjPnvQx7W1tm
       extra:
-        maximum-pool-size: 50
+        maximum-pool-size: 30
