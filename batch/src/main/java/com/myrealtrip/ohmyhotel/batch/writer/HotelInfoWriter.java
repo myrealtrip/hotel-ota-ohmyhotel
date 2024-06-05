@@ -11,6 +11,8 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.OmhStaticHotelInfo
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.request.OmhStaticHotelInfoListRequest;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.staticinfo.protocol.response.OmhStaticHotelInfoListResponse.OmhHotelInfo;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.batch.item.ItemWriter;
 
 import java.util.List;
@@ -48,7 +50,9 @@ public class HotelInfoWriter implements ItemWriter<Long> {
         hotelProvider.upsert(hotels);
         chunkUpdatedHotelCodeStorage.clear();
         chunkUpdatedHotelCodeStorage.addAll(updatedHotelIds);
-        notFoundHotelCodeStorage.removeAll(updatedHotelIds);
+
+        List<Long> notFoundHotelCodes = ListUtils.removeAll((List<Long>) hotelCodes, updatedHotelIds);
+        notFoundHotelCodeStorage.addAll(notFoundHotelCodes);
     }
 
     private List<OmhHotelInfoAggr> getOmhHotelInfoAggrs(List<Long> hotelCodes) {

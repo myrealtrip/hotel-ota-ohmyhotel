@@ -65,7 +65,7 @@ public class HotelSyncJobConfiguration {
     public Step getUpdatedHotelCodesStep() {
         return stepBuilderFactory.get("getUpdatedHotelCodesStep")
             .transactionManager(transactionManager)
-            .tasklet(getUpdatedHotelCodesTasklet(null, null, null, null))
+            .tasklet(getUpdatedHotelCodesTasklet(null, null, null))
             .build();
     }
 
@@ -95,12 +95,11 @@ public class HotelSyncJobConfiguration {
     @StepScope
     public Tasklet getUpdatedHotelCodesTasklet(@Value("#{jobParameters[beforeDays]}") Integer beforeDays,
                                                @Qualifier("allHotelCodeStorage") HotelCodeStorage allHotelCodeStorage,
-                                               @Qualifier("notFoundHotelCodeStorage") HotelCodeStorage notFoundHotelCodeStorage,
                                                OmhStaticHotelBulkListAgent omhStaticHotelBulkListAgent) {
         LocalDate lastUpdatedDate = isNull(beforeDays) ?
                                     LocalDate.of(1970, 1, 1) :
                                     LocalDate.now().minusDays(beforeDays);
-        return new GetUpdatedHotelCodesTasklet(allHotelCodeStorage, notFoundHotelCodeStorage, omhStaticHotelBulkListAgent, lastUpdatedDate);
+        return new GetUpdatedHotelCodesTasklet(allHotelCodeStorage, omhStaticHotelBulkListAgent, lastUpdatedDate);
     }
 
     @Bean
