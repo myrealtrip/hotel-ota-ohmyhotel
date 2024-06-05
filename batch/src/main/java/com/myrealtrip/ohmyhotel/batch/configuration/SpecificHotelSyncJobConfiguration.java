@@ -62,7 +62,7 @@ public class SpecificHotelSyncJobConfiguration {
         return stepBuilderFactory.get("specificHotelSyncStep")
             .transactionManager(transactionManager)
             .<Long, Long>chunk(CHUNK_SIZE)
-            .reader(hotelCodeStorageReader(null, null, null))
+            .reader(hotelCodeStorageReader(null, null))
             .writer(hotelInfoWriter(null, null, null, null, null))
             .listener(new HotelUpdateChunkListener(chunkUpdatedHotelCodeStorage, propertyUpsertKafkaSendService))
             .build();
@@ -80,14 +80,12 @@ public class SpecificHotelSyncJobConfiguration {
     @Bean
     @StepScope
     public ItemReader<Long> hotelCodeStorageReader(@Value("#{jobParameters[hotelIds]}") String hotelIdsParam,
-                                                   @Qualifier("allHotelCodeStorage") HotelCodeStorage allHotelCodeStorage,
-                                                   @Qualifier("notFoundHotelCodeStorage") HotelCodeStorage notFoundHotelCodeStorage) {
+                                                   @Qualifier("allHotelCodeStorage") HotelCodeStorage allHotelCodeStorage) {
         List<Long> hotelIds = Arrays.stream(hotelIdsParam.replaceAll(" ", "").split(","))
             .distinct()
             .map(Long::valueOf)
             .collect(Collectors.toList());
         allHotelCodeStorage.addAll(hotelIds);
-        notFoundHotelCodeStorage.addAll(hotelIds);
         return new HotelCodeStorageReader(allHotelCodeStorage, CHUNK_SIZE);
     }
 

@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 public class GetUpdatedHotelCodesTasklet implements Tasklet {
 
     private final HotelCodeStorage allHotelCodeStorage;
-    private final HotelCodeStorage notFoundHotelCodeStorage;
     private final OmhStaticHotelBulkListAgent omhStaticHotelBulkListAgent;
     private final LocalDate lastUpdateDate;
 
@@ -32,14 +31,14 @@ public class GetUpdatedHotelCodesTasklet implements Tasklet {
         Long lastHotelCode = 0L;
         while (true) {
             OmhStaticBulkHotelListResponse response = omhStaticHotelBulkListAgent.getBulkHotels(lastUpdateDate, lastHotelCode);
-            if (response.getHotelCount() == 0 || response.getHotels().get(0).getHotelCode().equals(lastHotelCode)) {
+            if (response.getHotelCount() == 0 ||
+                (response.getHotelCount() == 1 && response.getHotels().get(0).getHotelCode().equals(lastHotelCode))) {
                 break;
             }
             List<Long> hotelCodes = response.getHotels().stream()
                 .map(OmhBulkHotel::getHotelCode)
                 .collect(Collectors.toList());
             allHotelCodeStorage.addAll(hotelCodes);
-            notFoundHotelCodeStorage.addAll(hotelCodes);
             lastHotelCode = hotelCodes.get(hotelCodes.size() - 1);
         }
         log.info("total updated hotel size: {}", allHotelCodeStorage.getHotelCodes().size());
