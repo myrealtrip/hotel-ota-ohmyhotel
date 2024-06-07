@@ -43,12 +43,12 @@ public interface UpsertPropertyMessageMapper {
     org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UpsertPropertyMessageMapper.class);
     DateTimeFormatter CHECK_IN_OUT_FORMATTER = DateTimeFormatter.ofPattern("[H:mm][HH:mm]");
 
-    default UpsertPropertyMessage toUpsertPropertyMessage(Hotel hotel, boolean zeroMarginApply, Long partnerId) {
+    default UpsertPropertyMessage toUpsertPropertyMessage(Hotel hotel, boolean zeroMarginApply, Long partnerId, String profile) {
         return UpsertPropertyMessage.builder()
             .providerType(ProviderType.GDS)
             .providerCode(ProviderCode.OH_MY_HOTEL)
             .providerPropertyId(String.valueOf((hotel.getHotelId())))
-            .providerPropertyStatus(toProviderPropertyStatus(hotel))
+            .providerPropertyStatus(toProviderPropertyStatus(hotel, profile))
             .chainId(null)
             .chainName(null)
             .brandId(null)
@@ -88,13 +88,14 @@ public interface UpsertPropertyMessageMapper {
             .build();
     }
 
-    private ProviderPropertyStatus toProviderPropertyStatus(Hotel hotel) {
+    private ProviderPropertyStatus toProviderPropertyStatus(Hotel hotel, String profile) {
         // 해외 상품만 on_sale 한다.
         // https://myrealtrip.slack.com/archives/C051MGEQ2PP/p1716430178397629?thread_ts=1716355897.854959&cid=C051MGEQ2PP
-        if (hotel.isActive() && !StringUtils.equals(hotel.getCountryCode(), "KR")) {
-            return ProviderPropertyStatus.ON_SALE;
+        if ((profile.contains("prod") || profile.contains("stage")) &&
+            StringUtils.equals(hotel.getCountryCode(), "KR")) {
+            return ProviderPropertyStatus.OFF_SALE;
         }
-        return ProviderPropertyStatus.OFF_SALE;
+        return hotel.isActive() ? ProviderPropertyStatus.ON_SALE : ProviderPropertyStatus.OFF_SALE;
     }
 
     private List<Attribute> toAttributes(Hotel hotel) {

@@ -27,6 +27,9 @@ public class PropertyUpsertKafkaSendService {
     @Value("${ohmyhotel.partner-id}")
     private Long partnerId;
 
+    @Value("${spring.profiles.active}")
+    private String profile;
+
     private final CommonProducer commonProducer;
     private final HotelProvider hotelProvider;
     private final UpsertPropertyMessageMapper upsertPropertyMessageMapper;
@@ -46,7 +49,7 @@ public class PropertyUpsertKafkaSendService {
         List<UpsertPropertyMessage> messages = hotels.stream()
             .map(hotel -> {
                 ZeroMargin zeroMargin = zeroMarginMap.get(hotel.getHotelId());
-                return upsertPropertyMessageMapper.toUpsertPropertyMessage(hotel, zeroMargin.isOn(), partnerId);
+                return upsertPropertyMessageMapper.toUpsertPropertyMessage(hotel, zeroMargin.isOn(), partnerId, profile);
             })
             .collect(Collectors.toList());
 
