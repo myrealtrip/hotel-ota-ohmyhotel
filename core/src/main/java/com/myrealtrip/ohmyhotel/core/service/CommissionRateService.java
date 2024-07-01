@@ -1,5 +1,6 @@
 package com.myrealtrip.ohmyhotel.core.service;
 
+import com.myrealtrip.ohmyhotel.core.domain.partner.dto.MrtCommissionInfo;
 import com.myrealtrip.ohmyhotel.core.domain.partner.dto.Partner;
 import com.myrealtrip.ohmyhotel.core.provider.partner.PartnerProvider;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,11 @@ public class CommissionRateService {
     @Transactional(readOnly = true)
     public BigDecimal getMrtCommissionRate() {
         return partnerProvider.getByPartnerId(partnerId).getCommissionRate();
+    }
+
+    @Transactional
+    public MrtCommissionInfo getMrtCommissionInfo() {
+        Partner partner =  partnerProvider.getByPartnerId(partnerId);
+        return new MrtCommissionInfo(partner.getCommissionRate(), partner.getSaleCommissionPolicyId());
     }
 }

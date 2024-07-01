@@ -1,7 +1,5 @@
 package com.myrealtrip.ohmyhotel.core.domain.partner.dto;
 
-import com.myrealtrip.ohmyhotel.core.domain.ModifyInfo;
-import com.myrealtrip.ohmyhotel.enumarate.PartnerCommissionType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -14,15 +12,11 @@ import java.math.BigDecimal;
 
 @Getter
 @ToString
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@SuperBuilder(toBuilder = true)
-public class Partner extends ModifyInfo {
-
-    private Long partnerId;
-
-    private PartnerCommissionType commissionType;
+@SuperBuilder
+public class MrtCommissionInfo {
 
     private BigDecimal commissionRate;
 
