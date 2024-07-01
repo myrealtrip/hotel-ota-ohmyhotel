@@ -4,6 +4,7 @@ package com.myrealtrip.ohmyhotel.outbound.agent.mrt.settle;
 import com.myrealtrip.ohmyhotel.outbound.agent.common.CircuitBreakerFactory;
 import com.myrealtrip.ohmyhotel.outbound.agent.mrt.Mrt30ResponseHandler;
 import com.myrealtrip.ohmyhotel.outbound.agent.mrt.exception.MrtAgent4xxException;
+import com.myrealtrip.settle.web.values.SaleCommissionPolicyInquiryResponse;
 import com.myrealtrip.settle.web.values.SettlementConfigResponse;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
 import io.github.resilience4j.reactor.circuitbreaker.operator.CircuitBreakerOperator;
@@ -21,7 +22,7 @@ import java.time.Duration;
 @Slf4j
 public class SettleConfigAgent {
 
-    public static final String URI = "/api/v1/internal/settlement-configs/{partnerId}";
+    public static final String URI = "/api/v1/internal/sale-commission-policies";
     public static final String SETTLE_CONFIG = "Settle Config";
 
     private final WebClient webClient;
@@ -36,14 +37,16 @@ public class SettleConfigAgent {
         this.mrt30ResponseHandler = mrt30ResponseHandler;
     }
 
-    public SettlementConfigResponse getSettlementConfig(String partnerId) {
+    public SaleCommissionPolicyInquiryResponse getSettlementConfig(String partnerId) {
         return getSettlementConfigMono(partnerId).block();
     }
 
-    public Mono<SettlementConfigResponse> getSettlementConfigMono(String partnerId) {
+    public Mono<SaleCommissionPolicyInquiryResponse> getSettlementConfigMono(String partnerId) {
         return webClient.get()
-            .uri(URI, partnerId)
-            .exchangeToMono(res -> mrt30ResponseHandler.decode(res, SettlementConfigResponse.class))
+            .uri(URI, uriBuilder -> uriBuilder
+                .queryParam("partnerId", partnerId)
+                .build())
+            .exchangeToMono(res -> mrt30ResponseHandler.decode(res, SaleCommissionPolicyInquiryResponse.class))
             .onErrorMap(mrt30ResponseHandler::resolveError)
             .transform(CircuitBreakerOperator.of(this.circuitBreaker))
             .retryWhen(Retry.backoff(1, Duration.ofMillis(500))

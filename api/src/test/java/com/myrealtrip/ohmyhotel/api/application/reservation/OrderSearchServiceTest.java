@@ -2,6 +2,7 @@ package com.myrealtrip.ohmyhotel.api.application.reservation;
 
 import com.google.common.collect.Lists;
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.PreCheckRequestConverter;
+import com.myrealtrip.ohmyhotel.core.domain.partner.dto.MrtCommissionInfo;
 import com.myrealtrip.ohmyhotel.core.service.BedDescriptionConverter;
 import com.myrealtrip.ohmyhotel.core.service.MealBasisCodeConverter;
 import com.myrealtrip.ohmyhotel.core.service.RatePlanDistinctService;
@@ -173,8 +174,8 @@ class OrderSearchServiceTest {
         given(omhPreCheckAgent.preCheck(any()))
             .willReturn(omhPreCheckResponse);
 
-        given(commissionRateService.getMrtCommissionRate())
-            .willReturn(BigDecimal.valueOf(20));
+        given(commissionRateService.getMrtCommissionInfo())
+            .willReturn(new MrtCommissionInfo(BigDecimal.valueOf(20), 1L));
 
         given(zeroMarginSearchService.getZeroMargin(any(), anyBoolean()))
             .willReturn(ZeroMargin.empty());

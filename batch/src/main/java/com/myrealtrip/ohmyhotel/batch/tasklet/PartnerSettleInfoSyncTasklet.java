@@ -4,6 +4,7 @@ import com.myrealtrip.ohmyhotel.core.domain.partner.dto.Partner;
 import com.myrealtrip.ohmyhotel.core.provider.partner.PartnerProvider;
 import com.myrealtrip.ohmyhotel.enumarate.PartnerCommissionType;
 import com.myrealtrip.ohmyhotel.outbound.agent.mrt.settle.SettleConfigAgent;
+import com.myrealtrip.settle.web.values.SaleCommissionPolicyInquiryResponse;
 import com.myrealtrip.settle.web.values.SettlementConfigResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.EnumUtils;
@@ -24,23 +25,25 @@ public class PartnerSettleInfoSyncTasklet implements Tasklet {
     @Override
     public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
         Partner oldPartner = partnerProvider.getByPartnerId(Long.valueOf(partnerId));
-        SettlementConfigResponse settlementConfigResponse = settleConfigAgent.getSettlementConfig(partnerId);
+        SaleCommissionPolicyInquiryResponse settlementConfigResponse = settleConfigAgent.getSettlementConfig(partnerId);
         Partner newPartner = toNewPartner(oldPartner, settlementConfigResponse);
         partnerProvider.upsert(newPartner);
         return RepeatStatus.FINISHED;
     }
 
-    public Partner toNewPartner(Partner oldPartner, SettlementConfigResponse settlementConfigResponse) {
+    public Partner toNewPartner(Partner oldPartner, SaleCommissionPolicyInquiryResponse settlementConfigResponse) {
         if (isNull(oldPartner)) {
             return Partner.builder()
                 .partnerId(Long.valueOf(partnerId))
-                .commissionType(EnumUtils.getEnum(PartnerCommissionType.class, settlementConfigResponse.getCommissionType()))
-                .commissionRate(settlementConfigResponse.getSaleCommissionRate())
+                .commissionType(EnumUtils.getEnum(PartnerCommissionType.class, settlementConfigResponse.getCommissionCalculationType().name()))
+                .commissionRate(settlementConfigResponse.getCommissionRate())
+                .saleCommissionPolicyId(settlementConfigResponse.getSaleCommissionPolicyId())
                 .build();
         }
         return oldPartner.toBuilder()
-            .commissionType(EnumUtils.getEnum(PartnerCommissionType.class, settlementConfigResponse.getCommissionType()))
-            .commissionRate(settlementConfigResponse.getSaleCommissionRate())
+            .commissionType(EnumUtils.getEnum(PartnerCommissionType.class, settlementConfigResponse.getCommissionCalculationType().name()))
+            .commissionRate(settlementConfigResponse.getCommissionRate())
+            .saleCommissionPolicyId(settlementConfigResponse.getSaleCommissionPolicyId())
             .build();
     }
 }
