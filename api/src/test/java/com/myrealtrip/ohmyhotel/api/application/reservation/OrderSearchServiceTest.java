@@ -179,7 +179,7 @@ class OrderSearchServiceTest {
         given(zeroMarginSearchService.getZeroMargin(any(), anyBoolean()))
             .willReturn(ZeroMargin.empty());
 
-        given(orderConverter.toOrder(any(), any(), any(), any()))
+        given(orderConverter.toOrder(any(), any(), any(), any(), any()))
             .willReturn(Order.builder().build());
 
         given(orderProvider.upsert(any()))

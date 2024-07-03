@@ -7,6 +7,8 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.request.OmhRoomsAvailabilityRequest;
 import com.myrealtrip.unionstay.common.constant.RateOption;
 import com.myrealtrip.unionstay.common.constant.SalesEnvironment;
+import com.myrealtrip.unionstay.dto.hotelota.search.request.BaseSearchRequest;
+import com.myrealtrip.unionstay.dto.hotelota.search.request.ReservationSearchRequest;
 import com.myrealtrip.unionstay.dto.hotelota.search.request.SearchRequest;
 import org.apache.commons.collections4.CollectionUtils;
 import org.mapstruct.Mapper;
@@ -44,8 +46,20 @@ public class SearchRequestConverter {
             .build();
     }
 
+    public OmhRoomsAvailabilityRequest toOmhRoomsAvailabilityRequest(ReservationSearchRequest searchRequest) {
+        return OmhRoomsAvailabilityRequest.builder()
+            .nationalityCode(searchRequest.getCountryCode().getIso2CountryCode())
+            .language(Language.KO)
+            .checkInDate(searchRequest.getCheckin())
+            .checkOutDate(searchRequest.getCheckout())
+            .rooms(List.of(toOmhRoomGuestCount(searchRequest)))
+            .rateType(toRateType(searchRequest))
+            .hotelCode(Long.valueOf(searchRequest.getPropertyId()))
+            .build();
+    }
+
     /* https://myrealtrip.slack.com/archives/C051MGEQ2PP/p1716537289178509 */
-    private RateType toRateType(SearchRequest searchRequest) {
+    private RateType toRateType(BaseSearchRequest searchRequest) {
         if (nonNull(searchRequest.getRateOptions()) &&
             searchRequest.getRateOptions().contains(RateOption.MEMBER)) {
             return RateType.PACKAGE_RATE;
@@ -53,7 +67,7 @@ public class SearchRequestConverter {
         return RateType.STANDARD_RATE;
     }
 
-    private OmhRoomGuestCount toOmhRoomGuestCount(SearchRequest searchRequest) {
+    private OmhRoomGuestCount toOmhRoomGuestCount(BaseSearchRequest searchRequest) {
         return OmhRoomGuestCount.builder()
             .adultCount(searchRequest.getAdultCount())
             .childCount(searchRequest.getChildCount())

@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -23,18 +25,31 @@ public class SearchController {
 
     private final SearchService searchService;
 
+    // 통숙 배포 후 삭제
+    @Deprecated
     @Operation(summary = "실시간 재고 및 가격 조회", description = "property 의 실시간 재고와 가격을 검색합니다.")
     @GetMapping(value = "/properties/search")
     public Resource<SearchResponse> search(@Valid SearchRequest searchRequest) {
-        SearchResponse searchResponse;
         try {
-            searchResponse = searchService.search(searchRequest);
+            return Resource.<SearchResponse>builder()
+                .data(searchService.search(searchRequest))
+                .build();
         } catch (Throwable t) {
             log.warn("search api error request: {}", ObjectMapperUtils.writeAsString(searchRequest), t);
             throw t;
         }
-        return Resource.<SearchResponse>builder()
-            .data(searchResponse)
-            .build();
+    }
+
+    @Operation(summary = "실시간 재고 및 가격 조회", description = "property 의 실시간 재고와 가격을 검색합니다.")
+    @PostMapping(value = "/v2/properties/search")
+    public Resource<SearchResponse> searchV2(@RequestBody SearchRequest searchRequest) {
+        try {
+            return Resource.<SearchResponse>builder()
+                .data(searchService.search(searchRequest))
+                .build();
+        } catch (Throwable t) {
+            log.warn("search api error request: {}", ObjectMapperUtils.writeAsString(searchRequest), t);
+            throw t;
+        }
     }
 }
