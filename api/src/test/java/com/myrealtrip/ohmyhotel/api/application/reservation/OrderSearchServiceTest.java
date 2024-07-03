@@ -30,6 +30,7 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhPreCheckAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhPreCheckResponse;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhPreCheckResponse.OmhPreCheckAmount;
 import com.myrealtrip.unionstay.common.constant.CountryCode;
+import com.myrealtrip.unionstay.dto.hotelota.search.request.ReservationSearchRequest;
 import com.myrealtrip.unionstay.dto.hotelota.search.request.SearchRequest;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.SearchResponse;
 import org.junit.jupiter.api.Assertions;
@@ -75,12 +76,12 @@ class OrderSearchServiceTest {
     @Mock private OmhPreCheckAgent omhPreCheckAgent;
 
     @Test
-    @DisplayName("한 개 이상의 호텔이 요청으로 들어오면 Exception 을 던진다.")
+    @DisplayName("호텔이 없이 요청으로 들어오면 Exception 을 던진다.")
     void multiple_hotel_throw() {
         // given
-        SearchRequest searchRequest = SearchRequest.builder()
+        ReservationSearchRequest searchRequest = ReservationSearchRequest.builder()
             .countryCode(CountryCode.KR)
-            .propertyIds(List.of("1", "2"))
+            .propertyId(null)
             .checkin(LocalDate.of(2023, 5, 10))
             .checkout(LocalDate.of(2023, 5, 12))
             .adultCount(2)
@@ -101,9 +102,9 @@ class OrderSearchServiceTest {
     @DisplayName("주문하려는 상품이 검색되지 않으면 empty response 를 반환한다.")
     void empty() {
         // given
-        SearchRequest searchRequest = SearchRequest.builder()
+        ReservationSearchRequest searchRequest = ReservationSearchRequest.builder()
             .countryCode(CountryCode.KR)
-            .propertyIds(List.of("1"))
+            .propertyId("1")
             .checkin(LocalDate.of(2023, 5, 10))
             .checkout(LocalDate.of(2023, 5, 12))
             .adultCount(2)
@@ -132,9 +133,9 @@ class OrderSearchServiceTest {
     @DisplayName("주문하려는 상품 재고가 있다면 order row 를 생성하고 API 로그를 저장한다.")
     void success() {
         // given
-        SearchRequest searchRequest = SearchRequest.builder()
+        ReservationSearchRequest searchRequest = ReservationSearchRequest.builder()
             .countryCode(CountryCode.KR)
-            .propertyIds(List.of("1"))
+            .propertyId("1")
             .checkin(LocalDate.of(2023, 5, 10))
             .checkout(LocalDate.of(2023, 5, 12))
             .adultCount(2)
@@ -179,7 +180,7 @@ class OrderSearchServiceTest {
         given(zeroMarginSearchService.getZeroMargin(any(), anyBoolean()))
             .willReturn(ZeroMargin.empty());
 
-        given(orderConverter.toOrder(any(), any(), any(), any(), any()))
+        given(orderConverter.toOrder(any(), any(), any(), any()))
             .willReturn(Order.builder().build());
 
         given(orderProvider.upsert(any()))

@@ -10,6 +10,7 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.avilability.protocol.response
 import com.myrealtrip.ohmyhotel.utils.OmhPriceCalculateUtils;
 import com.myrealtrip.srtcommon.support.utils.ZeroMarginUtils;
 import com.myrealtrip.unionstay.dto.hotelota.search.request.BaseSearchRequest;
+import com.myrealtrip.unionstay.dto.hotelota.search.request.ReservationSearchRequest;
 import com.myrealtrip.unionstay.dto.hotelota.search.request.SearchRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -24,12 +25,11 @@ public class OrderConverter {
 
     private final HotelProvider hotelProvider;
 
-    public Order toOrder(BaseSearchRequest searchRequest,
-                         String propertyId,
+    public Order toOrder(ReservationSearchRequest searchRequest,
                          OmhRoomAvailability omhRoomAvailability,
                          BigDecimal mrtCommissionRate,
                          ZeroMargin zeroMargin) {
-        Long hotelId = Long.valueOf(propertyId);
+        Long hotelId = Long.valueOf(searchRequest.getPropertyId());
         Hotel hotel = hotelProvider.getByHotelIds(List.of(hotelId)).get(0);
         return Order.builder()
             .hotelId(hotelId)
