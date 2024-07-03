@@ -21,9 +21,12 @@ import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.OmhPreCheckAgent;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.request.OmhPreCheckRequest;
 import com.myrealtrip.ohmyhotel.outbound.agent.ota.reservation.protocol.response.OmhPreCheckResponse;
 import com.myrealtrip.srtcommon.support.utils.ObjectMapperUtils;
+import com.myrealtrip.unionstay.dto.hotelota.search.request.BaseSearchRequest;
+import com.myrealtrip.unionstay.dto.hotelota.search.request.ReservationSearchRequest;
 import com.myrealtrip.unionstay.dto.hotelota.search.request.SearchRequest;
 import com.myrealtrip.unionstay.dto.hotelota.search.response.SearchResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,13 +79,46 @@ public class OrderSearchService {
 
         BigDecimal mrtCommissionRate = commissionRateService.getMrtCommissionRate();
         ZeroMargin zeroMargin = zeroMarginSearchService.getZeroMargin(hotelId, true);
-        Order order = saveOrder(searchRequest, mrtCommissionRate, orderedRoomAvailability, zeroMargin);
+        Order order = saveOrder(searchRequest, searchRequest.getPropertyIds().get(0), mrtCommissionRate, orderedRoomAvailability, zeroMargin);
         saveApiLog(order.getOrderId(), omhRoomsAvailabilityRequest, omhRoomsAvailabilityResponse, omhPreCheckRequest, omhPreCheckResponse);
         return singleSearchResponseConverter.toSearchResponse(
             hotelId,
             orderedRoomAvailability,
             mrtCommissionRate,
             searchRequest.getRatePlanCount(),
+            zeroMargin,
+            String.valueOf(order.getOrderId())
+        );
+    }
+
+    @Transactional
+    public SearchResponse search(ReservationSearchRequest reservationSearchRequest) {
+        if (StringUtils.isBlank(reservationSearchRequest.getPropertyId())) {
+            throw new IllegalArgumentException("숙소가 없습니다.");
+        }
+        Long hotelId = Long.valueOf(reservationSearchRequest.getPropertyId());
+        RateSearchId rateSearchId = RateSearchId.from(reservationSearchRequest.getRateSearchId());
+        OmhRoomsAvailabilityRequest omhRoomsAvailabilityRequest = searchRequestConverter.toOmhRoomsAvailabilityRequest(reservationSearchRequest);
+        OmhRoomsAvailabilityResponse omhRoomsAvailabilityResponse = omhRoomsAvailabilityAgent.getRoomsAvailability(omhRoomsAvailabilityRequest);
+        OmhRoomAvailability orderedRoomAvailability = getOrderedOmhRoomAvailability(omhRoomsAvailabilityResponse, rateSearchId);
+        if (isNull(orderedRoomAvailability)) {
+            return singleSearchResponseConverter.empty();
+        }
+
+        // pre-check API 호출하여 최종 가격 으로 업데이트
+        OmhPreCheckRequest omhPreCheckRequest = preCheckRequestConverter.toOmhPreCheckRequest(reservationSearchRequest, orderedRoomAvailability);
+        OmhPreCheckResponse omhPreCheckResponse = omhPreCheckAgent.preCheck(omhPreCheckRequest);
+        orderedRoomAvailability.changeTotalNetAmount(omhPreCheckResponse.getAmount().getTotalNetAmount());
+
+        BigDecimal mrtCommissionRate = commissionRateService.getMrtCommissionRate();
+        ZeroMargin zeroMargin = zeroMarginSearchService.getZeroMargin(hotelId, true);
+        Order order = saveOrder(reservationSearchRequest, reservationSearchRequest.getPropertyId(), mrtCommissionRate, orderedRoomAvailability, zeroMargin);
+        saveApiLog(order.getOrderId(), omhRoomsAvailabilityRequest, omhRoomsAvailabilityResponse, omhPreCheckRequest, omhPreCheckResponse);
+        return singleSearchResponseConverter.toSearchResponse(
+            hotelId,
+            orderedRoomAvailability,
+            mrtCommissionRate,
+            reservationSearchRequest.getRatePlanCount(),
             zeroMargin,
             String.valueOf(order.getOrderId())
         );
@@ -99,8 +135,8 @@ public class OrderSearchService {
         return null;
     }
 
-    private Order saveOrder(SearchRequest searchRequest, BigDecimal mrtCommissionRate, OmhRoomAvailability omhRoomAvailability, ZeroMargin zeroMargin) {
-        Order order = orderConverter.toOrder(searchRequest, omhRoomAvailability, mrtCommissionRate, zeroMargin);
+    private Order saveOrder(BaseSearchRequest searchRequest, String propertyId, BigDecimal mrtCommissionRate, OmhRoomAvailability omhRoomAvailability, ZeroMargin zeroMargin) {
+        Order order = orderConverter.toOrder(searchRequest, propertyId, omhRoomAvailability, mrtCommissionRate, zeroMargin);
         return orderProvider.upsert(order);
     }
 
