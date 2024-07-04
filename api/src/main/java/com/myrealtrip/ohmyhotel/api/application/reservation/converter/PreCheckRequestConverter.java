@@ -15,21 +15,6 @@ import java.util.List;
 @Component
 public class PreCheckRequestConverter {
 
-    public OmhPreCheckRequest toOmhPreCheckRequest(SearchRequest searchRequest, OmhRoomAvailability omhRoomAvailability) {
-        return OmhPreCheckRequest.builder()
-            .language(Language.KO)
-            .hotelCode(Long.valueOf(searchRequest.getPropertyIds().get(0)))
-            .checkInDate(searchRequest.getCheckin())
-            .checkOutDate(searchRequest.getCheckout())
-            .roomTypeCode(omhRoomAvailability.getRoomTypeCode())
-            .roomToken(omhRoomAvailability.getRoomToken())
-            .ratePlanCode(omhRoomAvailability.getRatePlanCode())
-            .rateType(omhRoomAvailability.getRateType())
-            .totalNetAmount(omhRoomAvailability.getTotalNetAmount())
-            .rooms(List.of(toOmhRoomGuestCount(searchRequest)))
-            .build();
-    }
-
     public OmhPreCheckRequest toOmhPreCheckRequest(ReservationSearchRequest searchRequest, OmhRoomAvailability omhRoomAvailability) {
         return OmhPreCheckRequest.builder()
             .language(Language.KO)
@@ -65,14 +50,6 @@ public class PreCheckRequestConverter {
             .adultCount(adultCount)
             .childCount(childCount)
             .childAges(childAges)
-            .build();
-    }
-
-    private OmhRoomGuestCount toOmhRoomGuestCount(SearchRequest searchRequest) {
-        return OmhRoomGuestCount.builder()
-            .adultCount(searchRequest.getAdultCount())
-            .childCount(searchRequest.getChildCount())
-            .childAges(searchRequest.getChildAges())
             .build();
     }
 }
