@@ -44,7 +44,7 @@ import static java.util.Objects.isNull;
 @Slf4j
 public class SearchService {
 
-    private static final int PARTITION_SIZE = 10;
+    private static final int PARTITION_SIZE = 30;
 
     private final ExecutorService fixedThreadPool = Executors.newFixedThreadPool(600);
 
