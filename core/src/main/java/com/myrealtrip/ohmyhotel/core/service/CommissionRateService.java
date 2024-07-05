@@ -1,5 +1,7 @@
 package com.myrealtrip.ohmyhotel.core.service;
 
+import com.myrealtrip.ohmyhotel.core.config.cache.CacheProperties;
+import com.myrealtrip.ohmyhotel.core.config.cache.CacheProperties.LocalCache;
 import com.myrealtrip.ohmyhotel.core.config.cache.annotation.LocalCacheable;
 import com.myrealtrip.ohmyhotel.core.domain.partner.dto.MrtCommissionInfo;
 import com.myrealtrip.ohmyhotel.core.domain.partner.dto.Partner;
@@ -37,6 +39,7 @@ public class CommissionRateService {
      * @return
      */
     @Transactional
+    @LocalCacheable(cache = LocalCache.MRT_COMMISSION_INFO, param = "null", type = MrtCommissionInfo.class)
     public MrtCommissionInfo getMrtCommissionInfo() {
         MrtCommissionInfo mrtCommissionInfo;
         try {
