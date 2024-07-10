@@ -40,6 +40,7 @@ public class GetUpdatedHotelCodesTasklet implements Tasklet {
                 .collect(Collectors.toList());
             allHotelCodeStorage.addAll(hotelCodes);
             lastHotelCode = hotelCodes.get(hotelCodes.size() - 1);
+            log.info("{}", hotelCodes);
         }
         log.info("total updated hotel size: {}", allHotelCodeStorage.getHotelCodes().size());
         return RepeatStatus.FINISHED;
