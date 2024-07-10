@@ -2,6 +2,7 @@ package com.myrealtrip.ohmyhotel.api.application.reservation;
 
 
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.PreCheckRequestConverter;
+import com.myrealtrip.ohmyhotel.core.domain.partner.dto.MrtCommissionInfo;
 import com.myrealtrip.ohmyhotel.core.service.reservation.ReservationApiLogService;
 import com.myrealtrip.ohmyhotel.api.application.reservation.converter.OrderConverter;
 import com.myrealtrip.ohmyhotel.api.application.common.converter.SearchRequestConverter;
@@ -77,14 +78,14 @@ public class OrderSearchService {
         OmhPreCheckResponse omhPreCheckResponse = omhPreCheckAgent.preCheck(omhPreCheckRequest);
         orderedRoomAvailability.changeTotalNetAmount(omhPreCheckResponse.getAmount().getTotalNetAmount());
 
-        BigDecimal mrtCommissionRate = commissionRateService.getMrtCommissionRate();
+        MrtCommissionInfo mrtCommissionInfo = commissionRateService.getMrtCommissionInfo();
         ZeroMargin zeroMargin = zeroMarginSearchService.getZeroMargin(hotelId, true);
-        Order order = saveOrder(reservationSearchRequest, mrtCommissionRate, orderedRoomAvailability, zeroMargin);
+        Order order = saveOrder(reservationSearchRequest, mrtCommissionInfo.getCommissionRate(), orderedRoomAvailability, zeroMargin);
         saveApiLog(order.getOrderId(), omhRoomsAvailabilityRequest, omhRoomsAvailabilityResponse, omhPreCheckRequest, omhPreCheckResponse);
         return singleSearchResponseConverter.toSearchResponse(
             hotelId,
             orderedRoomAvailability,
-            mrtCommissionRate,
+            mrtCommissionInfo,
             reservationSearchRequest.getRatePlanCount(),
             zeroMargin,
             String.valueOf(order.getOrderId())

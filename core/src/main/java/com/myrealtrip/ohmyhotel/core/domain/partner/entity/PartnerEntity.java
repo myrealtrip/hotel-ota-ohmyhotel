@@ -35,4 +35,7 @@ public class PartnerEntity extends BaseEntity {
 
     @Column(name = "commission_rate")
     private BigDecimal commissionRate;
+
+    @Column(name = "sale_commission_policy_id")
+    private Long saleCommissionPolicyId;
 }

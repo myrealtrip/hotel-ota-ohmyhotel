@@ -5,6 +5,7 @@ import com.myrealtrip.ohmyhotel.api.application.search.converter.MultipleSearchR
 import com.myrealtrip.ohmyhotel.api.application.common.converter.SearchRequestConverter;
 import com.myrealtrip.ohmyhotel.api.application.common.converter.SingleSearchResponseConverter;
 import com.myrealtrip.ohmyhotel.api.protocol.search.OmhHotelsAvailabilityCacheRequest;
+import com.myrealtrip.ohmyhotel.core.domain.partner.dto.MrtCommissionInfo;
 import com.myrealtrip.ohmyhotel.core.domain.zeromargin.dto.ZeroMargin;
 import com.myrealtrip.ohmyhotel.core.service.CommissionRateService;
 import com.myrealtrip.ohmyhotel.core.service.ZeroMarginSearchService;
@@ -70,18 +71,18 @@ public class SearchService {
                 .build();
         }
 
-        BigDecimal mrtCommissionRate = commissionRateService.getMrtCommissionRate();
+        MrtCommissionInfo mrtCommissionInfo = commissionRateService.getMrtCommissionInfo();
         if (searchRequest.getPropertyIds().size() == 1) {
-            return singleOmhSearch(searchRequest, mrtCommissionRate);
+            return singleOmhSearch(searchRequest, mrtCommissionInfo);
         }
-        return multipleOmhSearch(searchRequest, mrtCommissionRate);
+        return multipleOmhSearch(searchRequest, mrtCommissionInfo);
     }
 
     /**
      * 한번에 최대 350 개의 호텔 조회 요청이 들어올 수 있다.
      * 오마이호텔 API 성능 이슈로 20 개씩 쪼개어 요청을 보낸다.
      */
-    private SearchResponse multipleOmhSearch(SearchRequest searchRequest, BigDecimal mrtCommissionRate) {
+    private SearchResponse multipleOmhSearch(SearchRequest searchRequest, MrtCommissionInfo mrtCommissionInfo) {
         List<Long> hotelIds = searchRequest.getPropertyIds().stream()
             .map(Long::valueOf)
             .collect(Collectors.toList());
@@ -109,20 +110,20 @@ public class SearchService {
 
         return multipleSearchResponseConverter.toSearchResponse(
             omhHotelAvailabilities,
-            mrtCommissionRate,
+            mrtCommissionInfo,
             searchRequest.getRatePlanCount(),
             hotelIdToZeroMargin
         );
     }
 
-    private SearchResponse singleOmhSearch(SearchRequest searchRequest, BigDecimal mrtCommissionRate) {
+    private SearchResponse singleOmhSearch(SearchRequest searchRequest, MrtCommissionInfo mrtCommissionInfo) {
         ZeroMargin zeroMargin = zeroMarginSearchService.getZeroMargin(Long.valueOf(searchRequest.getPropertyIds().get(0)), true);
         OmhRoomsAvailabilityRequest omhRoomsAvailabilityRequest = searchRequestConverter.toOmhRoomsAvailabilityRequest(searchRequest);
         OmhRoomsAvailabilityResponse omhRoomsAvailabilityResponse = omhRoomsAvailabilityAgent.getRoomsAvailability(omhRoomsAvailabilityRequest);
         return singleSearchResponseConverter.toSearchResponse(
             Long.valueOf(searchRequest.getPropertyIds().get(0)),
             omhRoomsAvailabilityResponse,
-            mrtCommissionRate,
+            mrtCommissionInfo,
             searchRequest.getRatePlanCount(),
             zeroMargin
         );

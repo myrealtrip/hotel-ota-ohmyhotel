@@ -13,6 +13,7 @@ public class CacheProperties {
     public enum CacheName {
         ROOM_META("room_meta"),
         HOTELS_AVAILABILITY("multiple_availability"),
+        MRT_COMMISSION_INFO("mrt_commission_info"),
         ;
 
         private final String cacheKeyType;
@@ -39,6 +40,7 @@ public class CacheProperties {
     @Getter
     @AllArgsConstructor
     public enum LocalCache {
+        MRT_COMMISSION_INFO(CacheName.MRT_COMMISSION_INFO, 30L, TimeUnit.SECONDS),
         ;
 
         private static final String LOCAL_CACHE_KEY_FORMAT = "%s:%s:%s";  // ex. unionstay:{cacheName}:{key}
