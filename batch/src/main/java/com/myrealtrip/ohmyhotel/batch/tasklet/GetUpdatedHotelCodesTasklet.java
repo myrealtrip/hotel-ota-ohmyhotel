@@ -32,7 +32,7 @@ public class GetUpdatedHotelCodesTasklet implements Tasklet {
         while (true) {
             OmhStaticBulkHotelListResponse response = omhStaticHotelBulkListAgent.getBulkHotels(lastUpdateDate, lastHotelCode);
             if (response.getHotelCount() == 0 ||
-                (response.getHotelCount() == 1 && response.getHotels().get(0).getHotelCode().equals(lastHotelCode))) {
+                response.getHotels().get(response.getHotels().size() - 1).getHotelCode().equals(lastHotelCode)) {
                 break;
             }
             List<Long> hotelCodes = response.getHotels().stream()
