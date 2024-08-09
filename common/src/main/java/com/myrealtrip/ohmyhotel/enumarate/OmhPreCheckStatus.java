@@ -16,7 +16,8 @@ public enum OmhPreCheckStatus {
 
     AVAILABLE("available"),
     AMOUNT_CHANGED("amount_changed"),
-    SOLD_OUT("sold_out");
+    SOLD_OUT("sold_out"),
+    NONE("");
 
     private static final Map<String, OmhPreCheckStatus> LABEL_TO_PRE_CHECK_STATUS = Arrays.stream(OmhPreCheckStatus.values())
         .collect(Collectors.toMap(OmhPreCheckStatus::getLabel, Function.identity()));
@@ -24,8 +25,8 @@ public enum OmhPreCheckStatus {
     private final String label;
 
     @JsonCreator
-    public static OmhPreCheckStatus get(String label) {
-        return LABEL_TO_PRE_CHECK_STATUS.get(label);
+    public static OmhPreCheckStatus get(Object label) {
+        return LABEL_TO_PRE_CHECK_STATUS.get(String.valueOf(label));
     }
 
     @JsonValue
